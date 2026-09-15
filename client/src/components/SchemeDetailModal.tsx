@@ -1,11 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
-import { X, ExternalLink, Check, Volume2, ShieldCheck, Clock, FileText, Building } from 'lucide-react';
+import { X, ExternalLink, Check, Volume2, ShieldCheck, Clock, FileText, Building, Sparkles, RefreshCw } from 'lucide-react';
 
 export const SchemeDetailModal: React.FC = () => {
-  const { selectedSchemeModal, setSelectedSchemeModal } = useProfile();
+  const { selectedSchemeModal, setSelectedSchemeModal, profile } = useProfile();
   const { speakText, language } = useLanguage();
+  const [aiExplanation, setAiExplanation] = useState<any>(null);
+  const [loadingAi, setLoadingAi] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (selectedSchemeModal) {
+      setAiExplanation(null);
+      fetchAiExplanation();
+    }
+  }, [selectedSchemeModal]);
+
+  const fetchAiExplanation = async () => {
+    if (!selectedSchemeModal) return;
+    setLoadingAi(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/ai/explain-match', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scheme: selectedSchemeModal.scheme,
+          profile,
+          score: selectedSchemeModal.matchScore
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAiExplanation(data);
+      }
+    } catch (e) {
+      console.warn('AI explain match fetch error:', e);
+    } finally {
+      setLoadingAi(false);
+    }
+  };
 
   if (!selectedSchemeModal) return null;
 
@@ -38,6 +71,56 @@ export const SchemeDetailModal: React.FC = () => {
           >
             <X size={24} />
           </button>
+        </div>
+
+        {/* AI Explainable Match Evaluation Card */}
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%)',
+          border: '1px solid rgba(99, 102, 241, 0.25)',
+          borderRadius: '12px',
+          padding: '14px 16px',
+          marginBottom: '20px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Sparkles size={16} style={{ color: '#4F46E5' }} />
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Explainable Match Score (Powered by Groq AI)
+              </span>
+            </div>
+            {loadingAi && (
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <RefreshCw size={12} className="animate-spin" /> Evaluating...
+              </span>
+            )}
+          </div>
+
+          {aiExplanation ? (
+            <div style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
+              <p style={{ margin: '0 0 6px', fontWeight: 500 }}>
+                {aiExplanation.rationale}
+              </p>
+              {aiExplanation.subsidyBenefitExplanation && (
+                <div style={{ padding: '6px 10px', background: 'rgba(16, 185, 129, 0.12)', borderLeft: '3px solid #10B981', borderRadius: '4px', margin: '8px 0', fontSize: '0.82rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+                  💰 {aiExplanation.subsidyBenefitExplanation}
+                </div>
+              )}
+              {aiExplanation.keyStrengthPoints && (
+                <div style={{ marginTop: '6px' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>Key Strengths:</span>
+                  <ul style={{ margin: '4px 0 0', paddingLeft: '18px', fontSize: '0.8rem' }}>
+                    {aiExplanation.keyStrengthPoints.map((pt: string, idx: number) => (
+                      <li key={idx}>{pt}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              {loadingAi ? 'AI is analyzing eligibility criteria against your profile...' : `Based on your ${profile.category} category and ${profile.sector} sector, you match ${matchScore}% of criteria.`}
+            </p>
+          )}
         </div>
 
         {/* Overview & TTS audio */}

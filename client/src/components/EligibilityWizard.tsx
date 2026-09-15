@@ -2,13 +2,65 @@ import React, { useState } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserProfile, SocialCategory, Gender, LocationType, SectorType, EducationLevel } from '../types';
-import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2 } from 'lucide-react';
 
 export const EligibilityWizard: React.FC = () => {
   const { profile, setProfile, updateProfileField, runMatching, isLoadingMatches } = useProfile();
   const { t } = useLanguage();
 
   const [activeStep, setActiveStep] = useState<'personal' | 'business' | 'docs'>('personal');
+  const [aiInputText, setAiInputText] = useState<string>('');
+  const [isExtracting, setIsExtracting] = useState<boolean>(false);
+  const [extractionNotice, setExtractionNotice] = useState<string | null>(null);
+  const [showAiBox, setShowAiBox] = useState<boolean>(true);
+
+  const handleAiExtraction = async (samplePrompt?: string) => {
+    const textToProcess = samplePrompt || aiInputText;
+    if (!textToProcess.trim()) return;
+
+    setIsExtracting(true);
+    setExtractionNotice(null);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/ai/extract-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: textToProcess })
+      });
+
+      if (res.ok) {
+        const extracted = await res.json();
+        
+        setProfile((prev) => {
+          const updated = {
+            ...prev,
+            ...(extracted.fullName ? { fullName: extracted.fullName } : {}),
+            ...(extracted.age ? { age: extracted.age } : {}),
+            ...(extracted.gender ? { gender: extracted.gender } : {}),
+            ...(extracted.category ? { category: extracted.category } : {}),
+            ...(extracted.state ? { state: extracted.state } : {}),
+            ...(extracted.locationType ? { locationType: extracted.locationType } : {}),
+            ...(extracted.sector ? { sector: extracted.sector } : {}),
+            ...(extracted.tradeType ? { tradeType: extracted.tradeType } : {}),
+            ...(extracted.requiredLoanAmount ? { requiredLoanAmount: extracted.requiredLoanAmount } : {}),
+            ...(extracted.totalProjectCost ? { totalProjectCost: extracted.totalProjectCost } : {}),
+            ...(extracted.annualFamilyIncome ? { annualFamilyIncome: extracted.annualFamilyIncome } : {}),
+            ...(extracted.isDifferentlyAbled !== undefined ? { isDifferentlyAbled: extracted.isDifferentlyAbled } : {})
+          };
+          runMatching(updated);
+          return updated;
+        });
+
+        setExtractionNotice(`✨ Groq AI extracted profile with ${extracted.confidenceScore || 90}% confidence! Form auto-filled.`);
+        if (samplePrompt) setAiInputText(samplePrompt);
+      }
+    } catch (err) {
+      console.error('AI extraction error:', err);
+      setExtractionNotice('AI service connection error. Please try again or fill form manually.');
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,6 +75,141 @@ export const EligibilityWizard: React.FC = () => {
           <span>{t.wizard.title}</span>
         </h3>
         <p>{t.wizard.subtitle}</p>
+      </div>
+
+      {/* AI Quick Profile Extraction Bar */}
+      <div className="wizard-ai-box" style={{
+        background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%)',
+        border: '1px solid rgba(99, 102, 241, 0.25)',
+        borderRadius: '12px',
+        padding: '12px 14px',
+        marginBottom: '16px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Wand2 size={16} style={{ color: '#6366F1' }} />
+            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+              AI Natural-Language Profile Extractor
+            </span>
+            <span style={{ fontSize: '0.65rem', background: '#6366F1', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+              GROQ AI
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            type="text"
+            placeholder="e.g. 34-yr SC woman in Bihar running tailoring unit, needs 4L loan"
+            value={aiInputText}
+            onChange={(e) => setAiInputText(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAiExtraction(); } }}
+            style={{
+              flex: 1,
+              padding: '8px 12px',
+              borderRadius: '8px',
+              fontSize: '0.8rem',
+              border: '1px solid var(--border-subtle)',
+              background: 'var(--bg-surface)'
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => handleAiExtraction()}
+            disabled={isExtracting || !aiInputText.trim()}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, #4F46E5, #6366F1)',
+              color: '#fff',
+              border: 'none',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              cursor: isExtracting ? 'wait' : 'pointer',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {isExtracting ? (
+              <>
+                <RefreshCw size={14} className="animate-spin" />
+                <span>Extracting...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles size={14} />
+                <span>Extract</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Quick Sample Chips */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Try:</span>
+          <button
+            type="button"
+            onClick={() => handleAiExtraction('Sunita, 34, SC woman in Bihar doing tailoring, needs 4L loan')}
+            style={{
+              fontSize: '0.68rem',
+              padding: '2px 8px',
+              borderRadius: '99px',
+              border: '1px dashed var(--border-subtle)',
+              background: 'var(--bg-surface-elevated)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer'
+            }}
+          >
+            👗 SC Tailor (Bihar, 4L)
+          </button>
+          <button
+            type="button"
+            onClick={() => handleAiExtraction('Ramesh, 28, OBC weaver in Varanasi, needs 10L loan for looms')}
+            style={{
+              fontSize: '0.68rem',
+              padding: '2px 8px',
+              borderRadius: '99px',
+              border: '1px dashed var(--border-subtle)',
+              background: 'var(--bg-surface-elevated)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer'
+            }}
+          >
+            🧵 OBC Weaver (UP, 10L)
+          </button>
+          <button
+            type="button"
+            onClick={() => handleAiExtraction('Deepak, 42, Safai Karamchari dependent, needs 3L for sanitation equipment')}
+            style={{
+              fontSize: '0.68rem',
+              padding: '2px 8px',
+              borderRadius: '99px',
+              border: '1px dashed var(--border-subtle)',
+              background: 'var(--bg-surface-elevated)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer'
+            }}
+          >
+            🧹 Sanitation (3L)
+          </button>
+        </div>
+
+        {extractionNotice && (
+          <div style={{
+            marginTop: '8px',
+            fontSize: '0.74rem',
+            color: '#059669',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <CheckCircle2 size={13} />
+            <span>{extractionNotice}</span>
+          </div>
+        )}
       </div>
 
       {/* Mini Stepper Tabs */}

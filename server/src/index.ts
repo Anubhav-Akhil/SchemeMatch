@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import schemesData from './data/schemes.json';
@@ -7,6 +10,7 @@ import { SchemeMatchingEngine } from './services/matchingEngine';
 import { DprGeneratorService } from './services/dprGenerator';
 import { DocumentService } from './services/documentService';
 import { SaathiChatService } from './services/chatService';
+import { GroqAIService } from './services/groqService';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +23,7 @@ const matchingEngine = new SchemeMatchingEngine(schemes);
 const dprService = new DprGeneratorService();
 const documentService = new DocumentService();
 const chatService = new SaathiChatService(schemes);
+const groqService = new GroqAIService();
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
@@ -134,17 +139,88 @@ app.post('/api/documents/analyze', (req: Request, res: Response) => {
   }
 });
 
-// Saathi AI Conversational Copilot
-app.post('/api/chat', (req: Request, res: Response) => {
+// Saathi AI Conversational Copilot (Powered by Groq Cloud)
+app.post('/api/chat', async (req: Request, res: Response) => {
   try {
     const { query, profile } = req.body;
     if (!query || typeof query !== 'string') {
       return res.status(400).json({ error: 'Query string is required' });
     }
-    const reply = chatService.processMessage(query, profile);
-    res.json(reply);
+
+    try {
+      const aiResponse = await groqService.chatWithSaathi(query, profile, schemes);
+      
+      // Also cross-reference with matching engine if query asks about schemes
+      const deterministicReply = chatService.processMessage(query, profile);
+
+      // Merge entity extraction for maximum reliability
+      const mergedUpdates = {
+        ...(deterministicReply.extractedProfileUpdates || {}),
+        ...(aiResponse.extractedProfileUpdates || {})
+      };
+
+      res.json({
+        id: `saathi-${Date.now()}`,
+        sender: 'assistant',
+        text: aiResponse.text,
+        hindiText: aiResponse.hindiText,
+        timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        matchedSchemes: deterministicReply.matchedSchemes,
+        suggestedPrompts: aiResponse.suggestedPrompts,
+        extractedProfileUpdates: Object.keys(mergedUpdates).length > 0 ? mergedUpdates : undefined
+      });
+    } catch (groqErr) {
+      console.warn('Groq AI chat encountered an issue, falling back to deterministic chat engine:', groqErr);
+      const fallbackReply = chatService.processMessage(query, profile);
+      res.json(fallbackReply);
+    }
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Error processing chat query' });
+  }
+});
+
+// AI Profile Extraction (Natural Language / Voice to Structured Profile)
+app.post('/api/ai/extract-profile', async (req: Request, res: Response) => {
+  try {
+    const { text } = req.body;
+    if (!text || typeof text !== 'string') {
+      return res.status(400).json({ error: 'Text prompt is required for AI extraction.' });
+    }
+
+    const extracted = await groqService.extractProfileFromText(text);
+    res.json(extracted);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error extracting profile from text' });
+  }
+});
+
+// AI Explainable Match Score Evaluation
+app.post('/api/ai/explain-match', async (req: Request, res: Response) => {
+  try {
+    const { scheme, profile, score } = req.body;
+    if (!scheme || !profile) {
+      return res.status(400).json({ error: 'Scheme and User Profile are required.' });
+    }
+
+    const explanation = await groqService.explainMatch(scheme, profile, score || 85);
+    res.json(explanation);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error generating match explanation' });
+  }
+});
+
+// AI DPR Banking Narrative Generator
+app.post('/api/ai/dpr-narrative', async (req: Request, res: Response) => {
+  try {
+    const { dprReq, financials } = req.body;
+    if (!dprReq || !financials) {
+      return res.status(400).json({ error: 'DPR Request and Financials are required.' });
+    }
+
+    const narrative = await groqService.generateDprNarrative(dprReq, financials);
+    res.json(narrative);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error generating DPR narrative' });
   }
 });
 
