@@ -30,7 +30,7 @@ interface AuthContextType {
   setAuthMode: (mode: 'login' | 'register') => void;
   loginWithEmail: (email: string, pass: string) => Promise<void>;
   registerWithEmail: (email: string, pass: string, fullName: string) => Promise<string>;
-  loginWithGoogle: (profile?: { name?: string; email?: string; avatarUrl?: string }) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   loginDemo: (name?: string, email?: string) => void;
   logout: () => Promise<void>;
   navigateToAuth: (mode?: 'login' | 'register') => void;
@@ -172,28 +172,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginWithGoogleHandler = async (googleProfile?: { name?: string; email?: string; avatarUrl?: string }) => {
+  const loginWithGoogleHandler = async () => {
     setIsLoading(true);
     try {
-      // Simulate authentic Google Identity verification latency (400ms)
-      await new Promise(r => setTimeout(r, 450));
-
-      const name = googleProfile?.name || 'Anubhav Akhil';
-      const email = googleProfile?.email || 'anubhav.akhil@gmail.com';
-      const avatarUrl = googleProfile?.avatarUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&auto=format&fit=crop&q=80';
-
-      const googleUser: AppUser = {
-        id: 'google_' + Math.random().toString(36).substring(2, 10),
-        email,
-        fullName: name,
-        avatarUrl,
-        isDemo: false,
-        provider: 'google'
-      };
-
-      setUser(googleUser);
-      localStorage.setItem(GOOGLE_USER_KEY, JSON.stringify(googleUser));
-      setCurrentView('app');
+      if (!isSupabaseConfigured) {
+        throw new Error('SUPABASE_NOT_CONFIGURED');
+      }
+      await signInWithGoogle();
     } finally {
       setIsLoading(false);
     }

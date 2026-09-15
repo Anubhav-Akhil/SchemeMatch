@@ -15,7 +15,6 @@ import {
   AlertCircle,
   CheckCircle2
 } from 'lucide-react';
-import { GoogleAccountModal } from './GoogleAccountModal';
 
 export const AuthPage: React.FC = () => {
   const { 
@@ -37,7 +36,6 @@ export const AuthPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [showGoogleModal, setShowGoogleModal] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,19 +86,24 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  const handleGoogleAuth = () => {
+  const handleGoogleAuth = async () => {
     setErrorMessage(null);
-    setShowGoogleModal(true);
+    setIsLoading(true);
+    try {
+      await loginWithGoogle();
+    } catch (err: any) {
+      setIsLoading(false);
+      const msg = err.message || '';
+      if (msg.includes('Unsupported provider') || msg.includes('provider is not enabled')) {
+        setErrorMessage('Google Sign-In needs to be enabled in your Supabase Dashboard: go to Authentication -> Providers -> Google and toggle ON.');
+      } else {
+        setErrorMessage(msg || 'Failed to initiate Google sign-in. Please try again.');
+      }
+    }
   };
 
   return (
     <div className="auth-page-wrapper">
-      {/* Google Identity Account Chooser Modal */}
-      <GoogleAccountModal
-        isOpen={showGoogleModal}
-        onClose={() => setShowGoogleModal(false)}
-      />
-
       {/* Subtle Ambient Radial Glowing Lights */}
       <div className="auth-ambient-glow" />
 
@@ -157,8 +160,20 @@ export const AuthPage: React.FC = () => {
             {/* Feedback Banners */}
             {errorMessage && (
               <div className="auth-alert error">
-                <AlertCircle size={16} />
-                <span>{errorMessage}</span>
+                <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <span>{errorMessage}</span>
+                  {errorMessage.includes('Supabase Dashboard') && (
+                    <a
+                      href="https://supabase.com/dashboard/project/flhiigvcnixepsixfpxm/auth/providers"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: '#4F46E5', fontWeight: 600, textDecoration: 'underline', fontSize: '0.78rem' }}
+                    >
+                      Open Supabase Google Provider Settings &rarr;
+                    </a>
+                  )}
+                </div>
               </div>
             )}
 
