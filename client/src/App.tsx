@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ProfileProvider, useProfile } from './context/ProfileContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthPage } from './components/AuthPage';
+import { MainAppDashboard } from './components/MainAppDashboard';
 import { Header } from './components/Header';
 import { HeroScrollWindow } from './components/HeroScrollWindow';
 import { SuperpoweredCardsSection } from './components/SuperpoweredCardsSection';
@@ -16,16 +19,16 @@ import { DprGeneratorView } from './components/DprGeneratorView';
 import { DocumentReadiness } from './components/DocumentReadiness';
 import { ApplicationNavigator } from './components/ApplicationNavigator';
 import { SaathiAICopilot } from './components/SaathiAICopilot';
-import { Sparkles, FileText, Scale, Compass, CheckCircle2, Filter, Layers, LayoutGrid } from 'lucide-react';
+import { Sparkles, FileText, Scale, Compass, CheckCircle2, Filter } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
+  const { currentView } = useAuth();
   const { t } = useLanguage();
   const {
     activeTab,
     setActiveTab,
     matchResults,
     otherSchemes,
-    isLoadingMatches,
     totalPotentialSubsidy,
     comparedSchemes
   } = useProfile();
@@ -33,7 +36,16 @@ const MainAppContent: React.FC = () => {
   const [selectedFilterCategory, setSelectedFilterCategory] = useState<string>('all');
   const [showInteractiveTools, setShowInteractiveTools] = useState<boolean>(false);
 
-  // Filter schemes
+  // View Routing: 1. Landing Page -> 2. Login/Register -> 3. Main Website (Workspace)
+  if (currentView === 'auth') {
+    return <AuthPage />;
+  }
+
+  if (currentView === 'app') {
+    return <MainAppDashboard />;
+  }
+
+  // Filter schemes on landing interactive preview
   const filteredMatches = matchResults.filter((m) => {
     if (selectedFilterCategory !== 'all') {
       if (
@@ -234,7 +246,9 @@ export function App() {
   return (
     <LanguageProvider>
       <ProfileProvider>
-        <MainAppContent />
+        <AuthProvider>
+          <MainAppContent />
+        </AuthProvider>
       </ProfileProvider>
     </LanguageProvider>
   );

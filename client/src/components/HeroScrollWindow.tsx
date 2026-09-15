@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
-import heroShowcaseImg from '../assets/hero-showcase.png';
+import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, ExternalLink, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const HeroScrollWindow: React.FC = () => {
   const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const heroShowcaseImg = getLandingImage('hero', language);
 
   // 3D Tilt & Specular Glare State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,27 +54,26 @@ export const HeroScrollWindow: React.FC = () => {
   };
 
   return (
-    <section className="hero-scroll-window-section">
+    <section className="hero-scroll-window-section" id="hero-scroll-window">
       <div className="container">
         {/* Kicker Label matching Image 1 */}
         <div className="hero-scroll-kicker">
-          <span>YOUR NEW SCHEME ENGINE</span>
+          <span>{t.landing.heroKicker}</span>
         </div>
 
         {/* Big Bold Headline matching Image 1 */}
         <h1 className="hero-scroll-heading">
-          The scheme <br />
-          you{' '}
+          {t.landing.heroHeadingLine1} <br />
           <span className="hero-scroll-highlight">
-            need to match
+            {t.landing.heroHeadingLine2}
             <span className="hero-cursor-line" />
-            <span className="hero-cursor-tag">Febby</span>
+            <span className="hero-cursor-tag">{t.landing.heroCursorTag}</span>
           </span>
         </h1>
 
         {/* Subtitle matching Image 1 rhythm */}
         <p className="hero-scroll-subtitle">
-          SchemeMatch evolves government schemes into a living, breathing workspace for marginalized entrepreneurs to instantly fund their enterprise.
+          {t.landing.heroSubtitle}
         </p>
 
         {/* Visual Element Container (Image 2 with Movement Animations & 3D Tilt) */}

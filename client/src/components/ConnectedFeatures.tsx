@@ -1,5 +1,6 @@
 import React from 'react';
 import { useProfile } from '../context/ProfileContext';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   CheckCircle2, 
   ChevronDown, 
@@ -13,6 +14,7 @@ import {
 
 export const ConnectedFeatures: React.FC = () => {
   const { setActiveTab } = useProfile();
+  const { t } = useLanguage();
 
   return (
     <section className="connected-features-section" id="connected-features">
@@ -20,9 +22,9 @@ export const ConnectedFeatures: React.FC = () => {
         {/* Section Headline with Hand-drawn Circular Marker around 'every' */}
         <div className="connected-header">
           <h2 className="connected-title">
-            Leave{' '}
+            {t.landing.connectedTitlePrefix}{' '}
             <span className="sketched-circle-wrap">
-              every
+              {t.landing.connectedTitleHighlight}
               <svg className="sketched-circle-svg" viewBox="0 0 120 54" fill="none">
                 <path
                   d="M15,28 C12,12 55,4 95,8 C115,10 118,34 92,44 C55,54 18,48 8,30 C3,18 35,8 80,12"
@@ -33,11 +35,10 @@ export const ConnectedFeatures: React.FC = () => {
                 />
               </svg>
             </span>{' '}
-            application <br />
-            feeling Confident
+            {t.landing.connectedTitleSuffix}
           </h2>
           <p className="connected-subtitle">
-            Never lose track of a deadline or miss an eligibility requirement. SchemeMatch keeps you and your enterprise organized before, during, and after every application.
+            {t.landing.connectedSubtitle}
           </p>
         </div>
 

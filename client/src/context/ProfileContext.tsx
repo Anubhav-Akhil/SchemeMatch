@@ -14,8 +14,8 @@ interface ProfileContextType {
   runMatching: (profileToMatch?: UserProfile) => Promise<void>;
   
   // Tabs & Navigation
-  activeTab: 'matcher' | 'dpr' | 'documents' | 'comparison' | 'roadmap';
-  setActiveTab: (tab: 'matcher' | 'dpr' | 'documents' | 'comparison' | 'roadmap') => void;
+  activeTab: 'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap';
+  setActiveTab: (tab: 'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap') => void;
 
   // Comparison
   comparedSchemes: Scheme[];
@@ -73,7 +73,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isLoadingMatches, setIsLoadingMatches] = useState<boolean>(false);
   const [totalPotentialSubsidy, setTotalPotentialSubsidy] = useState<number>(0);
 
-  const [activeTab, setActiveTab] = useState<'matcher' | 'dpr' | 'documents' | 'comparison' | 'roadmap'>('matcher');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap'>('dashboard');
   const [comparedSchemes, setComparedSchemes] = useState<Scheme[]>([]);
   const [selectedSchemeModal, setSelectedSchemeModal] = useState<SchemeMatchResult | null>(null);
   const [uploadedDocIds, setUploadedDocIds] = useState<string[]>(['aadhaar-card', 'caste-certificate', 'bank-statement']);

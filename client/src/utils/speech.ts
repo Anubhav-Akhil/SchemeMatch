@@ -36,7 +36,8 @@ export class SpeechAssistant {
     const langMap: Record<SupportedLanguage, string> = {
       en: 'en-IN',
       hi: 'hi-IN',
-      ta: 'ta-IN',
+      te: 'te-IN',
+      pa: 'pa-IN',
       mr: 'mr-IN',
       bn: 'bn-IN'
     };

@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
-import superpoweredShowcaseImg from '../assets/superpowered-showcase.png';
+import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, MapPin, Compass, CheckCircle2, ArrowRight, Building2, Scale, ShieldCheck } from 'lucide-react';
 
 export const SuperpoweredCardsSection: React.FC = () => {
   const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const superpoweredShowcaseImg = getLandingImage('superpowered', language);
 
   // 3D Tilt & Specular Glare State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,12 +62,12 @@ export const SuperpoweredCardsSection: React.FC = () => {
         {/* Section Headline matching Reference Design */}
         <div className="superpowered-header">
           <h2 className="superpowered-title">
-            A superpowered <br />
-            meeting in every <br />
-            scheme match
+            {t.landing.superpoweredTitleLine1} <br />
+            {t.landing.superpoweredTitleLine2} <br />
+            {t.landing.superpoweredTitleLine3}
           </h2>
           <p className="superpowered-subtitle">
-            SchemeMatch transforms government schemes into living, bank-ready workspaces designed to unlock the perfect capital subsidy and loan sanction in seconds.
+            {t.landing.superpoweredSubtitle}
           </p>
         </div>
 

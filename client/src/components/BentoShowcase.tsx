@@ -1,10 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { useProfile } from '../context/ProfileContext';
-import bentoShowcaseImg from '../assets/bento-showcase.png';
+import { useLanguage } from '../context/LanguageContext';
+import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const BentoShowcase: React.FC = () => {
   const { setActiveTab } = useProfile();
+  const { language } = useLanguage();
+
+  const bentoShowcaseImg = getLandingImage('bento', language);
 
   // 3D Tilt State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -34,7 +38,7 @@ export const BentoShowcase: React.FC = () => {
   };
 
   return (
-    <section className="bento-image-section">
+    <section className="bento-image-section" id="bento-showcase">
       <div className="container">
         {/* 3D Visual Stage with the exact user image asset */}
         <div

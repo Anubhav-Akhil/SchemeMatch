@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProfile } from '../context/ProfileContext';
+import { useLanguage } from '../context/LanguageContext';
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -17,6 +18,7 @@ import {
 
 export const FullDashboardShowcase: React.FC = () => {
   const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
+  const { t } = useLanguage();
   const [selectedDay, setSelectedDay] = useState<number>(15);
 
   const handleOpenTopScheme = () => {
@@ -33,9 +35,9 @@ export const FullDashboardShowcase: React.FC = () => {
         {/* Section Headline with Hand-drawn Smile Curve underline */}
         <div className="dashboard-showcase-header">
           <h2 className="dashboard-showcase-title">
-            All in a workspace, <br />
+            {t.landing.dashboardTitleLine1} <br />
             <span className="smile-underline-wrap">
-              that's a joy to use
+              {t.landing.dashboardTitleHighlight}
               <svg className="smile-underline-svg" viewBox="0 0 240 24" fill="none">
                 <path
                   d="M6,14 C60,24 180,24 234,10"
@@ -47,7 +49,7 @@ export const FullDashboardShowcase: React.FC = () => {
             </span>
           </h2>
           <p className="dashboard-showcase-subtitle">
-            An entire government scheme matching & DPR generation platform built inside a fast and modern workspace you and your business will love.
+            {t.landing.dashboardSubtitle}
           </p>
 
           {/* Feature Chips / Pills Row matching Figma reference */}

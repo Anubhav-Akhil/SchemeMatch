@@ -235,4 +235,4 @@ export interface ChatMessage {
   extractedProfileUpdates?: Partial<UserProfile>;
 }
 
-export type SupportedLanguage = 'en' | 'hi' | 'ta' | 'mr' | 'bn';
+export type SupportedLanguage = 'en' | 'hi' | 'te' | 'mr' | 'bn' | 'pa';

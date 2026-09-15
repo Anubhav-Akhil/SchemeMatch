@@ -1,105 +1,136 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { useProfile } from '../context/ProfileContext';
+import { useAuth } from '../context/AuthContext';
 import { SupportedLanguage } from '../types';
-import { Volume2, VolumeX, Moon, Sun, Scale } from 'lucide-react';
+import { 
+  Moon, 
+  Sun, 
+  LogIn, 
+  UserPlus,
+  Sparkles, 
+  Globe, 
+  ChevronDown
+} from 'lucide-react';
 import logoImg from '../assets/logo.png';
 
 export const Header: React.FC = () => {
-  const { language, setLanguage, theme, toggleTheme, t, isSpeaking, stopSpeech } = useLanguage();
-  const { comparedSchemes, setActiveTab } = useProfile();
+  const { language, setLanguage, theme, toggleTheme, t } = useLanguage();
+  const { user, navigateToAuth, setCurrentView } = useAuth();
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLanguage(e.target.value as SupportedLanguage);
-  };
+  // Close language dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const langs: { code: SupportedLanguage; label: string; short: string }[] = [
+    { code: 'en', label: 'English', short: 'EN' },
+    { code: 'hi', label: 'हिन्दी', short: 'HI' },
+    { code: 'te', label: 'తెలుగు', short: 'TE' },
+    { code: 'pa', label: 'ਪੰਜਾਬੀ', short: 'PA' },
+    { code: 'mr', label: 'मराठी', short: 'MR' },
+    { code: 'bn', label: 'বাংলা', short: 'BN' },
+  ];
+
+  const currentLang = langs.find(l => l.code === language) || langs[0];
 
   return (
     <header className="site-header">
       <div className="container header-inner">
-        {/* Brand Section with Official Logo */}
-        <div className="brand-section">
-          <div className="brand-logo-container" onClick={() => setActiveTab('matcher')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img 
-              src={logoImg} 
-              alt="SchemeMatch Logo" 
-              className="brand-logo-img"
-              style={{
-                width: '46px',
-                height: '46px',
-                objectFit: 'contain',
-                borderRadius: '12px',
-                background: '#FFFFFF',
-                padding: '2px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                border: '1.5px solid var(--border-subtle)'
-              }} 
-            />
-            <div className="brand-text">
-              <h1 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 800, letterSpacing: '-0.02em', background: 'linear-gradient(135deg, #0D1B2A 0%, #1E293B 100%)', WebkitBackgroundClip: theme === 'light' ? 'text' : 'unset', color: theme === 'dark' ? '#FFFFFF' : '#0D1B2A' }}>
-                  {t.appTitle}
-                </span>
-              </h1>
-              <div className="gov-tag" style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                {t.sponsoringMinistry}
-              </div>
-            </div>
-          </div>
+        {/* Left: Logo & Brand Name */}
+        <div className="hdr-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} role="button" tabIndex={0}>
+          <img src={logoImg} alt="SchemeMatch" className="hdr-brand-logo" />
+          <span className="hdr-brand-name">SchemeMatch</span>
         </div>
 
-        {/* Actions & Utilities */}
-        <div className="header-actions">
-          {/* Audio Speaking Status */}
-          {isSpeaking && (
-            <button 
-              className="audio-status-pill"
-              onClick={stopSpeech}
-              title="Stop voice narration"
-            >
-              <Volume2 size={16} />
-              <span>Speaking Audio (Click to Stop)</span>
-              <VolumeX size={14} />
-            </button>
-          )}
-
-          {/* Scheme Comparison Quick Badge */}
-          {comparedSchemes.length > 0 && (
-            <button
-              className="btn-secondary"
-              style={{ padding: '7px 14px', fontSize: '0.85rem' }}
-              onClick={() => setActiveTab('comparison')}
-            >
-              <Scale size={16} />
-              <span>Compare ({comparedSchemes.length}/3)</span>
-            </button>
-          )}
-
+        {/* Right: Utilities & Auth */}
+        <div className="hdr-actions">
           {/* Language Selector */}
-          <select 
-            value={language} 
-            onChange={handleLanguageChange}
-            aria-label="Select Language"
-            style={{ fontWeight: 600, padding: '7px 12px', fontSize: '0.88rem' }}
-          >
-            <option value="en">English (EN)</option>
-            <option value="hi">हिन्दी (Hindi)</option>
-            <option value="ta">தமிழ் (Tamil)</option>
-            <option value="mr">मराठी (Marathi)</option>
-            <option value="bn">বাংলা (Bengali)</option>
-          </select>
+          <div className="hdr-lang" ref={langRef}>
+            <button
+              type="button"
+              className="hdr-lang-trigger"
+              onClick={() => setLangOpen(!langOpen)}
+              aria-label="Select Language"
+            >
+              <Globe size={15} />
+              <span className="hdr-lang-label">{currentLang.label}</span>
+              <ChevronDown size={12} className={`hdr-lang-chevron ${langOpen ? 'rotated' : ''}`} />
+            </button>
+
+            {langOpen && (
+              <div className="hdr-lang-dropdown">
+                {langs.map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    className={`hdr-lang-option ${language === l.code ? 'selected' : ''}`}
+                    onClick={() => { setLanguage(l.code); setLangOpen(false); }}
+                  >
+                    <span>{l.label}</span>
+                    {language === l.code && <span className="hdr-lang-dot" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Theme Toggle */}
-          <button 
-            className="btn-secondary"
+          <button
+            type="button"
+            className="hdr-theme-btn"
             onClick={toggleTheme}
-            aria-label="Toggle Dark / Light Theme"
-            style={{ padding: '8px 12px' }}
-            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            aria-label={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
           >
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
+
+          {/* Separator */}
+          <div className="hdr-separator" />
+
+          {/* Auth Buttons */}
+          {user ? (
+            <button
+              type="button"
+              className="hdr-workspace-pill"
+              onClick={() => setCurrentView('app')}
+            >
+              <span className="hdr-avatar">{user.fullName?.charAt(0).toUpperCase() || 'U'}</span>
+              <span>{t.nav.workspace}</span>
+              <Sparkles size={13} />
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="hdr-signin-btn"
+                onClick={() => navigateToAuth('login')}
+              >
+                <LogIn size={15} />
+                <span>{t.nav.signIn}</span>
+              </button>
+
+              <button
+                type="button"
+                className="hdr-register-btn"
+                onClick={() => navigateToAuth('register')}
+              >
+                <UserPlus size={15} />
+                <span>{t.nav.createAccount}</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>
   );
 };
+
+export default Header;

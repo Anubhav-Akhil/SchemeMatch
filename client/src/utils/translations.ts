@@ -5,6 +5,41 @@ export interface Translations {
   appSubTitle: string;
   sponsoringMinistry: string;
   sihProblemStatement: string;
+  nav: {
+    signIn: string;
+    createAccount: string;
+    landingPage: string;
+    workspace: string;
+    signOut: string;
+  };
+  landing: {
+    heroKicker: string;
+    heroHeadingLine1: string;
+    heroHeadingLine2: string;
+    heroCursorTag: string;
+    heroSubtitle: string;
+    
+    superpoweredTitleLine1: string;
+    superpoweredTitleLine2: string;
+    superpoweredTitleLine3: string;
+    superpoweredSubtitle: string;
+    
+    connectedTitlePrefix: string;
+    connectedTitleHighlight: string;
+    connectedTitleSuffix: string;
+    connectedSubtitle: string;
+
+    dashboardTitleLine1: string;
+    dashboardTitleHighlight: string;
+    dashboardSubtitle: string;
+
+    bottomCtaHeadingLine1: string;
+    bottomCtaHeadingLine2: string;
+    bottomCtaSubheading: string;
+    bottomCtaSignUp: string;
+    bottomCtaDownload: string;
+    bottomCtaOpenWorkspace: string;
+  };
   tabs: {
     matcher: string;
     dpr: string;
@@ -67,11 +102,45 @@ export interface Translations {
 }
 
 export const TRANSLATIONS: Record<SupportedLanguage, Translations> = {
+  // -------------------------------------------------------------
+  // 1. ENGLISH
+  // -------------------------------------------------------------
   en: {
     appTitle: 'SchemeMatch',
     appSubTitle: 'AI Scheme Matching & Application Copilot for Marginalized Entrepreneurs',
     sponsoringMinistry: 'Ministry of Social Justice and Empowerment (MoSJE) & MSME',
     sihProblemStatement: 'AI-Driven Scheme Matching for Marginalized Entrepreneurs',
+    nav: {
+      signIn: 'Sign In',
+      createAccount: 'Create Free Account',
+      landingPage: 'Landing Page',
+      workspace: 'Workspace Pro',
+      signOut: 'Sign Out'
+    },
+    landing: {
+      heroKicker: 'YOUR NEW SCHEME ENGINE',
+      heroHeadingLine1: 'The scheme',
+      heroHeadingLine2: 'you need to match',
+      heroCursorTag: 'Saathi AI',
+      heroSubtitle: 'SchemeMatch evolves government schemes into a living, breathing workspace for marginalized entrepreneurs to instantly fund their enterprise.',
+      superpoweredTitleLine1: 'A superpowered',
+      superpoweredTitleLine2: 'meeting in every',
+      superpoweredTitleLine3: 'scheme match',
+      superpoweredSubtitle: 'SchemeMatch transforms government schemes into living, bank-ready workspaces designed to unlock the perfect capital subsidy and loan sanction in seconds.',
+      connectedTitlePrefix: 'Leave',
+      connectedTitleHighlight: 'every',
+      connectedTitleSuffix: 'application feeling Confident',
+      connectedSubtitle: 'Never lose track of a deadline or miss an eligibility requirement. SchemeMatch keeps you and your enterprise organized before, during, and after every application.',
+      dashboardTitleLine1: 'All in a workspace,',
+      dashboardTitleHighlight: "that's a joy to use",
+      dashboardSubtitle: 'An entire government scheme matching & DPR generation platform built inside a fast and modern workspace you and your business will love.',
+      bottomCtaHeadingLine1: "It's time.",
+      bottomCtaHeadingLine2: 'Get SchemeMatched',
+      bottomCtaSubheading: "Your enterprise has the power to shape your future. Don't settle for missed capital subsidies or endless bureaucratic delays. Get SchemeMatched, and let's shape the future of entrepreneurship and capital access together.",
+      bottomCtaSignUp: 'Sign Up Free',
+      bottomCtaDownload: 'Download Scheme Guide',
+      bottomCtaOpenWorkspace: 'Open Workspace'
+    },
     tabs: {
       matcher: 'AI Scheme Matcher',
       dpr: 'Bank-Ready DPR Generator',
@@ -125,18 +194,53 @@ export const TRANSLATIONS: Record<SupportedLanguage, Translations> = {
       listenAudio: 'Listen Voice Summary'
     },
     copilot: {
-      title: 'SchemeMatch Voice Copilot',
+      title: 'Saathi AI',
       subtitle: 'Ask in English, Hindi, or Hinglish',
       placeholder: 'E.g., I am an SC woman weaver in Varanasi, need ₹2.5 Lakh loan...',
-      sendBtn: 'Ask SchemeMatch',
+      sendBtn: 'Ask Saathi AI',
       listening: 'Listening to your voice...'
     }
   },
+
+  // -------------------------------------------------------------
+  // 2. HINDI (हिन्दी)
+  // -------------------------------------------------------------
   hi: {
     appTitle: 'SchemeMatch (स्कीममैच)',
     appSubTitle: 'हाशिए के उद्यमियों के लिए एआई-संचालित योजना चयन एवं आवेदन सहायता',
     sponsoringMinistry: 'सामाजिक न्याय और अधिकारिता मंत्रालय (MoSJE) एवं MSME',
     sihProblemStatement: 'वंचित उद्यमियों के लिए एआई आधारित योजना चयन',
+    nav: {
+      signIn: 'साइन इन करें',
+      createAccount: 'निःशुल्क खाता बनाएं',
+      landingPage: 'मुख्य पृष्ठ',
+      workspace: 'वर्कस्पेस प्रो',
+      signOut: 'लॉग आउट'
+    },
+    landing: {
+      heroKicker: 'आपका नया सरकारी योजना इंजन',
+      heroHeadingLine1: 'वह योजना',
+      heroHeadingLine2: 'जो आपके व्यवसाय के अनुकूल है',
+      heroCursorTag: 'साथी AI',
+      heroSubtitle: 'स्कीममैच सरकारी योजनाओं को हाशिए के उद्यमियों के लिए एक सजीव और त्वरित वर्कस्पेस में बदलता है ताकि वे आसानी से पूंजी प्राप्त कर सकें।',
+      superpoweredTitleLine1: 'हर योजना मिलान में',
+      superpoweredTitleLine2: 'एक सशक्त व पारदर्शी',
+      superpoweredTitleLine3: 'सहयोग',
+      superpoweredSubtitle: 'स्कीममैच सरकारी योजनाओं को बैंक-स्वीकार्य वर्कस्पेस में बदलकर मात्र कुछ सेकंड में अधिकतम पूंजी सब्सिडी और ऋण मंजूरी सुनिश्चित करता है।',
+      connectedTitlePrefix: 'हर',
+      connectedTitleHighlight: 'आवेदन',
+      connectedTitleSuffix: 'में पूर्ण आत्मविश्वास महसूस करें',
+      connectedSubtitle: 'कभी भी समय-सीमा या पात्रता की शर्त न भूलें। स्कीममैच आपके व्यवसाय और आवेदनों को पूरी तरह व्यवस्थित रखता है।',
+      dashboardTitleLine1: 'सब कुछ एक ही वर्कस्पेस में,',
+      dashboardTitleHighlight: 'जिसका उपयोग करना अत्यंत सरल है',
+      dashboardSubtitle: 'एक आधुनिक और तीव्र मंच, जो सरकारी योजना चयन और बैंक-स्वीकार्य डीपीआर तैयार करने में आपकी सहायता करता है।',
+      bottomCtaHeadingLine1: 'यही सही समय है।',
+      bottomCtaHeadingLine2: 'स्कीममैच से जुड़ें',
+      bottomCtaSubheading: 'आपके उद्यम में आपके भविष्य को बदलने की शक्ति है। सब्सिडी या लालफीताशाही के कारण अवसर न गंवाएं। आज ही स्कीममैच से जुड़कर अपनी सफलता सुनिश्चित करें।',
+      bottomCtaSignUp: 'निःशुल्क पंजीकरण करें',
+      bottomCtaDownload: 'योजना मार्गदर्शिका डाउनलोड करें',
+      bottomCtaOpenWorkspace: 'वर्कस्पेस खोलें'
+    },
     tabs: {
       matcher: 'एआई योजना मिलान',
       dpr: 'बैंक-प्रोजेक्ट रिपोर्ट (DPR)',
@@ -190,83 +294,253 @@ export const TRANSLATIONS: Record<SupportedLanguage, Translations> = {
       listenAudio: 'आवाज में विवरण सुनें'
     },
     copilot: {
-      title: 'स्कीममैच एआई वॉयस को-पायलट',
+      title: 'साथी (Saathi) AI',
       subtitle: 'हिंदी, अंग्रेजी या हिंग्लिश में पूछें',
       placeholder: 'जैसे: मैं वाराणसी से एससी महिला बुनकर हूं, मुझे ₹2.5 लाख ऋण चाहिए...',
       sendBtn: 'पूछें',
       listening: 'आपकी आवाज सुनी जा रही है...'
     }
   },
-  ta: {
-    appTitle: 'SchemeMatch (ஸ்கீம்ம್ಯಾட்ச்)',
-    appSubTitle: 'விளிம்புநிலை தொழில்முனைவோருக்கான AI திட்ட பொருத்துதல் தளம்',
-    sponsoringMinistry: 'சமூக நீதி மற்றும் அதிகாரமளித்தல் அமைச்சகம் (MoSJE)',
-    sihProblemStatement: 'விளிம்புநிலை தொழில்முனைவோருக்கான திட்ட பொருத்தம்',
+
+  // -------------------------------------------------------------
+  // 3. TELUGU (తెలుగు) — Replaced Tamil (ta -> te)
+  // -------------------------------------------------------------
+  te: {
+    appTitle: 'SchemeMatch (స్కీమ్‌మ్యాచ్)',
+    appSubTitle: 'అణగారిన వర్గాల వ్యవస్థాపకుల కోసం AI ఆధారిత పథకాల గుర్తింపు & దరఖాస్తు సహాయం',
+    sponsoringMinistry: 'సామాజిక న్యాయం మరియు సాధికారత మంత్రిత్వ శాఖ (MoSJE)',
+    sihProblemStatement: 'అణగారిన వ్యవస్థాపకుల కోసం AI ఆధారిత పథక సరిపోలిక',
+    nav: {
+      signIn: 'సైన్ ఇన్',
+      createAccount: 'ఉచిత ఖాతా తెరవండి',
+      landingPage: 'హోమ్‌పేజీ',
+      workspace: 'వర్క్‌స్పేస్ ప్రో',
+      signOut: 'లాగ్ అవుట్'
+    },
+    landing: {
+      heroKicker: 'మీ నూతన ప్రభుత్వ పథకాల వేదిక',
+      heroHeadingLine1: 'మీ వ్యాపారానికి సరిపోయే',
+      heroHeadingLine2: 'ఉత్తమ ప్రభుత్వ పథకం',
+      heroCursorTag: 'సాథీ AI',
+      heroSubtitle: 'స్కీమ్‌మ్యాచ్ ప్రభుత్వ పథకాలను అణగారిన పారిశ్రామికవేత్తల కోసం ఆధునిక వర్క్‌స్పేస్‌గా మారుస్తుంది, తద్వారా సులభంగా మూలధన రుణాలు పొందవచ్చు.',
+      superpoweredTitleLine1: 'ప్రతి పథక సరిపోలికలోనూ',
+      superpoweredTitleLine2: 'అద్భుతమైన',
+      superpoweredTitleLine3: 'సహాయక శక్తి',
+      superpoweredSubtitle: 'స్కీమ్‌మ్యాచ్ ప్రభుత్వ పథకాలను బ్యాంక్-ఆమోదిత వర్క్‌స్పేస్‌గా మార్చి, సెకన్లలో సరైన మూలధన సబ్సిడీ మరియు రుణ మంజూరును సులభతరం చేస్తుంది.',
+      connectedTitlePrefix: 'ప్రతి',
+      connectedTitleHighlight: 'దరఖాస్తును',
+      connectedTitleSuffix: 'పూర్తి ఆత్మవిశ్వాసంతో సమర్పించండి',
+      connectedSubtitle: 'గడువు తేదీలు లేదా అర్హత నిబంధనలను ఎప్పటికీ మర్చిపోకండి. స్కీమ్‌మ్యాచ్ మీ దరఖాస్తులను సంపూర్ణంగా నిర్వహిస్తుంది.',
+      dashboardTitleLine1: 'అన్నీ ఒకే వర్క్‌స్పేస్‌లో,',
+      dashboardTitleHighlight: 'ఉపయోగించడం ఎంతో సులభం',
+      dashboardSubtitle: 'ప్రభుత్వ పథకాల సరిపోలిక మరియు బ్యాంక్ డీపీఆర్ నివేదికలను వేగంగా సిద్ధం చేసే నూతన ఆధునిక వేదిక.',
+      bottomCtaHeadingLine1: 'ఇదే సరైన సమయం.',
+      bottomCtaHeadingLine2: 'స్కీమ్‌మ్యాచ్‌తో ప్రారంభించండి',
+      bottomCtaSubheading: 'మీ వ్యాపారానికి మీ భవిష్యత్తును మార్చే శక్తి ఉంది. సబ్సిడీలను కోల్పోకండి లేదా కార్యాలయ జాప్యాలకు గురికాకండి. ఈరోజే ఉచితంగా నమోదు చేసుకోండి.',
+      bottomCtaSignUp: 'ఉచితంగా సైన్ అప్ చేయండి',
+      bottomCtaDownload: 'పథక గైడ్ డౌన్‌లోడ్ చేసుకోండి',
+      bottomCtaOpenWorkspace: 'వర్క్‌స్పేస్ తెరవండి'
+    },
     tabs: {
-      matcher: 'AI திட்ட தேடல்',
-      dpr: 'வங்கி திட்ட அறிக்கை (DPR)',
-      documents: 'ஆவண தயார்நிலை ஸ்கேனர்',
-      comparison: 'திட்ட ஒப்பீடு',
-      roadmap: 'விண்ணப்ப வழிகாட்டி'
+      matcher: 'AI పథక సరిపోలిక',
+      dpr: 'బ్యాంక్ ప్రాజెక్ట్ నివేదిక (DPR)',
+      documents: 'పత్రాల సంసిద్ధత స్కానర్',
+      comparison: 'పథకాల పోలిక',
+      roadmap: 'దరఖాస్తు మార్గదర్శి'
     },
     hero: {
-      badge: 'தேசிய திட்ட நுண்ணறிவு தளம்',
-      titleMain: 'விளிம்புநிலை தொழில்முனைவோருக்கான',
-      titleHighlight: 'அறிவார்ந்த AI அரசு திட்ட தீர்வு',
-      tagline: '35% வரை மானியம், 4% குறைந்த வட்டி கடன், உடனடி வங்கி DPR தயாரிப்பு மற்றும் குரல் உதவி.',
-      personaTitle: 'உண்மையான தொழில்முனைவோர் சுயவிவரங்கள்:',
-      stat1Label: 'திட்டங்கள்',
-      stat2Label: 'அதிகபட்ச மானியம்',
-      stat3Label: 'குறைந்த வட்டி',
-      stat4Label: 'அரசு கழகங்கள்'
+      badge: 'జాతీయ పథక సమాచార వేదిక',
+      titleMain: 'అణగారిన వ్యవస్థాపకులకు సాధికారత,',
+      titleHighlight: 'AI పథక సమాచార వ్యవస్థతో',
+      tagline: '35% వరకు మూలధన సబ్సిడీ, 4% రాయితీ వడ్డీ రేటు, బ్యాంక్ ఆమోదిత ప్రాజెక్ట్ నివేదిక మరియు మీ భాషలో సహాయం.',
+      personaTitle: 'వాస్తవ వ్యవస్థాపక ప్రొఫైల్స్ చూడండి:',
+      stat1Label: 'లభ్యమయ్యే పథకాలు',
+      stat2Label: 'గరిష్ట సబ్సిడీ',
+      stat3Label: 'కనిష్ట వడ్డీ రేటు',
+      stat4Label: 'MoSJE కార్పొరేషన్లు'
     },
     wizard: {
-      title: 'தனிப்பயனாக்கப்பட்ட தகுதி மதிப்பீடு',
-      subtitle: 'உங்களுக்கான அரசு திட்டங்கள் மற்றும் மானியங்களை கண்டறிய வினாக்களுக்கு பதிலளிக்கவும்.',
-      personalTab: '1. சுயவிவரம் & பிரிவு',
-      businessTab: '2. தொழில் & மூலதனம்',
-      docsTab: '3. ஆவணங்கள்',
-      nameLabel: 'முழு பெயர்',
-      ageLabel: 'வயது',
-      categoryLabel: 'சமூக பிரிவு',
-      genderLabel: 'பாலினம்',
-      locationLabel: 'வசிப்பிடம் (கிராமம் / நகரம்)',
-      incomeLabel: 'குடும்ப ஆண்டு வருமானம் (₹)',
-      sectorLabel: 'தொழில் துறை',
-      loanLabel: 'தேவையான கடன் தொகை (₹)',
-      projectCostLabel: 'மொத்த திட்ட மதிப்பீடு (₹)',
-      marginLabel: 'சொந்த முதலீடு (₹)',
-      matchButton: 'தகுதியான திட்டங்களை காண்க',
-      calculatingText: 'திட்டங்கள் பகுப்பாய்வு செய்யப்படுகின்றன...'
+      title: 'వ్యక్తిగత అర్హత అంచనా',
+      subtitle: 'కొన్ని ప్రశ్నలకు సమాధానమిచ్చి మీకు సరిపోయే ప్రభుత్వ పథకాలు మరియు సబ్సిడీలను కనుగొనండి.',
+      personalTab: '1. వ్యక్తిగత వివరాలు & వర్గం',
+      businessTab: '2. వ్యాపారం & మూలధన అవసరం',
+      docsTab: '3. అందుబాటులో ఉన్న పత్రాలు',
+      nameLabel: 'పూర్తి పేరు',
+      ageLabel: 'వయస్సు',
+      categoryLabel: 'సామాజిక వర్గం',
+      genderLabel: 'లింగం',
+      locationLabel: 'ప్రాంతం (గ్రామీణ / పట్టణ)',
+      incomeLabel: 'వార్షిక కుటుంబ ఆదాయం (₹)',
+      sectorLabel: 'వ్యాపార రంగం / వృత్తి',
+      loanLabel: 'అవసరమైన రుణ మొత్తం (₹)',
+      projectCostLabel: 'మొత్తం ప్రాజెక్ట్ వ్యయం (₹)',
+      marginLabel: 'స్వంత పెట్టుబడి (₹)',
+      matchButton: 'అర్హతగల పథకాలు & సబ్సిడీలను లెక్కించండి',
+      calculatingText: '23+ పథకాలను విశ్లేషిస్తోంది...'
     },
     results: {
-      topMatchesTitle: 'உங்களுக்கான சிறந்த அரசு திட்டங்கள்',
-      matchScore: 'பொருத்தம் சதவீதம்',
-      maxSubsidy: 'அரசு மானிய தொகை',
-      ownContribution: 'சொந்த பங்களிப்பு',
-      estimatedEmi: 'மாதாந்திர தவணை (EMI)',
-      whyMatched: 'பொருந்துவதற்கான காரணங்கள்',
-      conditions: 'பூர்த்தி செய்ய வேண்டிய நிபந்தனைகள்',
-      missingDocs: 'தேவைப்படும் ஆவணங்கள்',
-      applyPortal: 'அதிகாரப்பூர்வ போர்டல்',
-      viewDetails: 'முழு விவரங்கள்',
-      addToCompare: 'ஒப்பிடுக',
-      inComparison: 'ஒப்பீட்டில் சேர்க்கப்பட்டது',
-      listenAudio: 'குரல் வழிகாட்டல்'
+      topMatchesTitle: 'మీ కోసం ఉత్తమంగా సరిపోయే పథకాలు',
+      matchScore: 'సరిపోలిక శాతం',
+      maxSubsidy: 'అర్హతగల సబ్సిడీ',
+      ownContribution: 'స్వంత వాటా',
+      estimatedEmi: 'అంచనా వేసిన నెలవారీ EMI',
+      whyMatched: 'పథకం సరిపోవడానికి కారణాలు',
+      conditions: 'నెరవేర్చవలసిన నిబంధనలు',
+      missingDocs: 'అవసరమైన పత్రాలు',
+      applyPortal: 'అధికారిక పోర్టల్ లింక్',
+      viewDetails: 'పూర్తి వివరాలు',
+      addToCompare: 'పోల్చి చూడండి',
+      inComparison: 'పోలికలో జోడించబడింది',
+      listenAudio: 'ఆడియో వినండి'
     },
     copilot: {
-      title: 'SchemeMatch குரல் உதவியாளர்',
-      subtitle: 'உங்கள் மொழியில் கேளுங்கள்',
-      placeholder: 'எ.கா. நான் சுயதொழில் தொடங்க ₹2 லட்சம் கடன் வேண்டும்...',
-      sendBtn: 'கேள்வி',
-      listening: 'குரல் கேட்கிறது...'
+      title: 'సాథీ (Saathi) AI',
+      subtitle: 'తెలుగు లేదా ఇంగ్లీషులో అడగండి',
+      placeholder: 'ఉదా: నాకు వారణాసిలో నేత వ్యాపారానికి ₹2.5 లక్షల రుణం కావాలి...',
+      sendBtn: 'అడగండి',
+      listening: 'మీ స్వరం వింటోంది...'
     }
   },
+
+  // -------------------------------------------------------------
+  // 4. PUNJABI (ਪੰਜਾਬੀ) — Newly Added (pa)
+  // -------------------------------------------------------------
+  pa: {
+    appTitle: 'SchemeMatch (ਸਕੀਮਮੈਚ)',
+    appSubTitle: 'ਵਾਂਝੇ ਉੱਦਮੀਆਂ ਲਈ AI-ਅਧਾਰਿਤ ਸਰਕਾਰੀ ਸਕੀਮ ਚੋਣ ਅਤੇ ਸਹਾਇਤਾ ਮੰਚ',
+    sponsoringMinistry: 'ਸਮਾਜਿਕ ਨਿਆਂ ਅਤੇ ਅਧਿਕਾਰਤਾ ਮੰਤਰਾਲਾ (MoSJE) ਅਤੇ MSME',
+    sihProblemStatement: 'ਵਾਂਝੇ ਉੱਦਮੀਆਂ ਲਈ AI-ਅਧਾਰਿਤ ਸਕੀਮ ਮੈਚਿੰਗ',
+    nav: {
+      signIn: 'ਸਾਈਨ ਇਨ',
+      createAccount: 'ਮੁਫ਼ਤ ਖਾਤਾ ਬਣਾਓ',
+      landingPage: 'ਮੁੱਖ ਪੰਨਾ',
+      workspace: 'ਵਰਕਸਪੇਸ ਪ੍ਰੋ',
+      signOut: 'ਲਾਗ ਆਊਟ'
+    },
+    landing: {
+      heroKicker: 'ਤੁਹਾਡਾ ਨਵਾਂ ਸਰਕਾਰੀ ਸਕੀਮ ਇੰਜਨ',
+      heroHeadingLine1: 'ਉਹ ਸਕੀਮ',
+      heroHeadingLine2: 'ਜੋ ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ ਦੇ ਅਨੁਕੂਲ ਹੈ',
+      heroCursorTag: 'ਸਾਥੀ AI',
+      heroSubtitle: 'ਸਕੀਮਮੈਚ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਨੂੰ ਵਾਂਝੇ ਉੱਦਮੀਆਂ ਲਈ ਇੱਕ ਆਧੁਨਿਕ ਵਰਕਸਪੇਸ ਵਿੱਚ ਬਦਲਦਾ ਹੈ ਤਾਂ ਜੋ ਉਹ ਆਸਾਨੀ ਨਾਲ ਕਰਜ਼ਾ ਅਤੇ ਸਬਸਿਡੀ ਪ੍ਰਾਪਤ ਕਰ ਸਕਣ।',
+      superpoweredTitleLine1: 'ਹਰ ਸਕੀਮ ਮੈਚ ਵਿੱਚ',
+      superpoweredTitleLine2: 'ਇੱਕ ਸ਼ਕਤੀਸ਼ਾਲੀ ਤੇ ਸਪਸ਼ਟ',
+      superpoweredTitleLine3: 'ਸਹਿਯੋਗ',
+      superpoweredSubtitle: 'ਸਕੀਮਮੈਚ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਨੂੰ ਬੈਂਕ-ਮਨਜ਼ੂਰ ਵਰਕਸਪੇਸ ਵਿੱਚ ਬਦਲ ਕੇ ਕੁਝ ਹੀ ਸਕਿੰਟਾਂ ਵਿੱਚ ਵੱਧ ਤੋਂ ਵੱਧ ਸਬਸਿਡੀ ਅਤੇ ਕਰਜ਼ਾ ਮਨਜ਼ੂਰੀ ਯਕੀਨੀ ਬਣਾਉਂਦਾ ਹੈ।',
+      connectedTitlePrefix: 'ਹਰ',
+      connectedTitleHighlight: 'ਅਰਜ਼ੀ',
+      connectedTitleSuffix: 'ਪੂਰੇ ਵਿਸ਼ਵਾਸ ਨਾਲ ਜਮ੍ਹਾਂ ਕਰੋ',
+      connectedSubtitle: 'ਕਦੇ ਵੀ ਅੰਤਿਮ ਮਿਤੀ ਜਾਂ ਯੋਗਤਾ ਸ਼ਰਤਾਂ ਨਾ ਭੁੱਲੋ। ਸਕੀਮਮੈਚ ਤੁਹਾਡੇ ਕਾਰੋਬਾਰ ਅਤੇ ਅਰਜ਼ੀਆਂ ਨੂੰ ਪੂਰੀ ਤਰ੍ਹਾਂ ਸੰਗਠਿਤ ਰੱਖਦਾ ਹੈ।',
+      dashboardTitleLine1: 'ਸਭ ਕੁਝ ਇੱਕੋ ਵਰਕਸਪੇਸ ਵਿੱਚ,',
+      dashboardTitleHighlight: 'ਜਿਸਨੂੰ ਵਰਤਣਾ ਬੇਹੱਦ ਆਸਾਨ ਹੈ',
+      dashboardSubtitle: 'ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਦੀ ਚੋਣ ਅਤੇ ਬੈਂਕ-ਮਨਜ਼ੂਰ ਡੀਪੀਆਰ ਰਿਪੋਰਟ ਤਿਆਰ ਕਰਨ ਲਈ ਇੱਕ ਤੇਜ਼ ਅਤੇ ਆਧੁਨਿਕ ਮੰਚ।',
+      bottomCtaHeadingLine1: 'ਇਹੀ ਸਹੀ ਸਮਾਂ ਹੈ।',
+      bottomCtaHeadingLine2: 'ਸਕੀਮਮੈਚ ਨਾਲ ਜੁੜੋ',
+      bottomCtaSubheading: 'ਤੁਹਾਡੇ ਉੱਦਮ ਵਿੱਚ ਤੁਹਾਡਾ ਭਵਿੱਖ ਬਦਲਣ ਦੀ ਸਮਰੱਥਾ ਹੈ। ਸਬਸਿਡੀ ਗੁਆਉਣ ਜਾਂ ਸਰਕਾਰੀ ਦੇਰੀ ਤੋਂ ਬਚੋ। ਅੱਜ ਹੀ ਮੁਫ਼ਤ ਰਜਿਸਟਰ ਕਰੋ।',
+      bottomCtaSignUp: 'ਮੁਫ਼ਤ ਰਜਿਸਟਰ ਕਰੋ',
+      bottomCtaDownload: 'ਸਕੀਮ ਗਾਈਡ ਡਾਊਨਲੋਡ ਕਰੋ',
+      bottomCtaOpenWorkspace: 'ਵਰਕਸਪੇਸ ਖੋਲ੍ਹੋ'
+    },
+    tabs: {
+      matcher: 'AI ਸਕੀਮ ਮੈਚਰ',
+      dpr: 'ਬੈਂਕ ਪ੍ਰੋਜੈਕਟ ਰਿਪੋਰਟ (DPR)',
+      documents: 'ਦਸਤਾਵੇਜ਼ ਤਿਆਰੀ ਸਕੈਨਰ',
+      comparison: 'ਸਕੀਮ ਤੁਲਨਾ',
+      roadmap: 'ਅਰਜ਼ੀ ਪ੍ਰਕਿਰਿਆ ਗਾਈਡ'
+    },
+    hero: {
+      badge: 'ਰਾਸ਼ਟਰੀ ਸਕੀਮ ਜਾਣਕਾਰੀ ਮੰਚ',
+      titleMain: 'ਵਾਂਝੇ ਉੱਦਮੀਆਂ ਦਾ ਸਸ਼ਕਤੀਕਰਨ,',
+      titleHighlight: 'ਸਮਾਰਟ AI ਸਕੀਮ ਜਾਣਕਾਰੀ ਨਾਲ',
+      tagline: '35% ਤੱਕ ਪੂੰਜੀ ਸਬਸਿਡੀ, 4% ਰਿਆਇਤੀ ਵਿਆਜ ਦਰ, ਬੈਂਕ-ਮਨਜ਼ੂਰ ਪ੍ਰੋਜੈਕਟ ਰਿਪੋਰਟ ਅਤੇ ਆਪਣੀ ਭਾਸ਼ਾ ਵਿੱਚ ਸਹਾਇਤਾ।',
+      personaTitle: 'ਅਸਲ ਉੱਦਮੀ ਉਦਾਹਰਣਾਂ ਦੇਖੋ:',
+      stat1Label: 'ਸੂਚੀਬੱਧ ਸਕੀਮਾਂ',
+      stat2Label: 'ਵੱਧ ਤੋਂ ਵੱਧ ਸਬਸਿਡੀ',
+      stat3Label: 'ਘੱਟੋ-ਘੱਟ ਵਿਆਜ ਦਰ',
+      stat4Label: 'MoSJE ਕਾਰਪੋਰੇਸ਼ਨਾਂ'
+    },
+    wizard: {
+      title: 'ਨਿੱਜੀ ਯੋਗਤਾ ਮੁਲਾਂਕਣ',
+      subtitle: 'ਕੁਝ ਆਸਾਨ ਸਵਾਲਾਂ ਦੇ ਜਵਾਬ ਦਿਓ ਅਤੇ ਆਪਣੇ ਲਈ ਸਭ ਤੋਂ ਢੁਕਵੀਆਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਅਤੇ ਸਬਸਿਡੀਆਂ ਦੀ ਜਾਣਕਾਰੀ ਪ੍ਰਾਪਤ ਕਰੋ।',
+      personalTab: '੧. ਨਿੱਜੀ ਵੇਰਵੇ ਅਤੇ ਵਰਗ',
+      businessTab: '੨. ਕਾਰੋਬਾਰ ਅਤੇ ਕਰਜ਼ਾ ਲੋੜ',
+      docsTab: '੩. ਉਪਲਬਧ ਦਸਤਾਵੇਜ਼',
+      nameLabel: 'ਪੂਰਾ ਨਾਮ',
+      ageLabel: 'ਉਮਰ (ਸਾਲ)',
+      categoryLabel: 'ਸਮਾਜਿਕ ਵਰਗ',
+      genderLabel: 'ਲਿੰਗ',
+      locationLabel: 'ਖੇਤਰ (ਪੇਂਡੂ / ਸ਼ਹਿਰੀ)',
+      incomeLabel: 'ਸਾਲਾਨਾ ਪਰਿਵਾਰਕ ਆਮਦਨ (₹)',
+      sectorLabel: 'ਕਾਰੋਬਾਰੀ ਖੇਤਰ / ਕਿੱਤਾ',
+      loanLabel: 'ਲੋੜੀਂਦੀ ਕਰਜ਼ਾ ਰਕਮ (₹)',
+      projectCostLabel: 'ਕੁੱਲ ਪ੍ਰੋਜੈਕਟ ਲਾਗਤ (₹)',
+      marginLabel: 'ਆਪਣਾ ਨਿਵੇਸ਼ (₹)',
+      matchButton: 'ਯੋਗ ਸਕੀਮਾਂ ਅਤੇ ਸਬਸਿਡੀਆਂ ਦੇਖੋ',
+      calculatingText: '23+ ਸਕੀਮਾਂ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...'
+    },
+    results: {
+      topMatchesTitle: 'ਤੁਹਾਡੇ ਲਈ ਸਭ ਤੋਂ ਵਧੀਆ ਸਿਫਾਰਸ਼ ਕੀਤੀਆਂ ਸਕੀਮਾਂ',
+      matchScore: 'ਮੈਚ ਸੰਭਾਵਨਾ',
+      maxSubsidy: 'ਅਨੁਮਾਨਿਤ ਸਰਕਾਰੀ ਸਬਸਿਡੀ',
+      ownContribution: 'ਆਪਣਾ ਹਿੱਸਾ',
+      estimatedEmi: 'ਅਨੁਮਾਨਿਤ ਮਾਸਿਕ ਕਿਸ਼ਤ (EMI)',
+      whyMatched: 'ਸਕੀਮ ਮੈਚ ਹੋਣ ਦੇ ਕਾਰਨ',
+      conditions: 'ਜ਼ਰੂਰੀ ਸ਼ਰਤਾਂ',
+      missingDocs: 'ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
+      applyPortal: 'ਅਧਿਕਾਰਤ ਪੋਰਟਲ ਲਿੰਕ',
+      viewDetails: 'ਪੂਰਾ ਵੇਰਵਾ ਦੇਖੋ',
+      addToCompare: 'ਤੁਲਨਾ ਕਰੋ',
+      inComparison: 'ਤੁਲਨਾ ਵਿੱਚ ਸ਼ਾਮਲ',
+      listenAudio: 'ਆਵਾਜ਼ ਸੁਣੋ'
+    },
+    copilot: {
+      title: 'ਸਾਥੀ (Saathi) AI',
+      subtitle: 'ਪੰਜਾਬੀ ਜਾਂ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਪੁੱਛੋ',
+      placeholder: 'ਉਦਾਹਰਣ ਵਜੋਂ: ਮੈਨੂੰ ਛੋਟੇ ਕਾਰੋਬਾਰ ਲਈ ₹2 ਲੱਖ ਦਾ ਕਰਜ਼ਾ ਚਾਹੀਦਾ ਹੈ...',
+      sendBtn: 'ਪੁੱਛੋ',
+      listening: 'ਤੁਹਾਡੀ ਆਵਾਜ਼ ਸੁਣੀ ਜਾ ਰਹੀ ਹੈ...'
+    }
+  },
+
+  // -------------------------------------------------------------
+  // 5. MARATHI (मराठी)
+  // -------------------------------------------------------------
   mr: {
     appTitle: 'SchemeMatch (स्कीममॅच)',
     appSubTitle: 'वंचित व दुर्बल घटकांतील उद्योजकांसाठी एआय योजना निवड व सहाय्य',
     sponsoringMinistry: 'सामाजिक न्याय व सक्षमीकरण मंत्रालय (MoSJE) व MSME',
     sihProblemStatement: 'दुर्बल घटकांतील उद्योजकांसाठी एआय योजना निवड',
+    nav: {
+      signIn: 'साइन इन करा',
+      createAccount: 'मोफत खाते उघडा',
+      landingPage: 'मुख्य पृष्ठ',
+      workspace: 'वर्कस्पेस प्रो',
+      signOut: 'लॉग आउट'
+    },
+    landing: {
+      heroKicker: 'तुमचे नवीन शासकीय योजना इंजिन',
+      heroHeadingLine1: 'ती शासकीय योजना',
+      heroHeadingLine2: 'जी तुमच्या व्यवसायाला योग्य आहे',
+      heroCursorTag: 'साथी AI',
+      heroSubtitle: 'स्कीममॅच शासकीय योजनांना दुर्बल घटकांतील नवउद्योजकांसाठी एका आधुनिक वर्कस्पेसमध्ये बदलते जेणेकरून सहज भांडवल उपलब्ध होईल.',
+      superpoweredTitleLine1: 'प्रत्येक योजना जुळणीत',
+      superpoweredTitleLine2: 'एक सक्षम व पारदर्शक',
+      superpoweredTitleLine3: 'सहकार्य',
+      superpoweredSubtitle: 'स्कीममॅच शासकीय योजनांना बँक-मान्य वर्कस्पेसमध्ये रूपांतरित करून काही सेकंदांत कमाल भांडवली अनुदान आणि कर्ज मंजुरी मिळवून देते.',
+      connectedTitlePrefix: 'प्रत्येक',
+      connectedTitleHighlight: 'अर्ज',
+      connectedTitleSuffix: 'पूर्ण आत्मविश्वासाने सादर करा',
+      connectedSubtitle: 'मुदत किंवा पात्रतेची अट कधीही विसरू नका. स्कीममॅच तुमचे अर्ज व व्यवसाय पूर्णपणे व्यवस्थापित ठेवते.',
+      dashboardTitleLine1: 'सर्व काही एकाच वर्कस्पेसमध्ये,',
+      dashboardTitleHighlight: 'वापरण्यास अत्यंत सोपे',
+      dashboardSubtitle: 'शासकीय योजनांची निवड आणि बँक-मान्य डीपीआर अहवाल तयार करण्यासाठी एक आधुनिक व जलद व्यासपीठ.',
+      bottomCtaHeadingLine1: 'हीच योग्य वेळ आहे.',
+      bottomCtaHeadingLine2: 'स्कीममॅचशी जोडा',
+      bottomCtaSubheading: 'तुमच्या उद्योगात तुमचे भविष्य घडवण्याची ताकद आहे. अनुदान गमावू नका. आजच मोफत नोंदणी करा आणि व्यवसायाला नवी दिशा द्या.',
+      bottomCtaSignUp: 'मोफत नोंदणी करा',
+      bottomCtaDownload: 'योजना मार्गदर्शिका डाउनलोड करा',
+      bottomCtaOpenWorkspace: 'वर्कस्पेस उघडा'
+    },
     tabs: {
       matcher: 'एआय योजना शोध',
       dpr: 'बँक-प्रकल्प अहवाल (DPR)',
@@ -320,18 +594,53 @@ export const TRANSLATIONS: Record<SupportedLanguage, Translations> = {
       listenAudio: 'माहिती ऐका'
     },
     copilot: {
-      title: 'SchemeMatch व्हॉईस सहाय्यक',
+      title: 'साथी (Saathi) AI',
       subtitle: 'मराठी किंवा इंग्रजीत विचारा',
       placeholder: 'उदा. मला शिलाई कामासाठी २ लाख रुपये कर्ज हवे आहे...',
       sendBtn: 'विचारा',
       listening: 'आवाज ऐकला जात आहे...'
     }
   },
+
+  // -------------------------------------------------------------
+  // 6. BENGALI (বাংলা)
+  // -------------------------------------------------------------
   bn: {
     appTitle: 'SchemeMatch (স্কিমম্যাচ)',
     appSubTitle: 'প্রান্তিক উদ্যোক্তাদের জন্য এআই ভিত্তিক সরকারি স্কিম নির্বাচন ও সহায়তা',
     sponsoringMinistry: 'সামাজিক ন্যায়বিচার ও ক্ষমতায়ন মন্ত্রক (MoSJE)',
     sihProblemStatement: 'প্রান্তিক উদ্যোক্তাদের জন্য স্কিম নির্বাচন',
+    nav: {
+      signIn: 'সাইন ইন',
+      createAccount: 'বিনামূল্যে অ্যাকাউন্ট তৈরি করুন',
+      landingPage: 'হোমপেজ',
+      workspace: 'ওয়ার্কস্পেস প্রো',
+      signOut: 'লগ আউট'
+    },
+    landing: {
+      heroKicker: 'আপনার নতুন সরকারি স্কিম ইঞ্জিন',
+      heroHeadingLine1: 'সেই সরকারি স্কিম',
+      heroHeadingLine2: 'যা আপনার ব্যবসার সাথে মেলে',
+      heroCursorTag: 'সাথী AI',
+      heroSubtitle: 'স্কিমম্যাচ প্রান্তিক উদ্যোক্তাদের জন্য সরকারি স্কিমগুলোকে একটি আধুনিক প্ল্যাটফর্মে পরিণত করে সহজে মূলধন ঋণ পেতে সহায়তা করে।',
+      superpoweredTitleLine1: 'প্রতিটি স্কিম মেলানোর মধ্যে',
+      superpoweredTitleLine2: 'একটি শক্তিশালী ও স্পষ্ট',
+      superpoweredTitleLine3: 'সহায়তা',
+      superpoweredSubtitle: 'স্কিমম্যাচ সরকারি স্কিমগুলোকে ব্যাংক-অনুমোদিত প্ল্যাটফর্মে রূপান্তরিত করে কয়েক সেকেন্ডের মধ্যে অনুদান ও ঋণ মঞ্জুরি সহজতর করে।',
+      connectedTitlePrefix: 'প্রতিটি',
+      connectedTitleHighlight: 'আবেদন',
+      connectedTitleSuffix: 'সম্পূর্ণ আত্মবিশ্বাসের সাথে জমা দিন',
+      connectedSubtitle: 'কখনোই সময়সীমা বা যোগ্যতার শর্ত ভুলে যাবেন না। স্কিমম্যাচ আপনার আবেদনগুলোকে পুরোপুরি সুসংগঠিত রাখে।',
+      dashboardTitleLine1: 'সবকিছু একই প্ল্যাটফর্মে,',
+      dashboardTitleHighlight: 'ব্যবহার করা অত্যন্ত সহজ',
+      dashboardSubtitle: 'সরকারি স্কিম নির্বাচন এবং ব্যাংক-অনুমোদিত ডিপিআর রিপোর্ট দ্রুত তৈরি করার একটি আধুনিক ও দ্রুত প্ল্যাটফর্ম।',
+      bottomCtaHeadingLine1: 'এটাই সঠিক সময়।',
+      bottomCtaHeadingLine2: 'স্কিমম্যাচের সাথে যুক্ত হন',
+      bottomCtaSubheading: 'আপনার উদ্যোগের আপনার ভবিষ্যৎ গড়ার ক্ষমতা রয়েছে। সরকারি অনুদান হাতছাড়া করবেন না। আজই বিনামূল্যে যুক্ত হন।',
+      bottomCtaSignUp: 'বিনামূল্যে সাইন আপ করুন',
+      bottomCtaDownload: 'স্কিম গাইড ডাউনলোড করুন',
+      bottomCtaOpenWorkspace: 'ওয়ার্কস্পেস খুলুন'
+    },
     tabs: {
       matcher: 'এআই স্কিম অনুসন্ধান',
       dpr: 'ব্যাংক প্রকল্প রিপোর্ট (DPR)',
@@ -351,7 +660,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Translations> = {
       stat4Label: 'MoSJE কর্পোরেশন'
     },
     wizard: {
-      title: 'ব্যক্তিগত যোগ্যতা মূল্যায়ন',
+      title: 'ব্যক্তিগত योग्यता মূল্যায়ন',
       subtitle: 'আপনার ব্যবসায়ের উপযোগী সরকারি স্কিম এবং অনুদান খুঁজতে তথ্য দিন।',
       personalTab: '১. ব্যক্তিগত তথ্য ও শ্রেণি',
       businessTab: '২. ব্যবসা ও ঋণ চাহিদা',
@@ -385,7 +694,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Translations> = {
       listenAudio: 'অডিও শুনুন'
     },
     copilot: {
-      title: 'SchemeMatch ভয়েস সহকারী',
+      title: 'Saathi AI (ভয়েস সহকারী)',
       subtitle: 'আপনার ভাষায় প্রশ্ন করুন',
       placeholder: 'যেমন: আমি তাঁত শিল্পের জন্য ২ লাখ টাকা ঋণ চাই...',
       sendBtn: 'জানুন',

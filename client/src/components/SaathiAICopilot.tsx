@@ -13,8 +13,8 @@ export const SaathiAICopilot: React.FC = () => {
     {
       id: 'msg-welcome',
       sender: 'assistant',
-      text: 'Namaste! I am SchemeMatch AI, your personalized scheme discovery copilot. Tell me about your work, where you live, or what funds you need, and I will find the best government subsidies and 4% concessional credit for you.',
-      hindiText: 'नमस्ते! मैं स्कीममैच (SchemeMatch) एआई हूँ। मुझे अपने कार्य, क्षेत्र और ऋण आवश्यकता के बारे में बताएं, मैं आपके लिए सर्वश्रेष्ठ सरकारी सब्सिडी और रियायती ऋण खोजूँगा।',
+      text: 'Namaste! I am Saathi AI, your personalized scheme discovery copilot. Tell me about your work, where you live, or what funds you need, and I will find the best government subsidies and 4% concessional credit for you.',
+      hindiText: 'नमस्ते! मैं साथी (Saathi) AI हूँ। मुझे अपने कार्य, क्षेत्र और ऋण आवश्यकता के बारे में बताएं, मैं आपके लिए सर्वश्रेष्ठ सरकारी सब्सिडी और रियायती ऋण खोजूँगा।',
       timestamp: 'Just now',
       suggestedPrompts: [
         'What is PMEGP subsidy for rural SC women?',
@@ -146,11 +146,11 @@ export const SaathiAICopilot: React.FC = () => {
       <button
         className="saathi-floating-btn"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="Open SchemeMatch AI Copilot"
+        aria-label="Open Saathi AI"
         style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
       >
-        <img src="/logo.png" alt="SchemeMatch" style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#FFFFFF', padding: '1px' }} />
-        <span>Ask SchemeMatch</span>
+        <img src="/logo.png" alt="Saathi AI" style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#FFFFFF', padding: '1px' }} />
+        <span>Ask Saathi AI</span>
         <Sparkles size={16} />
       </button>
 
@@ -183,7 +183,7 @@ export const SaathiAICopilot: React.FC = () => {
                 {msg.sender === 'assistant' && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                     <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-saffron)' }}>
-                      SchemeMatch AI
+                      Saathi AI
                     </span>
                     <button
                       onClick={() => speakText(language === 'hi' && msg.hindiText ? msg.hindiText : msg.text)}

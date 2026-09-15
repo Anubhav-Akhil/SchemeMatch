@@ -1,9 +1,13 @@
 import React from 'react';
 import { useProfile } from '../context/ProfileContext';
+import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { ArrowRight, ShieldCheck, CheckCircle2, Download } from 'lucide-react';
 
 export const BottomCTA: React.FC = () => {
   const { setActiveTab } = useProfile();
+  const { user, navigateToAuth, setCurrentView } = useAuth();
+  const { t } = useLanguage();
 
   return (
     <footer className="landing-bottom-cta-section" id="bottom-cta">
@@ -11,28 +15,43 @@ export const BottomCTA: React.FC = () => {
         {/* Main CTA Block matching crop3 */}
         <div className="bottom-cta-card">
           <h2 className="bottom-cta-heading">
-            It's time. <br />
-            Get SchemeMatched
+            {t.landing.bottomCtaHeadingLine1} <br />
+            {t.landing.bottomCtaHeadingLine2}
           </h2>
 
           <p className="bottom-cta-subheading">
-            Your enterprise has the power to shape your future. Don't settle for missed capital subsidies or endless bureaucratic delays. <br />
-            Get SchemeMatched, and let's shape the future of entrepreneurship and capital access together.
+            {t.landing.bottomCtaSubheading}
           </p>
 
           <div className="bottom-cta-actions">
-            <button
-              className="bottom-cta-primary-btn"
-              onClick={() => setActiveTab('matcher')}
-            >
-              <span>Sign Up Free</span>
-            </button>
+            {user ? (
+              <button
+                className="bottom-cta-primary-btn"
+                onClick={() => setCurrentView('app')}
+              >
+                <span>{t.landing.bottomCtaOpenWorkspace} ({user.fullName.split(' ')[0]})</span>
+              </button>
+            ) : (
+              <button
+                className="bottom-cta-primary-btn"
+                onClick={() => navigateToAuth('register')}
+              >
+                <span>{t.landing.bottomCtaSignUp}</span>
+              </button>
+            )}
 
             <button
               className="bottom-cta-secondary-btn"
-              onClick={() => setActiveTab('dpr')}
+              onClick={() => {
+                if (user) {
+                  setCurrentView('app');
+                  setActiveTab('dpr');
+                } else {
+                  navigateToAuth('register');
+                }
+              }}
             >
-              <span>Download Scheme Guide</span>
+              <span>{t.landing.bottomCtaDownload}</span>
             </button>
           </div>
         </div>
