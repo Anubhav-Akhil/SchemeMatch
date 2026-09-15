@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserProfile, SchemeMatchResult, PersonaProfile, Scheme } from '../types';
+import { SAMPLE_PERSONAS } from '../data/samplePersonas';
 
 interface ProfileContextType {
   profile: UserProfile;
@@ -16,6 +17,10 @@ interface ProfileContextType {
   // Tabs & Navigation
   activeTab: 'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap';
   setActiveTab: (tab: 'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap') => void;
+  navigateToFeature: (
+    tab: 'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap',
+    opts?: { schemeId?: string; scroll?: boolean }
+  ) => void;
 
   // Comparison
   comparedSchemes: Scheme[];
@@ -66,14 +71,14 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
-  const [personas, setPersonas] = useState<PersonaProfile[]>([]);
+  const [personas, setPersonas] = useState<PersonaProfile[]>(SAMPLE_PERSONAS);
   const [selectedPersonaId, setSelectedPersonaId] = useState<string>('sunita-weaver');
   const [matchResults, setMatchResults] = useState<SchemeMatchResult[]>([]);
   const [otherSchemes, setOtherSchemes] = useState<SchemeMatchResult[]>([]);
   const [isLoadingMatches, setIsLoadingMatches] = useState<boolean>(false);
   const [totalPotentialSubsidy, setTotalPotentialSubsidy] = useState<number>(0);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap'>('matcher');
   const [comparedSchemes, setComparedSchemes] = useState<Scheme[]>([]);
   const [selectedSchemeModal, setSelectedSchemeModal] = useState<SchemeMatchResult | null>(null);
   const [uploadedDocIds, setUploadedDocIds] = useState<string[]>(['aadhaar-card', 'caste-certificate', 'bank-statement']);
@@ -85,7 +90,9 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
         const res = await fetch('http://localhost:5000/api/personas');
         if (res.ok) {
           const data = await res.json();
-          setPersonas(data.personas || []);
+          if (data.personas && data.personas.length > 0) {
+            setPersonas(data.personas);
+          }
         }
       } catch (err) {
         console.warn('Backend personas fetch failed, continuing with defaults:', err);
@@ -124,11 +131,36 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const selectPersona = (personaId: string) => {
     setSelectedPersonaId(personaId);
-    const found = personas.find((p) => p.id === personaId);
+    const found = personas.find((p) => p.id === personaId) || SAMPLE_PERSONAS.find((p) => p.id === personaId);
     if (found) {
       const newProfile: UserProfile = { ...found };
       setProfile(newProfile);
       runMatching(newProfile);
+    }
+  };
+
+  const navigateToFeature = (
+    tab: 'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap',
+    opts?: { schemeId?: string; scroll?: boolean }
+  ) => {
+    setActiveTab(tab);
+    if (opts?.schemeId) {
+      const found = matchResults.find(m => m.scheme.id === opts.schemeId) ||
+                    otherSchemes.find(m => m.scheme.id === opts.schemeId);
+      if (found) {
+        setSelectedSchemeModal(found);
+      }
+    }
+    if (opts?.scroll !== false) {
+      setTimeout(() => {
+        const el = document.getElementById('interactive-workspace');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          el.classList.remove('workspace-highlight-active');
+          void el.offsetWidth; // trigger reflow
+          el.classList.add('workspace-highlight-active');
+        }
+      }, 60);
     }
   };
 
@@ -193,6 +225,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     runMatching,
     activeTab,
     setActiveTab,
+    navigateToFeature,
     comparedSchemes,
     toggleCompareScheme,
     isSchemeCompared,

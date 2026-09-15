@@ -5,7 +5,7 @@ import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const BentoShowcase: React.FC = () => {
-  const { setActiveTab } = useProfile();
+  const { setActiveTab, navigateToFeature, selectPersona } = useProfile();
   const { language } = useLanguage();
 
   const targetBentoImg = getLandingImage('bento', language);
@@ -86,7 +86,7 @@ export const BentoShowcase: React.FC = () => {
             {/* Tool 1: Scheme Search */}
             <div
               className="bento-hotspot hotspot-tool-search"
-              onClick={() => setActiveTab('matcher')}
+              onClick={() => navigateToFeature('matcher')}
               onMouseEnter={() => setActiveTooltip('Scheme Search: Discover 23+ Central & MoSJE Schemes')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Scheme Search"
@@ -94,13 +94,13 @@ export const BentoShowcase: React.FC = () => {
               <div className="bento-pulse-dot blue" />
             </div>
 
-            {/* Tool 2: Eligibility Checker */}
+            {/* Tool 2: Eligibility Checker & Gap Diagnostic */}
             <div
               className="bento-hotspot hotspot-tool-checker"
-              onClick={() => setActiveTab('matcher')}
-              onMouseEnter={() => setActiveTooltip('Eligibility Checker: Multi-Factor Affirmative Rules')}
+              onClick={() => navigateToFeature('gap')}
+              onMouseEnter={() => setActiveTooltip('Eligibility Gap Analyzer: Multi-Factor Diagnostic Rules')}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Eligibility Checker"
+              title="Eligibility Gap Checker"
             >
               <div className="bento-pulse-dot green" />
             </div>
@@ -108,8 +108,8 @@ export const BentoShowcase: React.FC = () => {
             {/* Tool 3: What-If Simulator */}
             <div
               className="bento-hotspot hotspot-tool-simulator"
-              onClick={() => setActiveTab('dpr')}
-              onMouseEnter={() => setActiveTooltip('What-If Simulator: Calculate 35% Subsidies & DSCR')}
+              onClick={() => navigateToFeature('whatif')}
+              onMouseEnter={() => setActiveTooltip('What-If Simulator: Calculate 35% Subsidies & DSCR in Real-Time')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="What-If Simulator"
             >
@@ -119,8 +119,8 @@ export const BentoShowcase: React.FC = () => {
             {/* Tool 4: Scheme Comparison */}
             <div
               className="bento-hotspot hotspot-tool-comparison"
-              onClick={() => setActiveTab('comparison')}
-              onMouseEnter={() => setActiveTooltip('Scheme Comparison: Side-by-side terms & interest')}
+              onClick={() => navigateToFeature('comparison')}
+              onMouseEnter={() => setActiveTooltip('Scheme Comparison: Side-by-side terms, subsidies & interest')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Scheme Comparison"
             >
@@ -130,10 +130,10 @@ export const BentoShowcase: React.FC = () => {
             {/* Tool 5: Document Checklist */}
             <div
               className="bento-hotspot hotspot-tool-docs"
-              onClick={() => setActiveTab('documents')}
-              onMouseEnter={() => setActiveTooltip('Document Checklist: Digital OCR & Readiness Verification')}
+              onClick={() => navigateToFeature('documents')}
+              onMouseEnter={() => setActiveTooltip('Document Readiness: Digital OCR & Readiness Verification')}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Document Checklist"
+              title="Document Readiness"
             >
               <div className="bento-pulse-dot amber" />
             </div>
@@ -141,7 +141,7 @@ export const BentoShowcase: React.FC = () => {
             {/* Tool 6: Application Tracker */}
             <div
               className="bento-hotspot hotspot-tool-tracker"
-              onClick={() => setActiveTab('roadmap')}
+              onClick={() => navigateToFeature('roadmap')}
               onMouseEnter={() => setActiveTooltip('Application Tracker: 6-Stage Nodal Clearance Milestones')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Application Tracker"
@@ -152,16 +152,16 @@ export const BentoShowcase: React.FC = () => {
             {/* Profile Selection Hotspot: SC/ST & Rural Popover */}
             <div
               className="bento-hotspot hotspot-profile-popover"
-              onClick={() => setActiveTab('matcher')}
-              onMouseEnter={() => setActiveTooltip('Filter Schemes by Targeted Profile & Affirmative Category')}
+              onClick={() => { selectPersona('sunita-weaver'); navigateToFeature('matcher'); }}
+              onMouseEnter={() => setActiveTooltip('Targeted Profile: Sunita Devi (SC Handloom Weaver) • 96% Match')}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Profile Recommendations"
+              title="Select SC Artisan Profile"
             />
 
             {/* Smart Tasks Hotspot */}
             <div
               className="bento-hotspot hotspot-tasks"
-              onClick={() => setActiveTab('roadmap')}
+              onClick={() => navigateToFeature('roadmap')}
               onMouseEnter={() => setActiveTooltip('Smart Tasks: Assign & Track Application Milestones')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Smart Tasks"

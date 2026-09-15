@@ -19,22 +19,47 @@ import { DprGeneratorView } from './components/DprGeneratorView';
 import { DocumentReadiness } from './components/DocumentReadiness';
 import { ApplicationNavigator } from './components/ApplicationNavigator';
 import { SaathiAICopilot } from './components/SaathiAICopilot';
-import { Sparkles, FileText, Scale, Compass, CheckCircle2, Filter } from 'lucide-react';
+import { WhatIfSimulator } from './components/WhatIfSimulator';
+import { FinancialCalculator } from './components/FinancialCalculator';
+import { GapAnalyzer } from './components/GapAnalyzer';
+import { ChannelPartnerRouter } from './components/ChannelPartnerRouter';
+import { 
+  Sparkles, 
+  FileText, 
+  Scale, 
+  Compass, 
+  CheckCircle2, 
+  Filter, 
+  Sliders, 
+  Calculator, 
+  SearchCheck, 
+  Building2, 
+  Check, 
+  ChevronDown, 
+  ChevronUp, 
+  TrendingUp,
+  ShieldCheck,
+  ArrowRight
+} from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
-  const { currentView } = useAuth();
+  const { currentView, setCurrentView } = useAuth();
   const { t } = useLanguage();
   const {
     activeTab,
     setActiveTab,
+    navigateToFeature,
     matchResults,
     otherSchemes,
     totalPotentialSubsidy,
-    comparedSchemes
+    comparedSchemes,
+    personas,
+    selectedPersonaId,
+    selectPersona
   } = useProfile();
 
   const [selectedFilterCategory, setSelectedFilterCategory] = useState<string>('all');
-  const [showInteractiveTools, setShowInteractiveTools] = useState<boolean>(false);
+  const [showInteractiveTools, setShowInteractiveTools] = useState<boolean>(true);
 
   // View Routing: 1. Landing Page -> 2. Login/Register -> 3. Main Website (Workspace)
   if (currentView === 'auth') {
@@ -78,82 +103,178 @@ const MainAppContent: React.FC = () => {
       {/* 5th Scroll Window: Full-Width Workspace Showcase ("All in a workspace, that's a joy to use") */}
       <FullDashboardShowcase />
 
-      {/* Interactive AI Workspace Toggle & Tabs */}
-      <div className="container" id="interactive-workspace" style={{ marginTop: '30px', marginBottom: '30px' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: showInteractiveTools ? '20px' : '0' }}>
-          <button
-            onClick={() => setShowInteractiveTools(!showInteractiveTools)}
-            className="btn-secondary"
-            style={{ 
-              padding: '10px 22px', 
-              fontSize: '0.88rem', 
-              borderRadius: 'var(--radius-full)',
-              background: showInteractiveTools ? 'var(--bg-surface-elevated)' : 'rgba(99, 102, 241, 0.08)',
-              borderColor: 'rgba(99, 102, 241, 0.3)',
-              color: '#4F46E5',
-              fontWeight: 600,
-              boxShadow: '0 2px 10px rgba(99, 102, 241, 0.1)'
-            }}
-          >
-            <Sparkles size={16} />
-            <span>{showInteractiveTools ? 'Collapse Interactive AI Engine Tools' : '⚡ Open Live Interactive AI Scheme Engine'}</span>
-          </button>
+      {/* Interactive AI Workspace: Central Command Hub */}
+      <div className="container" id="interactive-workspace" style={{ marginTop: '40px', marginBottom: '60px' }}>
+        {/* Workspace Banner & Status Bar */}
+        <div className="workspace-hero-bar">
+          <div className="workspace-hero-info">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+              <span className="workspace-live-badge">
+                <span className="pulse-dot" /> LIVE INTERACTIVE ENGINES
+              </span>
+              <span className="workspace-ai-status">Groq Llama-3.3 Cloud Active</span>
+            </div>
+            <h2 className="workspace-hero-title">
+              Affirmative Scheme Matching &amp; Bankable Credit Suite
+            </h2>
+            <p className="workspace-hero-desc">
+              Interact directly with all 9 core engines below. Select a profile or type in natural language to compute eligibility, simulate 35% subsidies, and generate SIDBI-compliant DPRs.
+            </p>
+          </div>
+
+          <div className="workspace-hero-stats">
+            <div className="ws-stat-card">
+              <span className="ws-stat-num">{matchResults.length}</span>
+              <span className="ws-stat-label">Eligible Schemes</span>
+            </div>
+            <div className="ws-stat-card highlight">
+              <span className="ws-stat-num">₹{(totalPotentialSubsidy / 100000).toFixed(1)}L</span>
+              <span className="ws-stat-label">Potential Subsidy</span>
+            </div>
+            <button
+              onClick={() => setShowInteractiveTools(!showInteractiveTools)}
+              className="workspace-toggle-btn"
+              title={showInteractiveTools ? "Collapse interactive engine section" : "Expand interactive engine section"}
+            >
+              {showInteractiveTools ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+              <span>{showInteractiveTools ? 'Minimize' : 'Expand Tools'}</span>
+            </button>
+          </div>
         </div>
 
         {showInteractiveTools && (
-          <>
-            <nav className="nav-tabs-bar" aria-label="SchemeMatch Features" style={{ marginTop: '16px' }}>
+          <div className="workspace-card-surface">
+            {/* 1-Click Interactive Persona Selector */}
+            <div className="persona-quick-bar">
+              <div className="persona-bar-header">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Sparkles size={16} className="text-amber" />
+                  <strong>1-Click Persona Simulator:</strong>
+                </div>
+                <span className="persona-bar-hint">
+                  Select an entrepreneur below to watch real-time eligibility scores and subsidies recalculate instantly:
+                </span>
+              </div>
+
+              <div className="persona-quick-grid">
+                {personas.slice(0, 4).map((p) => {
+                  const isSelected = selectedPersonaId === p.id;
+                  return (
+                    <button
+                      key={p.id}
+                      className={`persona-quick-chip ${isSelected ? 'active' : ''}`}
+                      onClick={() => selectPersona(p.id)}
+                      type="button"
+                    >
+                      <span className="persona-chip-avatar">{p.avatarEmoji}</span>
+                      <div className="persona-chip-body">
+                        <div className="persona-chip-name-row">
+                          <span className="persona-chip-name">{p.fullName}</span>
+                          {isSelected && (
+                            <span className="persona-selected-tag">
+                              <Check size={11} /> Selected
+                            </span>
+                          )}
+                        </div>
+                        <span className="persona-chip-role">{p.headline}</span>
+                        <div className="persona-chip-tags">
+                          <span className="p-tag cat">{p.category}</span>
+                          <span className="p-tag loc">{p.locationType}</span>
+                          <span className="p-tag loan">₹{(p.requiredLoanAmount / 100000).toFixed(1)}L Loan</span>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Navigation Tabs Bar for all 9 core engines */}
+            <nav className="nav-tabs-bar modern-tabs-bar" aria-label="SchemeMatch Features">
               <button
                 className={`nav-tab-btn ${activeTab === 'matcher' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('matcher'); }}
+                onClick={() => setActiveTab('matcher')}
               >
-                <Sparkles size={18} />
-                <span>{t.tabs.matcher}</span>
-                <span style={{ fontSize: '0.75rem', opacity: 0.85 }}>({matchResults.length})</span>
+                <Sparkles size={16} />
+                <span>AI Matcher &amp; Extractor</span>
+                <span className="tab-badge-count">{matchResults.length}</span>
+              </button>
+
+              <button
+                className={`nav-tab-btn ${activeTab === 'whatif' ? 'active' : ''}`}
+                onClick={() => setActiveTab('whatif')}
+              >
+                <Sliders size={16} />
+                <span>What-If Simulator</span>
+                <span className="tab-badge-pulse">Live</span>
+              </button>
+
+              <button
+                className={`nav-tab-btn ${activeTab === 'calculator' ? 'active' : ''}`}
+                onClick={() => setActiveTab('calculator')}
+              >
+                <Calculator size={16} />
+                <span>Financial &amp; EMI Calculator</span>
+              </button>
+
+              <button
+                className={`nav-tab-btn ${activeTab === 'gap' ? 'active' : ''}`}
+                onClick={() => setActiveTab('gap')}
+              >
+                <SearchCheck size={16} />
+                <span>Eligibility Gap Diagnostic</span>
               </button>
 
               <button
                 className={`nav-tab-btn ${activeTab === 'dpr' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('dpr'); }}
+                onClick={() => setActiveTab('dpr')}
               >
-                <FileText size={18} />
-                <span>{t.tabs.dpr}</span>
+                <FileText size={16} />
+                <span>Bank-Ready DPR</span>
+                <span className="tab-badge-accent">SIDBI</span>
               </button>
 
               <button
                 className={`nav-tab-btn ${activeTab === 'documents' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('documents'); }}
+                onClick={() => setActiveTab('documents')}
               >
-                <CheckCircle2 size={18} />
-                <span>{t.tabs.documents}</span>
+                <CheckCircle2 size={16} />
+                <span>Document Readiness</span>
               </button>
 
               <button
                 className={`nav-tab-btn ${activeTab === 'comparison' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('comparison'); }}
+                onClick={() => setActiveTab('comparison')}
               >
-                <Scale size={18} />
-                <span>{t.tabs.comparison}</span>
+                <Scale size={16} />
+                <span>Comparison Matrix</span>
                 {comparedSchemes.length > 0 && (
-                  <span className="badge badge-saffron" style={{ padding: '2px 6px', fontSize: '0.65rem' }}>
-                    {comparedSchemes.length}
-                  </span>
+                  <span className="tab-badge-saffron">{comparedSchemes.length}</span>
                 )}
               </button>
 
               <button
                 className={`nav-tab-btn ${activeTab === 'roadmap' ? 'active' : ''}`}
-                onClick={() => { setActiveTab('roadmap'); }}
+                onClick={() => setActiveTab('roadmap')}
               >
-                <Compass size={18} />
-                <span>{t.tabs.roadmap}</span>
+                <Compass size={16} />
+                <span>Application Roadmap</span>
+              </button>
+
+              <button
+                className={`nav-tab-btn ${activeTab === 'partners' ? 'active' : ''}`}
+                onClick={() => setActiveTab('partners')}
+              >
+                <Building2 size={16} />
+                <span>Channel Partner Locator</span>
               </button>
             </nav>
 
-            <main className="container" style={{ marginTop: '24px' }}>
-              {/* Tab 1: AI Scheme Matcher */}
+            {/* Active Workspace View Area */}
+            <main className="workspace-view-container">
+              {/* Tab 1: AI Scheme Matcher & Extractor */}
               {activeTab === 'matcher' && (
-                <div>
+                <div className="workspace-tab-view animate-fade-in">
                   <EligibilityWizard />
 
                   <section className="matcher-results-section" style={{ marginTop: '36px' }}>
@@ -162,7 +283,7 @@ const MainAppContent: React.FC = () => {
                         <h2>{t.results.topMatchesTitle}</h2>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem' }}>
                           Found <strong>{matchResults.length} prioritized schemes</strong> with up to{' '}
-                          <strong style={{ color: '#059669' }}>₹{(totalPotentialSubsidy / 100000).toFixed(1)} Lakhs</strong> in capital subsidies & concessional funding.
+                          <strong style={{ color: '#059669' }}>₹{(totalPotentialSubsidy / 100000).toFixed(1)} Lakhs</strong> in capital subsidies &amp; concessional funding.
                         </p>
                       </div>
 
@@ -174,7 +295,7 @@ const MainAppContent: React.FC = () => {
                         <select
                           value={selectedFilterCategory}
                           onChange={(e) => setSelectedFilterCategory(e.target.value)}
-                          style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                          style={{ padding: '7px 14px', fontSize: '0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}
                         >
                           <option value="all">All Schemes ({matchResults.length})</option>
                           <option value="Credit Subsidy">Credit Subsidy</option>
@@ -214,19 +335,63 @@ const MainAppContent: React.FC = () => {
                 </div>
               )}
 
-              {/* Tab 2: Bank-Ready DPR Generator */}
-              {activeTab === 'dpr' && <DprGeneratorView />}
+              {/* Tab 2: What-If Simulator */}
+              {activeTab === 'whatif' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <WhatIfSimulator />
+                </div>
+              )}
 
-              {/* Tab 3: Document Readiness Scanner */}
-              {activeTab === 'documents' && <DocumentReadiness />}
+              {/* Tab 3: Financial & EMI Calculator */}
+              {activeTab === 'calculator' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <FinancialCalculator />
+                </div>
+              )}
 
-              {/* Tab 4: Scheme Comparison */}
-              {activeTab === 'comparison' && <SchemeComparison />}
+              {/* Tab 4: Eligibility Gap Diagnostic */}
+              {activeTab === 'gap' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <GapAnalyzer />
+                </div>
+              )}
 
-              {/* Tab 5: Application Navigator */}
-              {activeTab === 'roadmap' && <ApplicationNavigator />}
+              {/* Tab 5: Bank-Ready DPR Generator */}
+              {activeTab === 'dpr' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <DprGeneratorView />
+                </div>
+              )}
+
+              {/* Tab 6: Document Readiness Scanner */}
+              {activeTab === 'documents' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <DocumentReadiness />
+                </div>
+              )}
+
+              {/* Tab 7: Scheme Comparison */}
+              {activeTab === 'comparison' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <SchemeComparison />
+                </div>
+              )}
+
+              {/* Tab 8: Application Navigator */}
+              {activeTab === 'roadmap' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <ApplicationNavigator />
+                </div>
+              )}
+
+              {/* Tab 9: Channel Partner Locator */}
+              {activeTab === 'partners' && (
+                <div className="workspace-tab-view animate-fade-in">
+                  <ChannelPartnerRouter />
+                </div>
+              )}
             </main>
-          </>
+          </div>
         )}
       </div>
 

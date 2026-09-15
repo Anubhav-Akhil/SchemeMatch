@@ -5,7 +5,7 @@ import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, MapPin, Compass, CheckCircle2, ArrowRight, Building2, Scale, ShieldCheck } from 'lucide-react';
 
 export const SuperpoweredCardsSection: React.FC = () => {
-  const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
+  const { setActiveTab, navigateToFeature, setSelectedSchemeModal, matchResults } = useProfile();
   const { t, language } = useLanguage();
 
   const targetSpImg = getLandingImage('superpowered', language);
@@ -69,7 +69,7 @@ export const SuperpoweredCardsSection: React.FC = () => {
     if (found) {
       setSelectedSchemeModal(found);
     } else {
-      setActiveTab('matcher');
+      navigateToFeature('matcher');
     }
   };
 
@@ -125,7 +125,7 @@ export const SuperpoweredCardsSection: React.FC = () => {
             {/* Hotspot 1: Start a Business Button */}
             <div
               className="sp-hotspot sp-hotspot-start-biz"
-              onClick={() => setActiveTab('matcher')}
+              onClick={() => navigateToFeature('matcher')}
               onMouseEnter={() => setActiveTooltip('Filter Schemes for Micro & Small Business Startups')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Start a Business Discovery"
@@ -192,7 +192,7 @@ export const SuperpoweredCardsSection: React.FC = () => {
             {/* Hotspot 7: [⚖️ Compare Schemes] Button */}
             <div
               className="sp-hotspot sp-hotspot-compare-schemes"
-              onClick={() => setActiveTab('comparison')}
+              onClick={() => navigateToFeature('comparison')}
               onMouseEnter={() => setActiveTooltip('Compare Term Loan vs PMEGP vs Stand-Up India Matrix')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Compare Schemes"
@@ -204,10 +204,10 @@ export const SuperpoweredCardsSection: React.FC = () => {
             {/* Hotspot 8: View on Map Button */}
             <div
               className="sp-hotspot sp-hotspot-map-btn"
-              onClick={() => setActiveTab('roadmap')}
-              onMouseEnter={() => setActiveTooltip('View 3 Authorized Channel Partners on Interactive Map')}
+              onClick={() => navigateToFeature('partners')}
+              onMouseEnter={() => setActiveTooltip('View Authorized Channel Partners on Interactive Nodal Map')}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="View on Map"
+              title="View Channel Partners"
             >
               <div className="sp-pulse-ring purple" />
             </div>
@@ -215,7 +215,7 @@ export const SuperpoweredCardsSection: React.FC = () => {
             {/* Hotspot 9: State Bank of India Eligible Row */}
             <div
               className="sp-hotspot sp-hotspot-sbi-partner"
-              onClick={() => setActiveTab('roadmap')}
+              onClick={() => navigateToFeature('partners')}
               onMouseEnter={() => setActiveTooltip('State Bank of India (Patna Main Branch) • Authorized Nodal Desk')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="SBI Main Branch Patna"
@@ -226,7 +226,7 @@ export const SuperpoweredCardsSection: React.FC = () => {
             {/* Hotspot 10: [✈️ Get Directions ->] Button */}
             <div
               className="sp-hotspot sp-hotspot-get-directions"
-              onClick={() => setActiveTab('roadmap')}
+              onClick={() => navigateToFeature('partners')}
               onMouseEnter={() => setActiveTooltip('Get Navigation Directions to Nearest Nodal Bank Branch')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Get Directions"

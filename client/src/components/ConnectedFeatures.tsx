@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const ConnectedFeatures: React.FC = () => {
-  const { setActiveTab } = useProfile();
+  const { setActiveTab, navigateToFeature } = useProfile();
   const { t } = useLanguage();
 
   return (
@@ -72,7 +72,7 @@ export const ConnectedFeatures: React.FC = () => {
                   <div>
                     <h4 className="cf-meeting-title">PMEGP &lt;&gt; SIDBI Review</h4>
                     <span className="cf-meeting-time">Nov 15th at 11 – 12pm • Weekly on Tuesday</span>
-                    <button className="cf-join-btn" onClick={() => setActiveTab('roadmap')}>
+                    <button className="cf-join-btn" onClick={() => navigateToFeature('roadmap')}>
                       <span className="cf-pulse-dot" />
                       <span>Join Nodal Review</span>
                     </button>
@@ -109,21 +109,21 @@ export const ConnectedFeatures: React.FC = () => {
                 </div>
                 <div className="cf-threads-body">
                   <div className="cf-threads-sidebar">
-                    <span className="active"><Inbox size={12} /> Inbox</span>
-                    <span><CheckSquare size={12} /> Tasks</span>
-                    <span><FileText size={12} /> DPR Models</span>
-                    <span><ShieldCheck size={12} /> Vault</span>
+                    <span className="active" onClick={() => navigateToFeature('documents')} style={{ cursor: 'pointer' }}><Inbox size={12} /> Inbox</span>
+                    <span onClick={() => navigateToFeature('roadmap')} style={{ cursor: 'pointer' }}><CheckSquare size={12} /> Tasks</span>
+                    <span onClick={() => navigateToFeature('dpr')} style={{ cursor: 'pointer' }}><FileText size={12} /> DPR Models</span>
+                    <span onClick={() => navigateToFeature('documents')} style={{ cursor: 'pointer' }}><ShieldCheck size={12} /> Vault</span>
                   </div>
                   <div className="cf-threads-tasks">
-                    <div className="cf-task-item done">
+                    <div className="cf-task-item done" onClick={() => navigateToFeature('documents')} style={{ cursor: 'pointer' }}>
                       <CheckCircle2 size={13} className="text-emerald" />
                       <span>Udyam Aadhaar Sync</span>
                     </div>
-                    <div className="cf-task-item done">
+                    <div className="cf-task-item done" onClick={() => navigateToFeature('dpr')} style={{ cursor: 'pointer' }}>
                       <CheckCircle2 size={13} className="text-emerald" />
                       <span>SIDBI PMEGP DPR Formatted</span>
                     </div>
-                    <div className="cf-task-item pending">
+                    <div className="cf-task-item pending" onClick={() => navigateToFeature('documents')} style={{ cursor: 'pointer' }}>
                       <div className="cf-circle-radio" />
                       <span>Land Lease NOC Upload</span>
                     </div>
@@ -154,7 +154,7 @@ export const ConnectedFeatures: React.FC = () => {
                 </div>
 
                 <div className="cf-board-list">
-                  <div className="cf-board-item">
+                  <div className="cf-board-item" onClick={() => navigateToFeature('roadmap')} style={{ cursor: 'pointer' }}>
                     <div className="cf-item-check" />
                     <div className="cf-item-details">
                       <strong>Follow up on Udyam Registration</strong>
@@ -162,7 +162,7 @@ export const ConnectedFeatures: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="cf-board-item highlight">
+                  <div className="cf-board-item highlight" onClick={() => navigateToFeature('dpr')} style={{ cursor: 'pointer' }}>
                     <div className="cf-item-check" />
                     <div className="cf-item-details">
                       <strong>Finalize SIDBI Bankable DPR</strong>
@@ -170,7 +170,7 @@ export const ConnectedFeatures: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="cf-board-item">
+                  <div className="cf-board-item" onClick={() => navigateToFeature('documents')} style={{ cursor: 'pointer' }}>
                     <div className="cf-item-check" />
                     <div className="cf-item-details">
                       <strong>Upload Workshop Lease NOC</strong>
@@ -178,7 +178,7 @@ export const ConnectedFeatures: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="cf-board-item">
+                  <div className="cf-board-item" onClick={() => navigateToFeature('whatif')} style={{ cursor: 'pointer' }}>
                     <div className="cf-item-check" />
                     <div className="cf-item-details">
                       <strong>Confirm 35% Capital Grant Credit</strong>
@@ -189,7 +189,7 @@ export const ConnectedFeatures: React.FC = () => {
 
                 <button 
                   className="cf-board-btn"
-                  onClick={() => setActiveTab('roadmap')}
+                  onClick={() => navigateToFeature('roadmap')}
                 >
                   <span>Open Full Application Roadmap</span>
                   <ArrowRight size={14} />

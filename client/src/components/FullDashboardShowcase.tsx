@@ -17,15 +17,17 @@ import {
 } from 'lucide-react';
 
 export const FullDashboardShowcase: React.FC = () => {
-  const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
+  const { setActiveTab, navigateToFeature, setSelectedSchemeModal, matchResults } = useProfile();
   const { t } = useLanguage();
   const [selectedDay, setSelectedDay] = useState<number>(15);
 
-  const handleOpenTopScheme = () => {
-    if (matchResults.length > 0) {
+  const handleOpenTopScheme = (schemeId?: string) => {
+    if (schemeId) {
+      navigateToFeature('matcher', { schemeId });
+    } else if (matchResults.length > 0) {
       setSelectedSchemeModal(matchResults[0]);
     } else {
-      setActiveTab('matcher');
+      navigateToFeature('matcher');
     }
   };
 
@@ -54,11 +56,11 @@ export const FullDashboardShowcase: React.FC = () => {
 
           {/* Feature Chips / Pills Row matching Figma reference */}
           <div className="dashboard-feature-chips">
-            <span className="dash-pill">Desktop & Web App</span>
-            <span className="dash-pill">AI Eligibility Matcher</span>
-            <span className="dash-pill">Dark & Light Mode</span>
-            <span className="dash-pill">DigiLocker & Udyam Sync</span>
-            <span className="dash-pill">Real-Time Notifications</span>
+            <span className="dash-pill" onClick={() => navigateToFeature('matcher')} style={{ cursor: 'pointer' }}>⚡ Desktop & Web App</span>
+            <span className="dash-pill" onClick={() => navigateToFeature('matcher')} style={{ cursor: 'pointer' }}>🎯 AI Eligibility Matcher</span>
+            <span className="dash-pill" onClick={() => navigateToFeature('whatif')} style={{ cursor: 'pointer' }}>🔮 What-If Simulator</span>
+            <span className="dash-pill" onClick={() => navigateToFeature('documents')} style={{ cursor: 'pointer' }}>📑 DigiLocker & Udyam Sync</span>
+            <span className="dash-pill" onClick={() => navigateToFeature('roadmap')} style={{ cursor: 'pointer' }}>🧭 Nodal Roadmap Tracker</span>
           </div>
         </div>
 
@@ -73,7 +75,7 @@ export const FullDashboardShowcase: React.FC = () => {
                   <span className="mac-dot yellow" />
                   <span className="mac-dot green" />
                 </div>
-                <button className="dash-today-btn">Today</button>
+                <button className="dash-today-btn" onClick={() => navigateToFeature('roadmap')}>Today</button>
                 <div className="dash-nav-arrows">
                   <button className="dash-nav-btn"><ChevronLeft size={13} /></button>
                   <button className="dash-nav-btn"><ChevronRight size={13} /></button>
@@ -82,9 +84,9 @@ export const FullDashboardShowcase: React.FC = () => {
               </div>
 
               <div className="dash-titlebar-right">
-                <button className="dash-icon-btn"><Search size={13} /></button>
-                <button className="dash-icon-btn"><Bell size={13} /></button>
-                <div className="dash-user-avatar">SD</div>
+                <button className="dash-icon-btn" onClick={() => navigateToFeature('matcher')}><Search size={13} /></button>
+                <button className="dash-icon-btn" onClick={() => navigateToFeature('roadmap')}><Bell size={13} /></button>
+                <div className="dash-user-avatar" onClick={() => navigateToFeature('matcher')} style={{ cursor: 'pointer' }}>SD</div>
               </div>
             </div>
 
@@ -94,19 +96,19 @@ export const FullDashboardShowcase: React.FC = () => {
               <div className="dash-col-sidebar">
                 <div className="dash-sidebar-group">
                   <span className="dash-group-title">SCHEMES</span>
-                  <div className="dash-group-item active">
+                  <div className="dash-group-item active" onClick={() => handleOpenTopScheme('pmegp-2026')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot blue" />
                     <span>PMEGP Scheme</span>
                   </div>
-                  <div className="dash-group-item">
+                  <div className="dash-group-item" onClick={() => handleOpenTopScheme('stand-up-india')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot cyan" />
                     <span>Stand-Up India</span>
                   </div>
-                  <div className="dash-group-item">
+                  <div className="dash-group-item" onClick={() => handleOpenTopScheme('pm-vishwakarma')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot green" />
                     <span>PM Vishwakarma</span>
                   </div>
-                  <div className="dash-group-item">
+                  <div className="dash-group-item" onClick={() => handleOpenTopScheme('nsfdc-term-loan')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot purple" />
                     <span>NSFDC Term Loan</span>
                   </div>
@@ -118,15 +120,15 @@ export const FullDashboardShowcase: React.FC = () => {
                     <Search size={12} />
                     <input type="text" placeholder="Search for mentor..." readOnly />
                   </div>
-                  <div className="dash-group-item">
+                  <div className="dash-group-item" onClick={() => navigateToFeature('partners')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot blue" />
                     <span>Sunil Kumar (Bank Lead)</span>
                   </div>
-                  <div className="dash-group-item">
+                  <div className="dash-group-item" onClick={() => navigateToFeature('partners')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot orange" />
                     <span>Dr. Rita Sharma (DIC)</span>
                   </div>
-                  <div className="dash-group-item">
+                  <div className="dash-group-item" onClick={() => navigateToFeature('partners')} style={{ cursor: 'pointer' }}>
                     <span className="dash-dot purple" />
                     <span>MSME Helpdesk</span>
                   </div>
@@ -178,13 +180,13 @@ export const FullDashboardShowcase: React.FC = () => {
                   {/* Scheduled Events Blocks */}
                   <div className="dash-events-layer">
                     {/* Sun 13 Event */}
-                    <div className="dash-event-chip col-1 top-10 blue" onClick={handleOpenTopScheme}>
+                    <div className="dash-event-chip col-1 top-10 blue" onClick={() => handleOpenTopScheme()}>
                       <strong>Orientation Call</strong>
                       <span>9:30 – 10:30 AM</span>
                     </div>
 
                     {/* Mon 14 Event */}
-                    <div className="dash-event-chip col-2 top-20 orange" onClick={handleOpenTopScheme}>
+                    <div className="dash-event-chip col-2 top-20 orange" onClick={() => handleOpenTopScheme()}>
                       <strong>DPR Review Session</strong>
                       <span>10:30 – 11:30 AM</span>
                       <div className="dash-chip-avatars">
@@ -194,7 +196,7 @@ export const FullDashboardShowcase: React.FC = () => {
                     </div>
 
                     {/* Tue 15 Event (Today) with Current Time Marker */}
-                    <div className="dash-event-chip col-3 top-30 red highlight" onClick={handleOpenTopScheme}>
+                    <div className="dash-event-chip col-3 top-30 red highlight" onClick={() => handleOpenTopScheme()}>
                       <strong>Nodal Inspection @ 11 AM</strong>
                       <span>11:00 AM – 12:30 PM</span>
                       <div className="dash-chip-avatars">
@@ -206,19 +208,19 @@ export const FullDashboardShowcase: React.FC = () => {
                     <div className="dash-current-time-line" />
 
                     {/* Wed 16 Event */}
-                    <div className="dash-event-chip col-4 top-20 blue" onClick={handleOpenTopScheme}>
+                    <div className="dash-event-chip col-4 top-20 blue" onClick={() => handleOpenTopScheme()}>
                       <strong>Credit Guarantee Sanction</strong>
                       <span>10:00 – 11:00 AM</span>
                     </div>
 
                     {/* Thu 17 Event */}
-                    <div className="dash-event-chip col-5 top-40 purple" onClick={handleOpenTopScheme}>
+                    <div className="dash-event-chip col-5 top-40 purple" onClick={() => handleOpenTopScheme()}>
                       <strong>State SCA Clearance</strong>
                       <span>1:00 – 2:00 PM</span>
                     </div>
 
                     {/* Fri 18 Event */}
-                    <div className="dash-event-chip col-6 top-15 emerald" onClick={handleOpenTopScheme}>
+                    <div className="dash-event-chip col-6 top-15 emerald" onClick={() => handleOpenTopScheme()}>
                       <strong>Margin Money Disbursal</strong>
                       <span>9:45 – 11:00 AM</span>
                     </div>

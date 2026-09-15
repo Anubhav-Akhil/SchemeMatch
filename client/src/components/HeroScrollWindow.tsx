@@ -5,7 +5,7 @@ import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, ExternalLink, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const HeroScrollWindow: React.FC = () => {
-  const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
+  const { setActiveTab, navigateToFeature, setSelectedSchemeModal, matchResults } = useProfile();
   const { t, language } = useLanguage();
 
   const targetHeroImg = getLandingImage('hero', language);
@@ -66,7 +66,7 @@ export const HeroScrollWindow: React.FC = () => {
     if (found) {
       setSelectedSchemeModal(found);
     } else {
-      setActiveTab('matcher');
+      navigateToFeature('matcher');
     }
   };
 
@@ -140,7 +140,7 @@ export const HeroScrollWindow: React.FC = () => {
             {/* Interactive Animated Hotspot 2: Fast-Track Application Button */}
             <div
               className="hero-hotspot hotspot-fast-track"
-              onClick={() => setActiveTab('roadmap')}
+              onClick={() => navigateToFeature('roadmap')}
               onMouseEnter={() => setActiveTooltip('Open 6-Stage Application Roadmap')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Open 6-Stage Application Roadmap"
@@ -151,7 +151,7 @@ export const HeroScrollWindow: React.FC = () => {
             {/* Interactive Animated Hotspot 3: Upload Doc Action Required */}
             <div
               className="hero-hotspot hotspot-upload-doc"
-              onClick={() => setActiveTab('documents')}
+              onClick={() => navigateToFeature('documents')}
               onMouseEnter={() => setActiveTooltip('Open Document Readiness Scanner')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Open Document Readiness Scanner"
@@ -162,7 +162,7 @@ export const HeroScrollWindow: React.FC = () => {
             {/* Interactive Animated Hotspot 4: Auto-Gen with AI (DPR) */}
             <div
               className="hero-hotspot hotspot-auto-gen"
-              onClick={() => setActiveTab('dpr')}
+              onClick={() => navigateToFeature('dpr')}
               onMouseEnter={() => setActiveTooltip('Generate Bank-Ready DPR (SIDBI/PMEGP)')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Generate Bank-Ready DPR"
@@ -173,7 +173,7 @@ export const HeroScrollWindow: React.FC = () => {
             {/* Interactive Animated Hotspot 5: Run DPR Simulation Button */}
             <div
               className="hero-hotspot hotspot-run-simulation"
-              onClick={() => setActiveTab('dpr')}
+              onClick={() => navigateToFeature('whatif')}
               onMouseEnter={() => setActiveTooltip('Simulate ₹11.37 Lakhs Subsidy & 3-Year Cash Flows')}
               onMouseLeave={() => setActiveTooltip(null)}
               title="Run DPR Simulation"
@@ -184,10 +184,10 @@ export const HeroScrollWindow: React.FC = () => {
             {/* Interactive Animated Hotspot 6: Financial Benefits & Subsidy Breakdown Table */}
             <div
               className="hero-hotspot hotspot-financial-breakdown"
-              onClick={() => setActiveTab('comparison')}
-              onMouseEnter={() => setActiveTooltip('Explore Full Comparative Matrix: 35% Subsidy vs General Tier')}
+              onClick={() => navigateToFeature('calculator')}
+              onMouseEnter={() => setActiveTooltip('Explore Financial & EMI Subsidy Calculator')}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Explore Comparative Financial Matrix"
+              title="Explore Financial Calculator"
             >
               <div className="hotspot-pulse-ring green" />
             </div>
