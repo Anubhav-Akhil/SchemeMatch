@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import logoImg from '../assets/logo.png';
+import authSideBannerImg from '../assets/auth-side-banner.jpg';
 import { 
   ArrowLeft, 
   Mail, 
@@ -11,9 +11,9 @@ import {
   EyeOff, 
   Sparkles, 
   ArrowRight, 
-  ShieldCheck, 
   AlertCircle,
-  CheckCircle2
+  CheckCircle2,
+  Globe
 } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
@@ -24,10 +24,9 @@ export const AuthPage: React.FC = () => {
     loginWithEmail, 
     registerWithEmail, 
     loginWithGoogle, 
-    loginDemo,
-    isConfigured 
+    loginDemo 
   } = useAuth();
-  const { theme } = useLanguage();
+  const { language, setLanguage } = useLanguage();
 
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -64,10 +63,8 @@ export const AuthPage: React.FC = () => {
       } else {
         const result = await registerWithEmail(email, password, fullName);
         if (result === 'confirm' || result === 'session') {
-          // Show success and switch to sign-in tab so they can log in
           setSuccessMessage('🎉 Account created successfully! Sign in with your credentials below.');
           setAuthMode('login');
-          // Keep email & password so they can just click Sign In
         }
       }
     } catch (err: any) {
@@ -103,91 +100,198 @@ export const AuthPage: React.FC = () => {
   };
 
   return (
-    <div className="auth-page-wrapper">
-      {/* Subtle Ambient Radial Glowing Lights */}
-      <div className="auth-ambient-glow" />
+    <div className="new-auth-page-root">
+      {/* Warm Ambient Radial Glow Background matching mockup */}
+      <div className="new-auth-ambient-glow" />
 
-      {/* Main Container */}
-      <div className="auth-container">
-        {/* Top Back Navigation */}
-        <div className="auth-back-nav">
-          <button 
-            type="button"
-            className="auth-back-btn" 
-            onClick={() => setCurrentView('landing')}
-          >
-            <ArrowLeft size={16} />
-            <span>Back to SchemeMatch</span>
-          </button>
+      {/* Floating Back to Home Button */}
+      <div className="new-auth-top-nav">
+        <button
+          type="button"
+          className="new-auth-back-btn"
+          onClick={() => setCurrentView('landing')}
+          title="Return to SchemeMatch Main Page"
+        >
+          <ArrowLeft size={16} />
+          <span>Back to Home</span>
+        </button>
+      </div>
+
+      {/* Main Rounded 2-Column Card Container */}
+      <div className="new-auth-card-frame">
+        {/* =========================================================
+            LEFT COLUMN: Side Banner Image matching 2nd image
+            ========================================================= */}
+        <div className="new-auth-side-column">
+          <img 
+            src={authSideBannerImg} 
+            alt="Your Goals Our Support — SchemeMatch Affirmative Schemes" 
+            className="new-auth-side-image"
+          />
         </div>
 
-        {/* Auth Glass Card */}
-        <div className="auth-card">
-          {/* Card Header & Brand Logo */}
-          <div className="auth-card-header">
-            <div className="auth-logo-badge">
-              <img src={logoImg} alt="SchemeMatch" className="auth-logo-img" />
+        {/* =========================================================
+            RIGHT COLUMN: Form & Navigation matching 1st image
+            ========================================================= */}
+        <div className="new-auth-form-column">
+          {/* Top Bar: Brand Logo & Sign Up Toggle */}
+          <div className="new-auth-header-bar">
+            <div 
+              className="new-auth-brand"
+              onClick={() => setCurrentView('landing')}
+              style={{ cursor: 'pointer' }}
+              title="Return to SchemeMatch Home"
+            >
+              <svg width="34" height="34" viewBox="0 0 32 32" fill="none" className="new-auth-sprout-logo">
+                <path d="M7 23C7 18 12 14 18 14C18 20 14 25 7 23Z" fill="#F97316" />
+                <path d="M16 11C16 6 21 3 26 4C25 10 20 14 16 11Z" fill="#FB923C" />
+                <path d="M12 16C9 12 11 7 15 5C17 10 16 15 12 16Z" fill="#EA580C" />
+                <path d="M13 27C14 22 17 19 21 18C21 23 18 27 13 27Z" fill="#F97316" />
+                <circle cx="16" cy="18" r="2" fill="#C2410C" />
+              </svg>
+              <div>
+                <div className="new-auth-brand-name">SchemeMatch</div>
+                <div className="new-auth-brand-tagline">Match • Apply • Grow</div>
+              </div>
             </div>
-            <h1 className="auth-title">
-              {authMode === 'login' ? 'Welcome Back' : 'Create Account'}
-            </h1>
-            <p className="auth-subtitle">
-              {authMode === 'login'
-                ? 'Sign in to access your matched schemes, bankable DPRs, and nodal mentors.'
-                : 'Join SchemeMatch to unlock tailored national capital subsidies for your enterprise.'}
-            </p>
 
-            {/* Segmented Pill Tabs */}
-            <div className="auth-tabs-row" role="tablist">
+            <div className="new-auth-switch-link">
+              <span>{authMode === 'login' ? 'New here?' : 'Already have an account?'}</span>{' '}
               <button
                 type="button"
-                className={`auth-tab ${authMode === 'login' ? 'active' : ''}`}
-                onClick={() => { setAuthMode('login'); setErrorMessage(null); }}
+                className="new-auth-signup-text"
+                onClick={() => {
+                  setAuthMode(authMode === 'login' ? 'register' : 'login');
+                  setErrorMessage(null);
+                  setSuccessMessage(null);
+                }}
               >
-                Sign In
-              </button>
-              <button
-                type="button"
-                className={`auth-tab ${authMode === 'register' ? 'active' : ''}`}
-                onClick={() => { setAuthMode('register'); setErrorMessage(null); }}
-              >
-                Create Account
+                {authMode === 'login' ? 'Sign Up' : 'Sign In'}
               </button>
             </div>
           </div>
 
-          <div className="auth-body">
-            {/* Feedback Banners */}
+          {/* Center Form Section */}
+          <div className="new-auth-center-content">
+            <div className="new-auth-headings">
+              <h1 className="new-auth-title">
+                {authMode === 'login' ? 'Welcome Back' : 'Create Account'}
+              </h1>
+              <p className="new-auth-subtitle">
+                {authMode === 'login'
+                  ? 'Sign in to continue your journey towards a brighter future.'
+                  : 'Join SchemeMatch to unlock tailored affirmative subsidies for your enterprise.'}
+              </p>
+            </div>
+
+            {/* Alert Messages */}
             {errorMessage && (
-              <div className="auth-alert error">
+              <div className="new-auth-alert error">
                 <AlertCircle size={16} style={{ flexShrink: 0, marginTop: 2 }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                  <span>{errorMessage}</span>
-                  {errorMessage.includes('Supabase Dashboard') && (
-                    <a
-                      href="https://supabase.com/dashboard/project/flhiigvcnixepsixfpxm/auth/providers"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: '#4F46E5', fontWeight: 600, textDecoration: 'underline', fontSize: '0.78rem' }}
-                    >
-                      Open Supabase Google Provider Settings &rarr;
-                    </a>
-                  )}
-                </div>
+                <span>{errorMessage}</span>
               </div>
             )}
 
             {successMessage && (
-              <div className="auth-alert success">
-                <CheckCircle2 size={16} />
+              <div className="new-auth-alert success">
+                <CheckCircle2 size={16} style={{ flexShrink: 0, marginTop: 2 }} />
                 <span>{successMessage}</span>
               </div>
             )}
 
-            {/* Google OAuth Button */}
+            {/* Main Form */}
+            <form onSubmit={handleSubmit} className="new-auth-fields-form">
+              {/* Full Name (when in Register Mode) */}
+              {authMode === 'register' && (
+                <div className="new-auth-input-box">
+                  <UserIcon size={18} className="new-auth-icon" />
+                  <input
+                    type="text"
+                    className="new-auth-input"
+                    placeholder="Full Name / Enterprise Name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
+
+              {/* Email or Username */}
+              <div className="new-auth-input-box">
+                <Mail size={18} className="new-auth-icon" />
+                <input
+                  type="text"
+                  className="new-auth-input"
+                  placeholder="Email or Username"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Password */}
+              <div className="new-auth-input-box">
+                <Lock size={18} className="new-auth-icon" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="new-auth-input"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="button"
+                  className="new-auth-eye-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
+
+              {/* Forgot password? Link */}
+              {authMode === 'login' && (
+                <div className="new-auth-forgot-row">
+                  <button
+                    type="button"
+                    className="new-auth-forgot-link"
+                    onClick={() => setSuccessMessage('Password recovery dispatched. Please check your inbox.')}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+              )}
+
+              {/* Submit Button ("→ Sign In") */}
+              <button
+                type="submit"
+                className="new-auth-submit-btn"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="btn-spinner" />
+                ) : (
+                  <>
+                    <ArrowRight size={18} />
+                    <span>{authMode === 'login' ? 'Sign In' : 'Create Account'}</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* "OR" Divider */}
+            <div className="new-auth-divider">
+              <span className="divider-line" />
+              <span className="divider-text">OR</span>
+              <span className="divider-line" />
+            </div>
+
+            {/* Continue with Google */}
             <button
               type="button"
-              className="auth-google-btn"
+              className="new-auth-google-btn"
               onClick={handleGoogleAuth}
               disabled={isLoading}
             >
@@ -212,117 +316,43 @@ export const AuthPage: React.FC = () => {
               <span>Continue with Google</span>
             </button>
 
-            {/* Centered Divider */}
-            <div className="auth-divider">
-              <span>or continue with email</span>
-            </div>
-
-            {/* Email & Password Form */}
-            <form onSubmit={handleSubmit} className="auth-form">
-              {/* Full Name for Registration */}
-              {authMode === 'register' && (
-                <div className="auth-form-group">
-                  <label htmlFor="auth-name">Full Name / Enterprise Name</label>
-                  <div className="auth-input-wrapper">
-                    <UserIcon size={16} className="auth-input-icon" />
-                    <input
-                      id="auth-name"
-                      type="text"
-                      placeholder="e.g. Sunita Devi"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Email Address */}
-              <div className="auth-form-group">
-                <label htmlFor="auth-email">Email Address</label>
-                <div className="auth-input-wrapper">
-                  <Mail size={16} className="auth-input-icon" />
-                  <input
-                    id="auth-email"
-                    type="email"
-                    placeholder="name@enterprise.in"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Password */}
-              <div className="auth-form-group">
-                <div className="auth-label-row">
-                  <label htmlFor="auth-pass">Password</label>
-                  {authMode === 'login' && (
-                    <button 
-                      type="button" 
-                      className="auth-forgot-link"
-                      onClick={() => setSuccessMessage('Password recovery dispatched. Check your inbox.')}
-                    >
-                      Forgot?
-                    </button>
-                  )}
-                </div>
-                <div className="auth-input-wrapper">
-                  <Lock size={16} className="auth-input-icon" />
-                  <input
-                    id="auth-pass"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="At least 6 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="auth-eye-btn"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="auth-submit-btn"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span className="btn-spinner" />
-                ) : (
-                  <>
-                    <span>{authMode === 'login' ? 'Sign In to Workspace' : 'Create Free Account'}</span>
-                    <ArrowRight size={16} />
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Card Footer with 1-Click Demo Shortcut & Security */}
-          <div className="auth-card-footer">
-            <div className="auth-demo-box">
-              <span className="auth-demo-label">Testing without entering credentials?</span>
+            {/* Quick Demo Shortcut */}
+            <div className="new-auth-demo-wrap">
               <button
                 type="button"
-                className="auth-demo-btn"
+                className="new-auth-demo-pill"
                 onClick={() => loginDemo('Sunita Devi (Demo)', 'sunita.devi@enterprise.in')}
               >
-                <Sparkles size={14} />
+                <Sparkles size={13} className="text-amber" />
                 <span>⚡ Instant Demo Access (Sunita Devi • 96% Match)</span>
               </button>
             </div>
+          </div>
 
-            <div className="auth-security-tag">
-              <ShieldCheck size={13} />
-              <span>Secured with Supabase Cloud • 256-bit TLS Encrypted</span>
+          {/* Bottom Footer Row */}
+          <div className="new-auth-footer-row">
+            <span className="new-auth-copyright">© 2026 SchemeMatch. All rights reserved.</span>
+
+            <div className="new-auth-footer-nav">
+              <button type="button" onClick={() => setCurrentView('landing')}>About</button>
+              <span className="footer-dot">•</span>
+              <button type="button" onClick={() => setCurrentView('landing')}>Contact Us</button>
+              <span className="footer-dot">•</span>
+              <div className="new-auth-lang-drop">
+                <Globe size={13} />
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value as any)}
+                  aria-label="Select platform language"
+                >
+                  <option value="en">English</option>
+                  <option value="hi">हिन्दी</option>
+                  <option value="mr">मराठी</option>
+                  <option value="bn">বাংলা</option>
+                  <option value="te">తెలుగు</option>
+                  <option value="pa">ਪੰਜਾਬੀ</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -330,4 +360,5 @@ export const AuthPage: React.FC = () => {
     </div>
   );
 };
+
 export default AuthPage;
