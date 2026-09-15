@@ -17,6 +17,7 @@ export const Header: React.FC = () => {
   const { language, setLanguage, theme, toggleTheme, t } = useLanguage();
   const { user, navigateToAuth, setCurrentView } = useAuth();
   const [langOpen, setLangOpen] = useState(false);
+  const [hdrAvatarError, setHdrAvatarError] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
   // Close language dropdown when clicking outside
@@ -102,10 +103,19 @@ export const Header: React.FC = () => {
               className="hdr-workspace-pill"
               onClick={() => setCurrentView('app')}
             >
-              {user.avatarUrl ? (
-                <img src={user.avatarUrl} alt={user.fullName} className="hdr-avatar-img" />
+              {user.avatarUrl && !hdrAvatarError ? (
+                <img 
+                  src={user.avatarUrl} 
+                  alt="" 
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
+                  onError={() => setHdrAvatarError(true)}
+                  className="hdr-avatar-img" 
+                />
               ) : (
-                <span className="hdr-avatar">{user.fullName?.charAt(0).toUpperCase() || 'U'}</span>
+                <span className="hdr-avatar">
+                  {user.fullName ? user.fullName.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase() : 'U'}
+                </span>
               )}
               <span>{t.nav.workspace}</span>
               <Sparkles size={13} />

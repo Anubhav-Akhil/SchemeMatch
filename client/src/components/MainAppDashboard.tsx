@@ -68,6 +68,7 @@ export const MainAppDashboard: React.FC = () => {
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   const [selectedFilterCategory, setSelectedFilterCategory] = useState<string>('all');
+  const [avatarError, setAvatarError] = useState<boolean>(false);
 
   const filteredMatches = matchResults.filter((m) => {
     if (selectedFilterCategory !== 'all') {
@@ -205,12 +206,24 @@ export const MainAppDashboard: React.FC = () => {
 
           {/* User Profile Pill */}
           <div className="ws-user-badge">
-            <div className="ws-user-avatar">
-              {user?.avatarUrl ? (
-                <img src={user.avatarUrl} alt={user.fullName} />
-              ) : (
-                <span>{user?.fullName?.charAt(0).toUpperCase() || 'U'}</span>
-              )}
+            <div className="ws-user-avatar-wrapper">
+              <div className="ws-user-avatar">
+                {user?.avatarUrl && !avatarError ? (
+                  <img 
+                    src={user.avatarUrl} 
+                    alt="" 
+                    referrerPolicy="no-referrer"
+                    crossOrigin="anonymous"
+                    onError={() => setAvatarError(true)} 
+                  />
+                ) : (
+                  <span>
+                    {user?.fullName
+                      ? user.fullName.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase()
+                      : 'U'}
+                  </span>
+                )}
+              </div>
               {user?.provider === 'google' && (
                 <div className="ws-user-google-badge" title="Authenticated via Google Identity">
                   <svg viewBox="0 0 24 24" width="10" height="10">

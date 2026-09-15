@@ -4652,23 +4652,57 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* User Badge Enhancements in MainAppDashboard */
-.ws-user-avatar {
+.ws-user-avatar-wrapper {
   position: relative;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.ws-user-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.ws-user-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.ws-user-avatar span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  user-select: none;
+  line-height: 1;
 }
 
 .ws-user-google-badge {
   position: absolute;
-  bottom: -3px;
-  right: -3px;
-  width: 16px;
-  height: 16px;
+  bottom: -2px;
+  right: -2px;
+  width: 15px;
+  height: 15px;
   background: #FFFFFF;
   border-radius: 50%;
   border: 1.5px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  z-index: 2;
 }
 
 [data-theme='dark'] .ws-user-google-badge {
@@ -5182,25 +5216,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 20px;
 }
 
-.ws-user-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #4F46E5, #10B981);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.78rem;
-  font-weight: 700;
-}
 
-.ws-user-avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
 
 .ws-user-info-text {
   display: flex;
