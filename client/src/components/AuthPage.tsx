@@ -15,6 +15,7 @@ import {
   AlertCircle,
   CheckCircle2
 } from 'lucide-react';
+import { GoogleAccountModal } from './GoogleAccountModal';
 
 export const AuthPage: React.FC = () => {
   const { 
@@ -36,6 +37,7 @@ export const AuthPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showGoogleModal, setShowGoogleModal] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,20 +88,19 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  const handleGoogleAuth = async () => {
+  const handleGoogleAuth = () => {
     setErrorMessage(null);
-    setIsLoading(true);
-    try {
-      await loginWithGoogle();
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to initiate Google sign-in.');
-    } finally {
-      setIsLoading(false);
-    }
+    setShowGoogleModal(true);
   };
 
   return (
     <div className="auth-page-wrapper">
+      {/* Google Identity Account Chooser Modal */}
+      <GoogleAccountModal
+        isOpen={showGoogleModal}
+        onClose={() => setShowGoogleModal(false)}
+      />
+
       {/* Subtle Ambient Radial Glowing Lights */}
       <div className="auth-ambient-glow" />
 

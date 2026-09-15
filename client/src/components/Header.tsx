@@ -102,7 +102,11 @@ export const Header: React.FC = () => {
               className="hdr-workspace-pill"
               onClick={() => setCurrentView('app')}
             >
-              <span className="hdr-avatar">{user.fullName?.charAt(0).toUpperCase() || 'U'}</span>
+              {user.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.fullName} className="hdr-avatar-img" />
+              ) : (
+                <span className="hdr-avatar">{user.fullName?.charAt(0).toUpperCase() || 'U'}</span>
+              )}
               <span>{t.nav.workspace}</span>
               <Sparkles size={13} />
             </button>
