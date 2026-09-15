@@ -8,7 +8,24 @@ export const SuperpoweredCardsSection: React.FC = () => {
   const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
   const { t, language } = useLanguage();
 
-  const superpoweredShowcaseImg = getLandingImage('superpowered', language);
+  const targetSpImg = getLandingImage('superpowered', language);
+  const [displayedImg, setDisplayedImg] = useState<string>(targetSpImg);
+  const [isImgReady, setIsImgReady] = useState<boolean>(true);
+
+  React.useEffect(() => {
+    if (targetSpImg === displayedImg) return;
+    setIsImgReady(false);
+    const img = new Image();
+    img.src = targetSpImg;
+    img.onload = () => {
+      setDisplayedImg(targetSpImg);
+      setIsImgReady(true);
+    };
+    img.onerror = () => {
+      setDisplayedImg(targetSpImg);
+      setIsImgReady(true);
+    };
+  }, [targetSpImg]);
 
   // 3D Tilt & Specular Glare State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -87,9 +104,11 @@ export const SuperpoweredCardsSection: React.FC = () => {
           <div className="sp-image-wrapper">
             {/* 4K Visual Asset */}
             <img
-              src={superpoweredShowcaseImg}
+              src={displayedImg}
               alt="SchemeMatch 3-Card Multi-Window Workspace Showcase"
-              className="sp-image-asset"
+              className={`sp-image-asset ${isImgReady ? 'img-loaded' : 'img-loading'}`}
+              loading="eager"
+              decoding="async"
             />
 
             {/* Dynamic Specular Glare Reflection moving with cursor */}

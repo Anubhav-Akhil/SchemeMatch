@@ -8,7 +8,24 @@ export const BentoShowcase: React.FC = () => {
   const { setActiveTab } = useProfile();
   const { language } = useLanguage();
 
-  const bentoShowcaseImg = getLandingImage('bento', language);
+  const targetBentoImg = getLandingImage('bento', language);
+  const [displayedImg, setDisplayedImg] = useState<string>(targetBentoImg);
+  const [isImgReady, setIsImgReady] = useState<boolean>(true);
+
+  React.useEffect(() => {
+    if (targetBentoImg === displayedImg) return;
+    setIsImgReady(false);
+    const img = new Image();
+    img.src = targetBentoImg;
+    img.onload = () => {
+      setDisplayedImg(targetBentoImg);
+      setIsImgReady(true);
+    };
+    img.onerror = () => {
+      setDisplayedImg(targetBentoImg);
+      setIsImgReady(true);
+    };
+  }, [targetBentoImg]);
 
   // 3D Tilt State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,9 +72,11 @@ export const BentoShowcase: React.FC = () => {
         >
           <div className="bento-image-wrapper">
             <img
-              src={bentoShowcaseImg}
+              src={displayedImg}
               alt="Find the Right Government Schemes - SchemeMatch Interactive Bento Showcase"
-              className="bento-image-asset"
+              className={`bento-image-asset ${isImgReady ? 'img-loaded' : 'img-loading'}`}
+              loading="eager"
+              decoding="async"
             />
 
             {/* =====================================================================

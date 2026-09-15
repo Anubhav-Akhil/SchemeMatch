@@ -4975,3 +4975,78 @@ input:focus, select:focus, textarea:focus {
   background: transparent;
 }
 
+/* ==========================================================================
+   4K ULTRA-HD IMAGE RENDERING & CROSS-FADE ANIMATIONS
+   ========================================================================== */
+
+.hero-image-asset,
+.sp-image-asset,
+.bento-image-asset {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), filter 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.img-loading {
+  opacity: 0.82;
+  filter: blur(2px);
+  transform: scale(0.996);
+}
+
+.img-loaded {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
+}
+
+/* ==========================================================================
+   GLOBAL LANGUAGE TRANSITION ANIMATION & TOP ACCENT BAR
+   ========================================================================== */
+
+body.lang-transition-active {
+  animation: globalLangPulse 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes globalLangPulse {
+  0% {
+    opacity: 0.92;
+    filter: blur(0.8px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+.global-lang-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #4F46E5 0%, #10B981 50%, #F59E0B 100%);
+  background-size: 200% 100%;
+  z-index: 99999;
+  animation: langBarSweep 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-shadow: 0 0 12px rgba(79, 70, 229, 0.7);
+  pointer-events: none;
+}
+
+@keyframes langBarSweep {
+  0% {
+    width: 0%;
+    opacity: 1;
+  }
+  60% {
+    width: 80%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+

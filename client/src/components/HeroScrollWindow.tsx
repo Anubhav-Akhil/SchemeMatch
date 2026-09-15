@@ -8,7 +8,24 @@ export const HeroScrollWindow: React.FC = () => {
   const { setActiveTab, setSelectedSchemeModal, matchResults } = useProfile();
   const { t, language } = useLanguage();
 
-  const heroShowcaseImg = getLandingImage('hero', language);
+  const targetHeroImg = getLandingImage('hero', language);
+  const [displayedImg, setDisplayedImg] = useState<string>(targetHeroImg);
+  const [isImgReady, setIsImgReady] = useState<boolean>(true);
+
+  React.useEffect(() => {
+    if (targetHeroImg === displayedImg) return;
+    setIsImgReady(false);
+    const img = new Image();
+    img.src = targetHeroImg;
+    img.onload = () => {
+      setDisplayedImg(targetHeroImg);
+      setIsImgReady(true);
+    };
+    img.onerror = () => {
+      setDisplayedImg(targetHeroImg);
+      setIsImgReady(true);
+    };
+  }, [targetHeroImg]);
 
   // 3D Tilt & Specular Glare State
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,9 +109,11 @@ export const HeroScrollWindow: React.FC = () => {
           {/* Main Visual Image matching Image 2 */}
           <div className="hero-image-wrapper">
             <img
-              src={heroShowcaseImg}
+              src={displayedImg}
               alt="SchemeMatch AI Interactive Showcase"
-              className="hero-image-asset"
+              className={`hero-image-asset ${isImgReady ? 'img-loaded' : 'img-loading'}`}
+              loading="eager"
+              decoding="async"
             />
 
             {/* Dynamic Specular Glare Reflection moving with cursor */}
