@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import authSideBannerImg from '../assets/auth-side-banner.jpg';
+import logoImg from '../assets/logo.png';
 import { 
   ArrowLeft, 
   Mail, 
@@ -13,7 +14,10 @@ import {
   ArrowRight, 
   AlertCircle,
   CheckCircle2,
-  Globe
+  Globe,
+  Sun,
+  Moon,
+  ShieldCheck
 } from 'lucide-react';
 
 export const AuthPage: React.FC = () => {
@@ -26,7 +30,7 @@ export const AuthPage: React.FC = () => {
     loginWithGoogle, 
     loginDemo 
   } = useAuth();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, theme, toggleTheme } = useLanguage();
 
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -101,10 +105,10 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="new-auth-page-root">
-      {/* Warm Ambient Radial Glow Background matching mockup */}
+      {/* Soft Ambient Radial Glow Background matching SchemeMatch Theme */}
       <div className="new-auth-ambient-glow" />
 
-      {/* Floating Back to Home Button */}
+      {/* Floating Top Controls: Back Button & Theme Toggle */}
       <div className="new-auth-top-nav">
         <button
           type="button"
@@ -113,28 +117,38 @@ export const AuthPage: React.FC = () => {
           title="Return to SchemeMatch Main Page"
         >
           <ArrowLeft size={16} />
-          <span>Back to Home</span>
+          <span>Back to SchemeMatch</span>
+        </button>
+
+        <button
+          type="button"
+          className="new-auth-theme-btn"
+          onClick={toggleTheme}
+          title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
+          aria-label="Toggle visual theme"
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
         </button>
       </div>
 
       {/* Main Rounded 2-Column Card Container */}
       <div className="new-auth-card-frame">
         {/* =========================================================
-            LEFT COLUMN: Side Banner Image matching 2nd image
+            LEFT COLUMN: Side Banner Image matching new theme asset
             ========================================================= */}
         <div className="new-auth-side-column">
           <img 
             src={authSideBannerImg} 
-            alt="Your Goals Our Support — SchemeMatch Affirmative Schemes" 
+            alt="Your Goals Our Support — SchemeMatch AI Scheme Matching" 
             className="new-auth-side-image"
           />
         </div>
 
         {/* =========================================================
-            RIGHT COLUMN: Form & Navigation matching 1st image
+            RIGHT COLUMN: Form & Navigation matching website theme
             ========================================================= */}
         <div className="new-auth-form-column">
-          {/* Top Bar: Brand Logo & Sign Up Toggle */}
+          {/* Top Bar: Official SchemeMatch Logo & Sign Up Toggle */}
           <div className="new-auth-header-bar">
             <div 
               className="new-auth-brand"
@@ -142,15 +156,12 @@ export const AuthPage: React.FC = () => {
               style={{ cursor: 'pointer' }}
               title="Return to SchemeMatch Home"
             >
-              <svg width="34" height="34" viewBox="0 0 32 32" fill="none" className="new-auth-sprout-logo">
-                <path d="M7 23C7 18 12 14 18 14C18 20 14 25 7 23Z" fill="#F97316" />
-                <path d="M16 11C16 6 21 3 26 4C25 10 20 14 16 11Z" fill="#FB923C" />
-                <path d="M12 16C9 12 11 7 15 5C17 10 16 15 12 16Z" fill="#EA580C" />
-                <path d="M13 27C14 22 17 19 21 18C21 23 18 27 13 27Z" fill="#F97316" />
-                <circle cx="16" cy="18" r="2" fill="#C2410C" />
-              </svg>
+              <img src={logoImg} alt="SchemeMatch Logo" className="new-auth-brand-logo-img" />
               <div>
-                <div className="new-auth-brand-name">SchemeMatch</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span className="new-auth-brand-name">SchemeMatch</span>
+                  <span className="new-auth-brand-badge">Workspace Pro</span>
+                </div>
                 <div className="new-auth-brand-tagline">Match • Apply • Grow</div>
               </div>
             </div>
@@ -179,8 +190,8 @@ export const AuthPage: React.FC = () => {
               </h1>
               <p className="new-auth-subtitle">
                 {authMode === 'login'
-                  ? 'Sign in to continue your journey towards a brighter future.'
-                  : 'Join SchemeMatch to unlock tailored affirmative subsidies for your enterprise.'}
+                  ? 'Sign in to access your matched schemes, bankable DPRs, and nodal mentors.'
+                  : 'Join SchemeMatch to unlock tailored national capital subsidies for your enterprise.'}
               </p>
             </div>
 
@@ -264,7 +275,7 @@ export const AuthPage: React.FC = () => {
                 </div>
               )}
 
-              {/* Submit Button ("→ Sign In") */}
+              {/* Submit Button ("→ Sign In") with Theme Gradient */}
               <button
                 type="submit"
                 className="new-auth-submit-btn"
@@ -275,7 +286,7 @@ export const AuthPage: React.FC = () => {
                 ) : (
                   <>
                     <ArrowRight size={18} />
-                    <span>{authMode === 'login' ? 'Sign In' : 'Create Account'}</span>
+                    <span>{authMode === 'login' ? 'Sign In to Workspace' : 'Create Free Account'}</span>
                   </>
                 )}
               </button>
@@ -329,9 +340,9 @@ export const AuthPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Bottom Footer Row */}
+          {/* Bottom Footer Row with Website Theme Info */}
           <div className="new-auth-footer-row">
-            <span className="new-auth-copyright">© 2026 SchemeMatch. All rights reserved.</span>
+            <span className="new-auth-copyright">© 2026 SchemeMatch. Affirmative Credit Intelligence.</span>
 
             <div className="new-auth-footer-nav">
               <button type="button" onClick={() => setCurrentView('landing')}>About</button>
