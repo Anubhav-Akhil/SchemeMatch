@@ -11,6 +11,7 @@ import { DprGeneratorService } from './services/dprGenerator';
 import { DocumentService } from './services/documentService';
 import { SaathiChatService } from './services/chatService';
 import { GroqAIService } from './services/groqService';
+import { GeoSpatialPartnerRouterService, PartnerRoutingRequest } from './services/geoPartnerRouter';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +25,7 @@ const dprService = new DprGeneratorService();
 const documentService = new DocumentService();
 const chatService = new SaathiChatService(schemes);
 const groqService = new GroqAIService();
+const partnerRouterService = new GeoSpatialPartnerRouterService();
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
@@ -158,6 +160,37 @@ app.post('/api/documents/analyze', (req: Request, res: Response) => {
     res.json(report);
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Error analyzing documents' });
+  }
+});
+
+// Geo-Spatial Partner Locator & Router Endpoint
+app.post('/api/partners/route', (req: Request, res: Response) => {
+  try {
+    const routingReq: PartnerRoutingRequest = req.body;
+    const result = partnerRouterService.routePartners(routingReq);
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error processing partner routing' });
+  }
+});
+
+// Get all channel partners
+app.get('/api/partners', (req: Request, res: Response) => {
+  try {
+    const { district, type } = req.query;
+    let partners = partnerRouterService.getAllPartners();
+    if (district && typeof district === 'string') {
+      partners = partners.filter(p => p.district.toLowerCase() === district.toLowerCase());
+    }
+    if (type && typeof type === 'string') {
+      partners = partners.filter(p => p.type.toLowerCase() === type.toLowerCase());
+    }
+    res.json({
+      count: partners.length,
+      partners
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || 'Error fetching partners' });
   }
 });
 
