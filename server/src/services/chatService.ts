@@ -295,8 +295,7 @@ export class SaathiChatService {
         break;
       }
 
-      case 'recommendation':
-      default: {
+      case 'recommendation': {
         responseText = `Namaste! Based on your profile (${mergedCategory} entrepreneur in a ${mergedLocation} area, requirement ₹${loanAmt.toLocaleString('en-IN')}), our AI engine has matched you with top high-impact schemes:
 1. **PMEGP**: Up to 35% Capital Grant & loan up to ₹50 Lakhs.
 2. **PM Vishwakarma**: ₹15,000 tool grant + 5% subsidized loan for traditional artisans.
@@ -340,6 +339,29 @@ export class SaathiChatService {
           'Check my eligibility for PMEGP',
           'Calculate my monthly EMI',
           'What documents do I need to apply?'
+        );
+        break;
+      }
+
+      case 'general':
+      default: {
+        const isGreeting = /^(hi|hello|hey|namaste|greetings|good morning|good afternoon|good evening|who are you|help|thanks|thank you|shukriya|ਧੰਨਵਾਦ)[\s!.,?]*$/i.test(q) || q.length < 5;
+
+        if (isGreeting) {
+          responseText = `Hello! I am your AI assistant for government schemes and concessional credit. You can ask me anything about finding schemes, documents needed, calculating EMI, or where to apply. How can I help you today?`;
+          responseHindi = `नमस्ते! मैं सरकारी योजनाओं और रियायती ऋण के लिए आपका एआई सहायक हूँ। आप मुझसे योजना खोजने, आवश्यक दस्तावेज़ों, ईएमआई गणना या कहाँ आवेदन करें, इस बारे में कुछ भी पूछ सकते हैं। आज मैं आपकी क्या सहायता करूँ?`;
+          responsePunjabi = `ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਮੈਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਅਤੇ ਸਸਤੇ ਕਰਜ਼ਿਆਂ ਲਈ ਤੁਹਾਡਾ ਏਆਈ ਸਹਾਇਕ ਹਾਂ। ਤੁਸੀਂ ਸਕੀਮ ਲੱਭਣ, ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼ਾਂ, EMI ਗਣਨਾ ਜਾਂ ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛ ਸਕਦੇ ਹੋ।`;
+        } else {
+          responseText = `I am here to help you navigate government schemes, subsidies, and loans. You can ask me any question about requirements, eligibility, EMIs, or authorized banks.`;
+          responseHindi = `मैं सरकारी योजनाओं, सब्सिडी और ऋणों में आपकी सहायता के लिए तैयार हूँ। आप पात्रता, ईएमआई, आवश्यक दस्तावेज़ या बैंकों के बारे में कोई भी प्रश्न पूछ सकते हैं।`;
+          responsePunjabi = `ਮੈਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ, ਸਬਸਿਡੀਆਂ ਅਤੇ ਕਰਜ਼ਿਆਂ ਵਿੱਚ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਹਾਜ਼ਰ ਹਾਂ। ਤੁਸੀਂ ਕੋਈ ਵੀ ਸਵਾਲ ਪੁੱਛ ਸਕਦੇ ਹੋ।`;
+        }
+
+        suggestedPrompts.push(
+          'Find a scheme',
+          'Documents needed',
+          'Calculate EMI',
+          'Where to apply'
         );
         break;
       }

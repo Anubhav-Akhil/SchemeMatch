@@ -3,22 +3,17 @@ import { useLanguage } from '../context/LanguageContext';
 import { useProfile } from '../context/ProfileContext';
 import { ChatMessage, ChatFeatureMode } from '../types';
 import { 
-  Bot, 
   Send, 
   Mic, 
   MicOff, 
   X, 
-  Sparkles, 
   Volume2, 
   VolumeX, 
   ArrowRight, 
-  Globe,
   RefreshCw,
-  SlidersHorizontal,
-  ExternalLink
+  Sparkles
 } from 'lucide-react';
 import { 
-  FeatureChipsBar, 
   EmiCardView, 
   DocumentChecklistCardView, 
   PartnerFinderCardView, 
@@ -26,65 +21,94 @@ import {
   EligibilityCardView 
 } from './SaathiChatCards';
 
+interface SuggestionOption {
+  titleEn: string;
+  titleHi: string;
+  titlePa: string;
+  subEn: string;
+  subHi: string;
+  subPa: string;
+  mode: ChatFeatureMode;
+  prompt: string;
+}
+
+const SUGGESTIONS: SuggestionOption[] = [
+  {
+    titleEn: 'Find a scheme',
+    titleHi: 'योजना खोजें',
+    titlePa: 'ਸਕੀਮ ਲੱਭੋ',
+    subEn: 'Best schemes for your work & profile',
+    subHi: 'अपनी प्रोफ़ाइल हेतु सर्वश्रेष्ठ योजनाएं',
+    subPa: 'ਆਪਣੇ ਕੰਮ ਲਈ ਵਧੀਆ ਸਕੀਮਾਂ',
+    mode: 'recommendation',
+    prompt: 'Find a scheme based on my work and profile'
+  },
+  {
+    titleEn: 'Documents needed',
+    titleHi: 'आवश्यक दस्तावेज़',
+    titlePa: 'ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
+    subEn: 'Check personalized document checklist',
+    subHi: 'आवेदन हेतु दस्तावेज़ों की सूची',
+    subPa: 'ਕਰਜ਼ੇ ਲਈ ਜ਼ਰੂਰੀ ਕਾਗਜ਼ਾਤ ਸੂਚੀ',
+    mode: 'documents',
+    prompt: 'What documents are needed to apply for loans?'
+  },
+  {
+    titleEn: 'Calculate EMI',
+    titleHi: 'EMI गणना करें',
+    titlePa: 'EMI ਗਣਨਾ ਕਰੋ',
+    subEn: 'Loan amount, subsidy & monthly EMI',
+    subHi: 'ऋण, सरकारी सब्सिडी व मासिक किस्त',
+    subPa: 'ਕਰਜ਼ਾ, ਸਬਸਿਡੀ ਅਤੇ ਮਾਸਿਕ ਕਿਸ਼ਤ',
+    mode: 'emi',
+    prompt: 'Calculate loan EMI, interest rate, and subsidy'
+  },
+  {
+    titleEn: 'Where to apply',
+    titleHi: 'कहाँ आवेदन करें',
+    titlePa: 'ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ',
+    subEn: 'Authorized banks & channel partners',
+    subHi: 'अधिकृत बैंक और चैनल पार्टनर खोजें',
+    subPa: 'ਅਧਿਕਾਰਤ ਬੈਂਕ ਤੇ ਚੈਨਲ ਪਾਰਟਨਰ',
+    mode: 'partners',
+    prompt: 'Where to apply and authorized channel partners'
+  }
+];
+
 export const SaathiAICopilot: React.FC = () => {
-  const { t, speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
+  const { speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
   const { profile, setProfile, runMatching, setSelectedSchemeModal } = useProfile();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
-  const [activeFeature, setActiveFeature] = useState<ChatFeatureMode>('recommendation');
-
-  // Keep chatLang synced with globalLang if globalLang is one of our primary chat langs
-  useEffect(() => {
-    if (globalLang === 'hi') setChatLang('hi');
-    else if (globalLang === 'pa') setChatLang('pa');
-    else setChatLang('en');
-  }, [globalLang]);
-
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 'msg-welcome',
-      sender: 'assistant',
-      text: 'Namaste! I am Saathi AI, your personalized welfare & credit copilot. Choose a feature above or ask me any question in English, Hindi, or Punjabi.',
-      hindiText: 'नमस्ते! मैं साथी (Saathi) AI हूँ। अपने कार्य और ऋण आवश्यकता के बारे में बताएं, या ऊपर दिए गए विकल्पों से तुरंत पात्रता, EMI और दस्तावेज़ जांचें।',
-      punjabiText: 'ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਮੈਂ ਸਾਥੀ (Saathi) AI ਹਾਂ। ਆਪਣੀ ਜ਼ਰੂਰਤ ਦੱਸੋ ਜਾਂ ਉੱਪਰ ਦਿੱਤੇ ਵਿਕਲਪਾਂ ਤੋਂ ਆਪਣੀ ਯੋਗਤਾ, ਕਿਸ਼ਤ (EMI) ਅਤੇ ਜ਼ਰੂਰੀ ਦਸਤਾਵੇਜ਼ ਜਾਣੋ।',
-      timestamp: 'Just now',
-      suggestedPrompts: [
-        'Calculate my monthly EMI and subsidy',
-        'Check my eligibility for PMEGP',
-        'Show my required document checklist',
-        'Find nearest authorized channel partner'
-      ]
-    }
-  ]);
-
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputQuery, setInputQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRecordingVoice, setIsRecordingVoice] = useState<boolean>(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    if (globalLang === 'hi') setChatLang('hi');
+    else if (globalLang === 'pa') setChatLang('pa');
+    else setChatLang('en');
+  }, [globalLang]);
 
   useEffect(() => {
-    if (isOpen) {
-      scrollToBottom();
+    if (isOpen && messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isOpen]);
 
-  const handleSendMessage = async (queryToSend?: string, overrideMode?: ChatFeatureMode) => {
+  const handleSendMessage = async (queryToSend?: string, mode?: ChatFeatureMode) => {
     const q = (queryToSend || inputQuery).trim();
     if (!q) return;
-
-    const modeToUse = overrideMode || activeFeature;
 
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       sender: 'user',
       text: q,
-      featureMode: modeToUse,
+      featureMode: mode,
       timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -99,7 +123,7 @@ export const SaathiAICopilot: React.FC = () => {
         body: JSON.stringify({
           query: q,
           profile,
-          mode: modeToUse
+          mode
         })
       });
 
@@ -107,11 +131,6 @@ export const SaathiAICopilot: React.FC = () => {
         const reply: ChatMessage = await res.json();
         setMessages((prev) => [...prev, reply]);
 
-        if (reply.featureMode) {
-          setActiveFeature(reply.featureMode);
-        }
-
-        // Apply entity extractions if detected
         if (reply.extractedProfileUpdates) {
           setProfile((prev) => ({
             ...prev,
@@ -124,31 +143,27 @@ export const SaathiAICopilot: React.FC = () => {
         }
       }
     } catch (err) {
-      console.error('Chat query failed:', err);
-      const errorMsg: ChatMessage = {
-        id: `err-${Date.now()}`,
-        sender: 'assistant',
-        text: 'Sorry, I encountered a temporary connection issue. Please verify your query or try again.',
-        hindiText: 'क्षमा करें, अस्थायी नेटवर्क समस्या आई है। कृपया पुनः प्रयास करें।',
-        punjabiText: 'ਮਾਫ਼ ਕਰਨਾ, ਨੈੱਟਵਰਕ ਸਮੱਸਿਆ ਆਈ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।',
-        timestamp: 'Just now'
-      };
-      setMessages((prev) => [...prev, errorMsg]);
+      console.error('Chat query error:', err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `err-${Date.now()}`,
+          sender: 'assistant',
+          text: 'I am here to help. Could you please rephrase or try again?',
+          hindiText: 'मैं आपकी सहायता के लिए तैयार हूँ। कृपया पुनः प्रयास करें।',
+          punjabiText: 'ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਹਾਜ਼ਰ ਹਾਂ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।',
+          timestamp: 'Just now'
+        }
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSelectFeature = (mode: ChatFeatureMode, prompt: string) => {
-    setActiveFeature(mode);
-    handleSendMessage(prompt, mode);
-  };
-
-  // Multilingual voice speech recognition
   const toggleVoiceInput = () => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert('Speech recognition is not supported in this browser. Please type your query.');
+      alert('Speech recognition is not supported in this browser.');
       return;
     }
 
@@ -172,18 +187,10 @@ export const SaathiAICopilot: React.FC = () => {
         handleSendMessage(transcript);
       };
 
-      recognition.onerror = (e: any) => {
-        console.error('Speech recognition error:', e);
-        setIsRecordingVoice(false);
-      };
-
-      recognition.onend = () => {
-        setIsRecordingVoice(false);
-      };
-
+      recognition.onerror = () => setIsRecordingVoice(false);
+      recognition.onend = () => setIsRecordingVoice(false);
       recognition.start();
-    } catch (err) {
-      console.error('Failed to start speech recognition:', err);
+    } catch {
       setIsRecordingVoice(false);
     }
   };
@@ -194,285 +201,264 @@ export const SaathiAICopilot: React.FC = () => {
     return msg.text;
   };
 
-  const handleSpeakToggle = (msg: ChatMessage) => {
+  const handleAudioToggle = (msg: ChatMessage) => {
     if (isSpeaking) {
       stopSpeech();
     } else {
-      const text = getMessageDisplay(msg);
-      speakText(text, chatLang);
+      speakText(getMessageDisplay(msg), chatLang);
     }
+  };
+
+  const handleResetChat = () => {
+    setMessages([]);
+    stopSpeech();
   };
 
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Floating Trigger Button */}
       <button
         className="saathi-floating-btn"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Open Saathi AI"
+        onClick={() => setIsOpen(true)}
+        aria-label="Open Chat Bot"
         style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
       >
-        <img src="/logo.png" alt="Saathi AI" style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#FFFFFF', padding: '1px' }} />
+        <img 
+          src="/logo.png" 
+          alt="Saathi AI" 
+          style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#FFFFFF', padding: '1px' }} 
+        />
         <span>Ask Saathi AI</span>
         <ArrowRight size={16} />
       </button>
 
-      {/* Expandable Drawer */}
+      {/* Modern Modal Window matching the attached Figma screenshot */}
       {isOpen && (
-        <div className="saathi-drawer">
-          {/* Header */}
-          <div className="drawer-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img src="/logo.png" alt="SchemeMatch" style={{ width: '34px', height: '34px', borderRadius: '8px', background: '#FFFFFF', padding: '2px' }} />
-              <div>
-                <strong style={{ fontSize: '0.98rem', display: 'block' }}>Saathi AI Copilot</strong>
-                <span style={{ fontSize: '0.72rem', color: '#CBD5E1' }}>
-                  {chatLang === 'hi' ? 'स्मार्ट योजना व वित्तीय सहायक' : chatLang === 'pa' ? 'ਸਮਾਰਟ ਸਕੀਮ ਤੇ ਕਰਜ਼ਾ ਸਹਾਇਕ' : 'Smart Scheme & Credit Assistant'}
-                </span>
-              </div>
-            </div>
+        <div className="chatbot-modal-overlay" onClick={() => setIsOpen(false)}>
+          <div 
+            className="chatbot-figma-card" 
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Chat Bot UI"
+          >
+            {/* Top Bar */}
+            <div className="chatbot-figma-top-bar">
+              <span className="chatbot-figma-title">Chat Bot UI</span>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              {/* Language Switcher */}
-              <div className="saathi-lang-switcher">
-                <button 
-                  type="button" 
-                  className={`saathi-lang-btn ${chatLang === 'en' ? 'active' : ''}`}
-                  onClick={() => setChatLang('en')}
-                >
-                  EN
-                </button>
-                <button 
-                  type="button" 
-                  className={`saathi-lang-btn ${chatLang === 'hi' ? 'active' : ''}`}
-                  onClick={() => setChatLang('hi')}
-                >
-                  हिन्दी
-                </button>
-                <button 
-                  type="button" 
-                  className={`saathi-lang-btn ${chatLang === 'pa' ? 'active' : ''}`}
-                  onClick={() => setChatLang('pa')}
-                >
-                  ਪੰਜਾਬੀ
-                </button>
-              </div>
-
-              <button
-                onClick={() => setIsOpen(false)}
-                style={{ background: 'transparent', color: '#FFFFFF', padding: '4px', border: 'none', cursor: 'pointer' }}
-                aria-label="Close Chat"
-              >
-                <X size={20} />
-              </button>
-            </div>
-          </div>
-
-          {/* Feature Selector Chips Bar */}
-          <FeatureChipsBar 
-            activeMode={activeFeature} 
-            onSelectMode={handleSelectFeature} 
-            lang={chatLang}
-          />
-
-          {/* Body / Message History */}
-          <div className="drawer-body">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`chat-bubble ${msg.sender}`}>
-                {msg.sender === 'assistant' && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--primary-saffron)' }}>
-                        Saathi AI
-                      </span>
-                      {msg.featureMode && (
-                        <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px', background: 'rgba(255, 111, 0, 0.1)', color: 'var(--primary-saffron)', fontWeight: 600 }}>
-                          {msg.featureMode.toUpperCase()}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleSpeakToggle(msg)}
-                      style={{ background: 'transparent', color: isSpeaking ? '#059669' : 'var(--text-muted)', border: 'none', cursor: 'pointer', padding: '2px', transition: 'color 0.2s' }}
-                      title={isSpeaking ? 'Stop Audio' : 'Listen aloud'}
-                    >
-                      {isSpeaking ? <VolumeX size={15} /> : <Volume2 size={15} />}
-                    </button>
-                  </div>
-                )}
-
-                <div style={{ whiteSpace: 'pre-line', fontSize: '0.86rem', lineHeight: '1.45' }}>
-                  {getMessageDisplay(msg)}
+              <div className="chatbot-figma-actions">
+                {/* Language Switcher */}
+                <div className="saathi-lang-switcher">
+                  <button 
+                    type="button" 
+                    className={`saathi-lang-btn ${chatLang === 'en' ? 'active' : ''}`}
+                    onClick={() => setChatLang('en')}
+                  >
+                    EN
+                  </button>
+                  <button 
+                    type="button" 
+                    className={`saathi-lang-btn ${chatLang === 'hi' ? 'active' : ''}`}
+                    onClick={() => setChatLang('hi')}
+                  >
+                    हिन्दी
+                  </button>
+                  <button 
+                    type="button" 
+                    className={`saathi-lang-btn ${chatLang === 'pa' ? 'active' : ''}`}
+                    onClick={() => setChatLang('pa')}
+                  >
+                    ਪੰਜਾਬੀ
+                  </button>
                 </div>
 
-                {/* 1. Rich Scheme Recommendation Card */}
-                {msg.matchedSchemes && msg.matchedSchemes.length > 0 && (
-                  <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ fontSize: '0.74rem', fontWeight: 700, color: 'var(--emerald-growth)' }}>
-                      {chatLang === 'hi' ? 'सुझाई गई प्रमुख योजनाएं:' : chatLang === 'pa' ? 'ਸਿਫ਼ਾਰਸ਼ ਕੀਤੀਆਂ ਸਕੀਮਾਂ:' : 'Recommended High-Impact Schemes:'}
-                    </div>
-                    {msg.matchedSchemes.map((s) => (
-                      <div
-                        key={s.id}
-                        style={{
-                          padding: '8px 10px',
-                          background: 'var(--bg-surface-subtle)',
-                          borderRadius: '8px',
-                          border: '1px solid var(--border-subtle)',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: '8px'
-                        }}
-                      >
-                        <div>
-                          <strong style={{ fontSize: '0.82rem', display: 'block', color: 'var(--text-primary)' }}>{s.name}</strong>
-                          <span style={{ fontSize: '0.72rem', color: 'var(--primary-saffron)', fontWeight: 600 }}>{s.subsidyHighlight}</span>
-                          {s.interestRate && (
-                            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginLeft: '8px' }}>• {s.interestRate}</span>
-                          )}
-                        </div>
+                {messages.length > 0 && (
+                  <button
+                    type="button"
+                    className="chatbot-figma-close-btn"
+                    onClick={handleResetChat}
+                    title="New Chat"
+                    style={{ fontSize: '0.78rem', gap: '4px' }}
+                  >
+                    <RefreshCw size={14} />
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  className="chatbot-figma-close-btn"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
+
+            {/* Main Content Area */}
+            {messages.length === 0 ? (
+              /* Initial State: Star icon and "Ask our AI anything" */
+              <div className="chatbot-figma-hero">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="chatbot-figma-star">
+                  <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"/>
+                </svg>
+                <h1 className="chatbot-figma-headline">
+                  {chatLang === 'hi' ? 'हमारे AI से कुछ भी पूछें' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੁਝ ਵੀ ਪੁੱਛੋ' : 'Ask our AI anything'}
+                </h1>
+              </div>
+            ) : (
+              /* Conversation Stream */
+              <div className="chatbot-figma-stream">
+                {messages.map((msg) => (
+                  <div key={msg.id} className={`chatbot-figma-bubble ${msg.sender}`}>
+                    {msg.sender === 'assistant' && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--primary-saffron)' }}>
+                          Saathi AI
+                        </span>
                         <button
                           type="button"
-                          className="card-quick-action"
-                          onClick={() => setSelectedSchemeModal({ id: s.id, name: s.name } as any)}
-                          style={{ fontSize: '0.68rem', padding: '3px 8px', flexShrink: 0 }}
+                          onClick={() => handleAudioToggle(msg)}
+                          style={{ background: 'transparent', border: 'none', color: isSpeaking ? '#10B981' : '#94A3B8', cursor: 'pointer', padding: '2px' }}
+                          title={isSpeaking ? 'Stop Audio' : 'Listen aloud'}
                         >
-                          {chatLang === 'hi' ? 'विवरण' : chatLang === 'pa' ? 'ਵੇਰਵਾ' : 'View'}
+                          {isSpeaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
                         </button>
                       </div>
-                    ))}
+                    )}
+
+                    <div style={{ whiteSpace: 'pre-line' }}>
+                      {getMessageDisplay(msg)}
+                    </div>
+
+                    {/* Matched schemes */}
+                    {msg.matchedSchemes && msg.matchedSchemes.length > 0 && (
+                      <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {msg.matchedSchemes.map((s) => (
+                          <div
+                            key={s.id}
+                            style={{
+                              padding: '8px 12px',
+                              background: 'rgba(255, 255, 255, 0.9)',
+                              borderRadius: '8px',
+                              border: '1px solid rgba(226, 232, 240, 0.9)',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              gap: '8px'
+                            }}
+                          >
+                            <div>
+                              <strong style={{ fontSize: '0.84rem', display: 'block', color: '#0F172A' }}>{s.name}</strong>
+                              <span style={{ fontSize: '0.74rem', color: '#EA580C', fontWeight: 600 }}>{s.subsidyHighlight}</span>
+                            </div>
+                            <button
+                              type="button"
+                              className="card-quick-action"
+                              onClick={() => setSelectedSchemeModal({ id: s.id, name: s.name } as any)}
+                              style={{ fontSize: '0.7rem', padding: '3px 8px' }}
+                            >
+                              {chatLang === 'hi' ? 'विवरण' : chatLang === 'pa' ? 'ਵੇਰਵਾ' : 'View Details'}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Rich Cards */}
+                    {msg.emiCard && <EmiCardView card={msg.emiCard} onPromptClick={handleSendMessage} lang={chatLang} />}
+                    {msg.documentCard && <DocumentChecklistCardView card={msg.documentCard} onPromptClick={handleSendMessage} lang={chatLang} />}
+                    {msg.partnerCard && <PartnerFinderCardView card={msg.partnerCard} onPromptClick={handleSendMessage} lang={chatLang} />}
+                    {msg.whatIfCard && <WhatIfCardView card={msg.whatIfCard} onPromptClick={handleSendMessage} lang={chatLang} />}
+                    {msg.eligibilityCard && <EligibilityCardView card={msg.eligibilityCard} onPromptClick={handleSendMessage} lang={chatLang} />}
+
+                    <div style={{ fontSize: '0.66rem', color: '#94A3B8', textAlign: 'right', marginTop: '4px' }}>
+                      {msg.timestamp}
+                    </div>
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className="chatbot-figma-bubble assistant" style={{ fontStyle: 'italic', fontSize: '0.86rem' }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      <Sparkles size={14} className="spin-slow" />
+                      {chatLang === 'hi' ? 'एआई उत्तर तैयार कर रहा है...' : chatLang === 'pa' ? 'ਏਆਈ ਉੱਤਰ ਤਿਆਰ ਕਰ ਰਿਹਾ ਹੈ...' : 'AI is thinking...'}
+                    </span>
                   </div>
                 )}
 
-                {/* 2. Rich Loan & EMI Card */}
-                {msg.emiCard && (
-                  <EmiCardView 
-                    card={msg.emiCard} 
-                    onPromptClick={handleSendMessage} 
-                    lang={chatLang}
-                  />
-                )}
-
-                {/* 3. Rich Document Checklist Card */}
-                {msg.documentCard && (
-                  <DocumentChecklistCardView 
-                    card={msg.documentCard} 
-                    onPromptClick={handleSendMessage} 
-                    lang={chatLang}
-                  />
-                )}
-
-                {/* 4. Rich Channel Partner Finder Card */}
-                {msg.partnerCard && (
-                  <PartnerFinderCardView 
-                    card={msg.partnerCard} 
-                    onPromptClick={handleSendMessage} 
-                    lang={chatLang}
-                  />
-                )}
-
-                {/* 5. Rich What-If Simulator Card */}
-                {msg.whatIfCard && (
-                  <WhatIfCardView 
-                    card={msg.whatIfCard} 
-                    onPromptClick={handleSendMessage} 
-                    lang={chatLang}
-                  />
-                )}
-
-                {/* 6. Rich Eligibility Checker Card */}
-                {msg.eligibilityCard && (
-                  <EligibilityCardView 
-                    card={msg.eligibilityCard} 
-                    onPromptClick={handleSendMessage} 
-                    lang={chatLang}
-                  />
-                )}
-
-                {/* Quick prompt suggestions */}
-                {msg.suggestedPrompts && msg.suggestedPrompts.length > 0 && (
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '10px' }}>
-                    {msg.suggestedPrompts.map((prompt, idx) => (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleSendMessage(prompt)}
-                        style={{
-                          fontSize: '0.73rem',
-                          padding: '4px 10px',
-                          borderRadius: '999px',
-                          background: 'var(--bg-surface-subtle)',
-                          border: '1px solid var(--border-subtle)',
-                          color: 'var(--text-secondary)',
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease'
-                        }}
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textAlign: 'right', marginTop: '4px' }}>
-                  {msg.timestamp}
-                </div>
-              </div>
-            ))}
-
-            {isLoading && (
-              <div className="chat-bubble assistant" style={{ fontStyle: 'italic', fontSize: '0.84rem' }}>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                  <Sparkles size={14} className="spin-slow" />
-                  {chatLang === 'hi' ? 'सरकारी दिशानिर्देशों का विश्लेषण हो रहा है...' : chatLang === 'pa' ? 'ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਦੀ ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ...' : 'Analyzing government guidelines & calculating exact benefits...'}
-                </span>
+                <div ref={messagesEndRef} />
               </div>
             )}
 
-            <div ref={messagesEndRef} />
-          </div>
+            {/* Suggestions Section: exactly matching screenshot */}
+            <div className="chatbot-figma-suggestions">
+              <div className="chatbot-figma-suggestions-title">
+                {chatLang === 'hi' ? 'हमारे AI से क्या पूछें:' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੀ ਪੁੱਛਣਾ ਹੈ:' : 'Suggestions on what to ask Our AI'}
+              </div>
 
-          {/* Footer Input */}
-          <div className="drawer-footer" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button
-              type="button"
-              className={`btn-secondary ${isRecordingVoice ? 'btn-success' : ''}`}
-              onClick={toggleVoiceInput}
-              style={{ padding: '8px 12px', flexShrink: 0 }}
-              title={`Voice Input (${chatLang.toUpperCase()})`}
-            >
-              {isRecordingVoice ? (
-                <div className="voice-recording-wave">
-                  <div className="voice-wave-dot" />
-                  <span>REC</span>
-                </div>
-              ) : (
-                <Mic size={18} />
-              )}
-            </button>
+              <div className="chatbot-figma-suggestions-grid">
+                {SUGGESTIONS.map((s, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className="chatbot-figma-chip-card"
+                    onClick={() => handleSendMessage(s.prompt, s.mode)}
+                  >
+                    <span className="chatbot-figma-chip-main">
+                      {chatLang === 'hi' ? s.titleHi : chatLang === 'pa' ? s.titlePa : s.titleEn}
+                    </span>
+                    <span className="chatbot-figma-chip-sub">
+                      {chatLang === 'hi' ? s.subHi : chatLang === 'pa' ? s.subPa : s.subEn}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            <input
-              type="text"
-              value={inputQuery}
-              onChange={(e) => setInputQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder={
-                isRecordingVoice
-                  ? (chatLang === 'hi' ? 'बोलें, हम सुन रहे हैं...' : chatLang === 'pa' ? 'ਬੋਲੋ, ਅਸੀਂ ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening to your voice...')
-                  : (chatLang === 'hi' ? 'योजना, ईएमआई या पात्रता के बारे में पूछें...' : chatLang === 'pa' ? 'ਸਕੀਮ, EMI ਜਾਂ ਯੋਗਤਾ ਬਾਰੇ ਪੁੱਛੋ...' : 'Ask about schemes, EMI, documents or partners...')
-              }
-              style={{ flex: 1 }}
-            />
+            {/* Input Bar: exactly matching screenshot */}
+            <div className="chatbot-figma-input-container">
+              <div className="chatbot-figma-input-box">
+                <button
+                  type="button"
+                  className={`btn-secondary ${isRecordingVoice ? 'btn-success' : ''}`}
+                  onClick={toggleVoiceInput}
+                  style={{ padding: '6px 10px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748B' }}
+                  title={`Voice Input (${chatLang.toUpperCase()})`}
+                >
+                  {isRecordingVoice ? (
+                    <div className="voice-recording-wave">
+                      <div className="voice-wave-dot" />
+                      <span>REC</span>
+                    </div>
+                  ) : (
+                    <Mic size={18} />
+                  )}
+                </button>
 
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => handleSendMessage()}
-              style={{ padding: '8px 14px', flexShrink: 0 }}
-            >
-              <Send size={16} />
-            </button>
+                <input
+                  type="text"
+                  className="chatbot-figma-input-field"
+                  value={inputQuery}
+                  onChange={(e) => setInputQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder={
+                    isRecordingVoice
+                      ? (chatLang === 'hi' ? 'बोलें, हम सुन रहे हैं...' : chatLang === 'pa' ? 'ਬੋਲੋ, ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening...')
+                      : (chatLang === 'hi' ? 'अपनी योजनाओं या आवश्यकताओं के बारे में कुछ भी पूछें...' : chatLang === 'pa' ? 'ਆਪਣੀਆਂ ਸਕੀਮਾਂ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ...' : 'Ask me anything about your projects, schemes, or loans...')
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="chatbot-figma-send-btn"
+                  onClick={() => handleSendMessage()}
+                  aria-label="Send message"
+                >
+                  <Send size={20} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

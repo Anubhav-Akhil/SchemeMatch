@@ -37,11 +37,35 @@ export interface FeatureChip {
 export const SAATHI_FEATURES: FeatureChip[] = [
   {
     id: 'recommendation',
-    labelEn: '🎯 Smart Schemes',
-    labelHi: '🎯 योजना सुझाव',
-    labelPa: '🎯 ਸਕੀਮ ਸੁਝਾਅ',
+    labelEn: '🎯 Find a scheme',
+    labelHi: '🎯 योजना खोजें',
+    labelPa: '🎯 ਸਕੀਮ ਲੱਭੋ',
     icon: <Target size={14} />,
-    prompt: 'Find the most suitable schemes based on my profile'
+    prompt: 'Find a scheme based on my work and profile'
+  },
+  {
+    id: 'documents',
+    labelEn: '📄 Documents needed',
+    labelHi: '📄 आवश्यक दस्तावेज़',
+    labelPa: '📄 ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
+    icon: <FileText size={14} />,
+    prompt: 'What documents are needed to apply for loans?'
+  },
+  {
+    id: 'emi',
+    labelEn: '💰 Calculate EMI',
+    labelHi: '💰 EMI गणना करें',
+    labelPa: '💰 EMI ਗਣਨਾ ਕਰੋ',
+    icon: <BadgePercent size={14} />,
+    prompt: 'Calculate loan EMI, interest rate, and subsidy'
+  },
+  {
+    id: 'partners',
+    labelEn: '🏦 Where to apply',
+    labelHi: '🏦 कहाँ आवेदन करें',
+    labelPa: '🏦 ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ',
+    icon: <Building2 size={14} />,
+    prompt: 'Where to apply and authorized channel partners'
   },
   {
     id: 'eligibility',
@@ -50,30 +74,6 @@ export const SAATHI_FEATURES: FeatureChip[] = [
     labelPa: '✅ ਯੋਗਤਾ ਜਾਂਚ',
     icon: <CheckCircle2 size={14} />,
     prompt: 'Check my eligibility score and explain the criteria'
-  },
-  {
-    id: 'emi',
-    labelEn: '💰 Loan & EMI',
-    labelHi: '💰 ऋण व ईएमआई',
-    labelPa: '💰 ਕਰਜ਼ਾ ਤੇ EMI',
-    icon: <BadgePercent size={14} />,
-    prompt: 'Calculate my loan amount, EMI, interest rate, and moratorium'
-  },
-  {
-    id: 'documents',
-    labelEn: '📄 Document Checklist',
-    labelHi: '📄 दस्तावेज़ सूची',
-    labelPa: '📄 ਦਸਤਾਵੇਜ਼ ਸੂਚੀ',
-    icon: <FileText size={14} />,
-    prompt: 'Provide personalized required-document checklist'
-  },
-  {
-    id: 'partners',
-    labelEn: '🏦 Channel Partners',
-    labelHi: '🏦 अधिकृत बैंक/पार्टनर',
-    labelPa: '🏦 ਚੈਨਲ ਪਾਰਟਨਰ',
-    icon: <Building2 size={14} />,
-    prompt: 'Find suitable authorized channel partners and guide where to apply'
   },
   {
     id: 'whatif',

@@ -229,7 +229,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
         punjabiText: deterministicReply.punjabiText,
         timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
         featureMode: deterministicReply.featureMode,
-        matchedSchemes: deterministicReply.matchedSchemes,
+        matchedSchemes: (deterministicReply.featureMode === 'recommendation' || query.toLowerCase().includes('scheme') || query.toLowerCase().includes('योजना')) ? deterministicReply.matchedSchemes : undefined,
         emiCard: deterministicReply.emiCard,
         documentCard: deterministicReply.documentCard,
         partnerCard: deterministicReply.partnerCard,
