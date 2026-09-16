@@ -221,17 +221,81 @@ export interface DocumentReadinessReport {
   actionPlan: string[];
 }
 
+export type ChatFeatureMode = 
+  | 'recommendation' 
+  | 'eligibility' 
+  | 'emi' 
+  | 'documents' 
+  | 'partners' 
+  | 'whatif' 
+  | 'general';
+
+export interface ChatEmiCardData {
+  loanAmount: number;
+  subsidyAmount: number;
+  interestRate: number;
+  tenureMonths: number;
+  monthlyEmi: number;
+  moratoriumMonths?: number;
+  schemeName: string;
+}
+
+export interface ChatDocumentItem {
+  name: string;
+  mandatory: boolean;
+  status?: 'Ready' | 'Missing';
+  howToGet?: string;
+}
+
+export interface ChatPartnerItem {
+  name: string;
+  type: string;
+  distanceKm: number;
+  address: string;
+  schemeAuthorization: string;
+}
+
+export interface ChatWhatIfCardData {
+  baselineSubsidy: number;
+  improvedSubsidy: number;
+  baselineEmi: number;
+  improvedEmi: number;
+  recommendationTip: string;
+}
+
+export interface ChatEligibilityCardData {
+  schemeName: string;
+  matchScore: number;
+  verdict: 'Eligible' | 'Conditional' | 'Not Eligible';
+  reasons: string[];
+  remedyTips: string[];
+}
+
 export interface ChatMessage {
   id: string;
   sender: 'user' | 'assistant';
   text: string;
   hindiText?: string;
+  punjabiText?: string;
   timestamp: string;
+  featureMode?: ChatFeatureMode;
   matchedSchemes?: Array<{
     id: string;
     name: string;
     subsidyHighlight: string;
+    interestRate?: string;
+    maxLoan?: number;
   }>;
+  emiCard?: ChatEmiCardData;
+  documentCard?: {
+    schemeName: string;
+    documents: ChatDocumentItem[];
+  };
+  partnerCard?: {
+    nearestPartners: ChatPartnerItem[];
+  };
+  whatIfCard?: ChatWhatIfCardData;
+  eligibilityCard?: ChatEligibilityCardData;
   suggestedPrompts?: string[];
   extractedProfileUpdates?: Partial<UserProfile>;
 }

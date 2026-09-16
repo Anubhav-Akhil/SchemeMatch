@@ -1,19 +1,17 @@
-import { Scheme, UserProfile, SocialCategory, Gender, SectorType } from '../types';
-
-export interface ChatMessage {
-  id: string;
-  sender: 'user' | 'assistant';
-  text: string;
-  hindiText?: string;
-  timestamp: string;
-  matchedSchemes?: Array<{
-    id: string;
-    name: string;
-    subsidyHighlight: string;
-  }>;
-  suggestedPrompts?: string[];
-  extractedProfileUpdates?: Partial<UserProfile>;
-}
+import { 
+  Scheme, 
+  UserProfile, 
+  SocialCategory, 
+  Gender, 
+  SectorType, 
+  ChatMessage, 
+  ChatFeatureMode,
+  ChatEmiCardData,
+  ChatDocumentItem,
+  ChatPartnerItem,
+  ChatWhatIfCardData,
+  ChatEligibilityCardData
+} from '../types';
 
 export class SaathiChatService {
   private schemes: Scheme[];
@@ -22,17 +20,27 @@ export class SaathiChatService {
     this.schemes = schemes;
   }
 
-  public processMessage(userQuery: string, currentProfile?: Partial<UserProfile>): ChatMessage {
+  private calculateEmi(principal: number, annualRatePercent: number, tenureMonths: number): number {
+    if (principal <= 0 || tenureMonths <= 0) return 0;
+    const r = annualRatePercent / 1200;
+    if (r === 0) return Math.round(principal / tenureMonths);
+    const emi = (principal * r * Math.pow(1 + r, tenureMonths)) / (Math.pow(1 + r, tenureMonths) - 1);
+    return Math.round(emi);
+  }
+
+  public processMessage(
+    userQuery: string, 
+    currentProfile?: Partial<UserProfile>, 
+    preferredMode?: ChatFeatureMode
+  ): ChatMessage {
     const q = userQuery.toLowerCase().trim();
     const updates: Partial<UserProfile> = {};
-    const matchedSchemes: Array<{ id: string; name: string; subsidyHighlight: string }> = [];
     const suggestedPrompts: string[] = [];
 
     // Entity extraction
-    // Category detection
-    if (q.includes('sc') || q.includes('scheduled caste') || q.includes('dalit') || q.includes('harijan') || q.includes('अनुसूचित जाति')) {
+    if (q.includes('sc') || q.includes('scheduled caste') || q.includes('dalit') || q.includes('अनुसूचित जाति')) {
       updates.category = 'SC';
-    } else if (q.includes('st') || q.includes('scheduled tribe') || q.includes('adivasi') || q.includes('tribal') || q.includes('आदिवासी') || q.includes('अनुसूचित जनजाति')) {
+    } else if (q.includes('st') || q.includes('scheduled tribe') || q.includes('adivasi') || q.includes('अनुसूचित जनजाति')) {
       updates.category = 'ST';
     } else if (q.includes('obc') || q.includes('backward class') || q.includes('पिछड़ा वर्ग')) {
       updates.category = 'OBC';
@@ -44,46 +52,42 @@ export class SaathiChatService {
       updates.isMinority = true;
     }
 
-    // Gender detection
-    if (q.includes('mahila') || q.includes('woman') || q.includes('women') || q.includes('female') || q.includes('aurat') || q.includes('महिला')) {
+    if (q.includes('mahila') || q.includes('woman') || q.includes('women') || q.includes('female') || q.includes('महिला') || q.includes('ਔਰਤ')) {
       updates.gender = 'Female';
-    } else if (q.includes('purush') || q.includes('man') || q.includes('male') || q.includes('पुरुष')) {
+    } else if (q.includes('purush') || q.includes('man') || q.includes('male') || q.includes('पुरुष') || q.includes('ਮਰਦ')) {
       updates.gender = 'Male';
     }
 
-    // Disability detection
-    if (q.includes('divyang') || q.includes('handicap') || q.includes('disabled') || q.includes('disability') || q.includes('दिव्यांग')) {
+    if (q.includes('divyang') || q.includes('handicap') || q.includes('disabled') || q.includes('disability') || q.includes('दिव्यांग') || q.includes('ਅਪਾਹਜ')) {
       updates.isDifferentlyAbled = true;
       updates.disabilityPercentage = 40;
     }
 
-    // Location detection
-    if (q.includes('gaao') || q.includes('gaon') || q.includes('rural') || q.includes('village') || q.includes('panchayat') || q.includes('ग्रामीण')) {
+    if (q.includes('gaao') || q.includes('gaon') || q.includes('rural') || q.includes('village') || q.includes('ग्रामीण') || q.includes('ਪੇਂਡੂ')) {
       updates.locationType = 'Rural';
-    } else if (q.includes('city') || q.includes('urban') || q.includes('nagar') || q.includes('shahar') || q.includes('शहरी')) {
+    } else if (q.includes('city') || q.includes('urban') || q.includes('nagar') || q.includes('shahar') || q.includes('शहरी') || q.includes('ਸ਼ਹਿਰੀ')) {
       updates.locationType = 'Urban';
     }
 
-    // Sector / Trade detection
-    if (q.includes('silai') || q.includes('tailor') || q.includes('cloth') || q.includes('garment') || q.includes('kapda') || q.includes('textile') || q.includes('कपड़ा')) {
+    if (q.includes('silai') || q.includes('tailor') || q.includes('garment') || q.includes('कपड़ा') || q.includes('ਕੱਪੜੇ')) {
       updates.sector = 'Textiles';
       updates.tradeType = 'Tailoring & Garments';
-    } else if (q.includes('bunkar') || q.includes('weaver') || q.includes('handloom') || q.includes('loom') || q.includes('हथकरघा') || q.includes('कारीगर') || q.includes('artisan') || q.includes('craft')) {
+    } else if (q.includes('bunkar') || q.includes('weaver') || q.includes('handloom') || q.includes('कारीगर') || q.includes('artisan') || q.includes('craft')) {
       updates.sector = 'ArtisanHandicraft';
       updates.tradeType = 'Handloom / Artisan Craft';
-    } else if (q.includes('vendor') || q.includes('thela') || q.includes('food cart') || q.includes('chaat') || q.includes('stall') || q.includes('फेरीवाला') || q.includes('स्ट्रीट वेंडर')) {
+    } else if (q.includes('vendor') || q.includes('thela') || q.includes('food cart') || q.includes('chaat') || q.includes('stall') || q.includes('रेहड़ी') || q.includes('ਰੇਹੜੀ')) {
       updates.sector = 'StreetVending';
       updates.tradeType = 'Street Vending Stall';
-    } else if (q.includes('sanitation') || q.includes('cleaning') || q.includes('tanker') || q.includes('सफाई')) {
+    } else if (q.includes('sanitation') || q.includes('cleaning') || q.includes('सफाई')) {
       updates.sector = 'Sanitation';
       updates.tradeType = 'Mechanized Sanitation Services';
-    } else if (q.includes('kisan') || q.includes('agro') || q.includes('krishi') || q.includes('dairy') || q.includes('poultry') || q.includes('farming') || q.includes('honey') || q.includes('मधुमक्खी')) {
+    } else if (q.includes('kisan') || q.includes('agro') || q.includes('krishi') || q.includes('dairy') || q.includes('poultry') || q.includes('खेती') || q.includes('ਡੇਅਰੀ')) {
       updates.sector = 'AgroAllied';
       updates.tradeType = 'Agro-Processing & Allied';
     }
 
     // Loan amount parsing
-    const lakhMatch = q.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|लाख)/i);
+    const lakhMatch = q.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|लाख|ਲੱਖ)/i);
     if (lakhMatch) {
       const lakhs = parseFloat(lakhMatch[1]);
       updates.requiredLoanAmount = lakhs * 100000;
@@ -96,114 +100,268 @@ export class SaathiChatService {
       }
     }
 
-    // Determine dialogue response
+    const mergedCategory = updates.category || currentProfile?.category || 'SC';
+    const mergedLocation = updates.locationType || currentProfile?.locationType || 'Rural';
+    const loanAmt = updates.requiredLoanAmount || currentProfile?.requiredLoanAmount || 500000;
+
+    // Determine Feature Mode
+    let detectedMode: ChatFeatureMode = preferredMode || 'general';
+    if (detectedMode === 'general') {
+      if (q.includes('emi') || q.includes('interest') || q.includes('loan') || q.includes('किस्त') || q.includes('ब्याज') || q.includes('ਕਿਸ਼ਤ') || q.includes('ਵਿਆਜ') || q.includes('moratorium')) {
+        detectedMode = 'emi';
+      } else if (q.includes('document') || q.includes('paper') || q.includes('kagaz') || q.includes('aadhaar') || q.includes('pan') || q.includes('दस्तावेज') || q.includes('ਕਾਗਜ਼ਾਤ') || q.includes('certificate')) {
+        detectedMode = 'documents';
+      } else if (q.includes('partner') || q.includes('bank') || q.includes('branch') || q.includes('where to apply') || q.includes('sca') || q.includes('psb') || q.includes('कहाँ') || q.includes('ਕਿੱਥੇ')) {
+        detectedMode = 'partners';
+      } else if (q.includes('what if') || q.includes('what-if') || q.includes('change') || q.includes('income') || q.includes('अगर') || q.includes('ਜੇਕਰ') || q.includes('simulate')) {
+        detectedMode = 'whatif';
+      } else if (q.includes('eligib') || q.includes('qualif') || q.includes('patrata') || q.includes('score') || q.includes('पात्रता') || q.includes('ਯੋਗਤਾ')) {
+        detectedMode = 'eligibility';
+      } else if (q.includes('scheme') || q.includes('yojana') || q.includes('recommend') || q.includes('योजना') || q.includes('ਸਕੀਮ') || q.includes('best')) {
+        detectedMode = 'recommendation';
+      }
+    }
+
     let responseText = '';
     let responseHindi = '';
+    let responsePunjabi = '';
+    let emiCard: ChatEmiCardData | undefined;
+    let documentCard: { schemeName: string; documents: ChatDocumentItem[] } | undefined;
+    let partnerCard: { nearestPartners: ChatPartnerItem[] } | undefined;
+    let whatIfCard: ChatWhatIfCardData | undefined;
+    let eligibilityCard: ChatEligibilityCardData | undefined;
+    const matchedSchemes: Array<{ id: string; name: string; subsidyHighlight: string; interestRate?: string; maxLoan?: number }> = [];
 
-    if (q.includes('pmegp') || q.includes('subsidy') || q.includes('subsidi') || q.includes('सब्सिडी')) {
-      responseText = `Under the PMEGP scheme, marginalized entrepreneurs (SC, ST, OBC, Women, Differently-Abled, Minorities) receive a **35% capital subsidy in rural areas** and **25% in urban areas**. Your own contribution is just 5% of the total project cost. For manufacturing projects, loans go up to ₹50 Lakhs, and for services up to ₹20 Lakhs.`;
-      responseHindi = `पीएमईजीपी योजना के तहत, विशेष श्रेणी के उद्यमियों (एससी, एसटी, ओबीसी, महिलाओं, दिव्यांगों) को **ग्रामीण क्षेत्रों में 35%** और **शहरी क्षेत्रों में 25%** सरकारी सब्सिडी मिलती है। आपका स्वयं का अंशदान परियोजना लागत का मात्र 5% होता है। विनिर्माण हेतु ₹50 लाख और सेवा क्षेत्र हेतु ₹20 लाख तक ऋण मिलता है।`;
-      
-      matchedSchemes.push({
-        id: 'pmegp-2026',
-        name: "Prime Minister's Employment Generation Programme (PMEGP)",
-        subsidyHighlight: 'Up to 35% Capital Grant (Rural Special)'
-      });
-      suggestedPrompts.push('Generate Bank-Ready DPR for PMEGP', 'What documents are required for PMEGP?', 'How to apply online on KVIC portal?');
+    switch (detectedMode) {
+      case 'emi': {
+        const rate = 8.5;
+        const tenureMonths = 60;
+        const subsidyRate = mergedLocation === 'Rural' ? 0.35 : 0.25;
+        const subsidyAmount = Math.round(loanAmt * subsidyRate);
+        const netLoanPrincipal = Math.max(10000, loanAmt - subsidyAmount);
+        const monthlyEmi = this.calculateEmi(netLoanPrincipal, rate, tenureMonths);
 
-    } else if (q.includes('vishwakarma') || q.includes('artisan') || q.includes('craft') || q.includes('विश्वकर्मा')) {
-      responseText = `The **PM Vishwakarma Scheme** offers holistic support for 18 traditional crafts. You get a **₹15,000 digital voucher for modern tools**, free skill training with **₹500 daily stipend**, and **collateral-free loan up to ₹3 Lakhs at only 5% interest rate** (backed by 8% direct government subvention).`;
-      responseHindi = `**पीएम विश्वकर्मा योजना** 18 पारंपरिक शिल्पों के लिए सम्पूर्ण सहायता देती है। इसमें **आधुनिक औजारों हेतु ₹15,000 का ई-वाउचर**, **₹500/दिन वजीफे के साथ निःशुल्क प्रशिक्षण**, और **मात्र 5% ब्याज दर पर ₹3 लाख तक का संपार्श्विक-मुक्त ऋण** मिलता है।`;
-      
-      matchedSchemes.push({
-        id: 'pm-vishwakarma',
-        name: 'PM Vishwakarma Scheme for Traditional Artisans',
-        subsidyHighlight: '₹15,000 Toolkit Grant + 5% Subsidized Loan'
-      });
-      suggestedPrompts.push('Which 18 trades are covered in PM Vishwakarma?', 'Check PM Vishwakarma document checklist');
+        responseText = `Here is your loan and EMI breakdown for a loan of ₹${loanAmt.toLocaleString('en-IN')}. Under PMEGP (${mergedCategory}, ${mergedLocation}), you qualify for a **${subsidyRate * 100}% Capital Subsidy (₹${subsidyAmount.toLocaleString('en-IN')})**. With a concessional rate of ${rate}% over 5 years (60 months) and a 6-month moratorium on principal repayment, your estimated net monthly EMI is **₹${monthlyEmi.toLocaleString('en-IN')}/month**.`;
+        
+        responseHindi = `₹${loanAmt.toLocaleString('en-IN')} के ऋण के लिए आपकी ईएमआई का विवरण: PMEGP (${mergedCategory}, ${mergedLocation === 'Rural' ? 'ग्रामीण' : 'शहरी'}) के तहत आपको **${subsidyRate * 100}% सरकारी सब्सिडी (₹${subsidyAmount.toLocaleString('en-IN')})** मिलेगी। 5 वर्ष (60 माह) के लिए ${rate}% वार्षिक ब्याज दर और 6 माह के अधिस्थगन (मोरेटोरियम) के साथ आपकी अनुमानित शुद्ध मासिक ईएमआई मात्र **₹${monthlyEmi.toLocaleString('en-IN')}/माह** होगी।`;
 
-    } else if (q.includes('svanidhi') || q.includes('street') || q.includes('thela') || q.includes('vendor') || q.includes('स्वनिधि')) {
-      responseText = `**PM SVANidhi** provides collateral-free working capital for street vendors in 3 progressive tranches: **₹10,000 -> ₹20,000 -> ₹50,000**. You get a **7% interest subsidy** credited to your bank account via DBT and **up to ₹1,200 annual cashback** for accepting digital payments (₹100/month).`;
-      responseHindi = `**पीएम स्वनिधि** रेहड़ी-पटरी विक्रेताओं को 3 चरणों में संपार्श्विक-मुक्त ऋण देती है: **₹10,000 -> ₹20,000 -> ₹50,000**। इसमें **7% ब्याज अनुदान** सीधे खाते में आता है और डिजिटल लेन-देन पर **₹1,200 तक वार्षिक कैशबैक** मिलता है।`;
-      
-      matchedSchemes.push({
-        id: 'pm-svanidhi',
-        name: 'PM SVANidhi for Street Vendors',
-        subsidyHighlight: '7% Interest Subsidy + ₹1,200 Annual Cashback'
-      });
-      suggestedPrompts.push('How to get Certificate of Vending (CoV)?', 'What is the repayment period for PM SVANidhi?');
+        responsePunjabi = `₹${loanAmt.toLocaleString('en-IN')} ਦੇ ਕਰਜ਼ੇ ਲਈ ਤੁਹਾਡੀ ਈਐਮਆਈ ਦੀ ਜਾਣਕਾਰੀ: PMEGP (${mergedCategory}, ${mergedLocation === 'Rural' ? 'ਪੇਂਡੂ' : 'ਸ਼ਹਿਰੀ'}) ਦੇ ਤਹਿਤ ਤੁਹਾਨੂੰ **${subsidyRate * 100}% ਸਬਸਿਡੀ (₹${subsidyAmount.toLocaleString('en-IN')})** ਮਿਲ ਸਕਦੀ ਹੈ। 5 ਸਾਲ (60 ਮਹੀਨੇ) ਲਈ ${rate}% ਵਿਆਜ ਦਰ 'ਤੇ ਤੁਹਾਡੀ ਮਾਸਿਕ ਕਿਸ਼ਤ ਲਗਭਗ **₹${monthlyEmi.toLocaleString('en-IN')}/ਮਹੀਨਾ** ਹੋਵੇਗੀ।`;
 
-    } else if (q.includes('nsfdc') || q.includes('sc ') || (updates.category === 'SC' && (updates.gender === 'Female' || q.includes('mahila')))) {
-      responseText = `For Scheduled Caste entrepreneurs, the **Ministry of Social Justice and Empowerment (MoSJE)** provides dedicated schemes through **NSFDC**:
-1. **NSFDC Mahila Samriddhi Yojana**: Micro-finance up to ₹1,40,000 at only **4% per annum interest rate** for SC women.
-2. **NSFDC Term Loan**: Up to ₹50 Lakhs covering 95% of project cost at 6% to 9% concessional interest rate.`;
-      responseHindi = `अनुसूचित जाति के उद्यमियों के लिए, **सामाजिक न्याय और अधिकारिता मंत्रालय (MoSJE)** **एनएसएफडीसी** के माध्यम से विशेष योजनाएं चलाता है:
-1. **महिला समृद्धि योजना**: एससी महिलाओं हेतु मात्र **4% वार्षिक ब्याज पर ₹1,40,000** तक का ऋण।
-2. **एनएसएफडीसी मियादी ऋण**: परियोजना लागत का 95% तक 6% से 9% ब्याज पर ₹50 लाख तक का ऋण।`;
+        emiCard = {
+          schemeName: "Prime Minister's Employment Generation Programme (PMEGP)",
+          loanAmount: loanAmt,
+          subsidyAmount,
+          interestRate: rate,
+          tenureMonths,
+          monthlyEmi,
+          moratoriumMonths: 6
+        };
 
-      matchedSchemes.push(
-        {
-          id: 'nsfdc-mahila-samriddhi',
-          name: 'NSFDC Mahila Samriddhi Yojana for SC Women',
-          subsidyHighlight: 'Ultra-low 4% Interest Rate'
-        },
-        {
-          id: 'nsfdc-term-loan',
-          name: 'NSFDC Term Loan for SC Entrepreneurs',
-          subsidyHighlight: '95% Project Cost Financing at 6-9%'
-        }
-      );
-      suggestedPrompts.push('Check NSFDC income criteria', 'How to apply via State Channelizing Agency (SCA)?');
+        suggestedPrompts.push(
+          'What if I increase loan tenure to 7 years?',
+          'What documents are needed for bank EMI approval?',
+          'Find nearest PSB branch to apply for this loan'
+        );
+        break;
+      }
 
-    } else if (q.includes('udyam') || q.includes('registration') || q.includes('पंजीकरण')) {
-      responseText = `**Udyam Registration** is the official MSME registration. It is **100% Free, paperless, and takes only 10 minutes** on [udyamregistration.gov.in](https://udyamregistration.gov.in). You only need your **Aadhaar number and linked mobile** (and PAN if available). It unlocks priority sector bank loans, collateral-free credit, and subsidy release.`;
-      responseHindi = `**उद्यम पंजीकरण** आधिकारिक एमएसएमई पहचान है। यह [udyamregistration.gov.in](https://udyamregistration.gov.in) पर **100% निःशुल्क, कागज रहित और 10 मिनट में** हो जाता है। इसके लिए केवल **आधार नंबर और उससे जुड़ा मोबाइल** चाहिए। यह प्राथमिकता ऋण और सब्सिडी के लिए अनिवार्य है।`;
-      suggestedPrompts.push('Is GST required for Udyam?', 'Verify my document readiness score');
+      case 'documents': {
+        responseText = `Here is your personalized document checklist for applying to Ministry of Social Justice & PMEGP schemes. Ensuring these documents are active and digitized increases your sanction speed by over 3x!`;
+        responseHindi = `सामाजिक न्याय मंत्रालय और PMEGP योजनाओं में आवेदन हेतु आपकी व्यक्तिगत दस्तावेज़ चेकलिस्ट तैयार है। इन दस्तावेजों को डिजिटल रूप में रखने से ऋण स्वीकृति 3 गुना तेज़ी से होती है!`;
+        responsePunjabi = `ਸਮਾਜਿਕ ਨਿਆਂ ਮੰਤਰਾਲੇ ਅਤੇ PMEGP ਸਕੀਮਾਂ ਲਈ ਤੁਹਾਡੀ ਜ਼ਰੂਰੀ ਦਸਤਾਵੇਜ਼ ਸੂਚੀ ਇੱਥੇ ਹੈ। ਇਹ ਕਾਗਜ਼ਾਤ ਤਿਆਰ ਹੋਣ ਨਾਲ ਕਰਜ਼ਾ ਬਹੁਤ ਜਲਦੀ ਮਨਜ਼ੂਰ ਹੁੰਦਾ ਹੈ।`;
 
-    } else if (q.includes('visvas') || q.includes('विश्वास')) {
-      responseText = `The **VISVAS Scheme** (Vanchit Ikai Samooh Aur Vargon Ki Aarthik Sahayata) by MoSJE provides **5% direct interest subvention** on standard bank loans and Mudra loans for SC and OBC micro-borrowers (up to ₹2 Lakh) and SHGs (up to ₹4 Lakh). If your bank charges 9.5%, your effective interest rate drops to just 4.5%!`;
-      responseHindi = `सामाजिक न्याय मंत्रालय की **विश्वास योजना** अनुसूचित जाति और अन्य पिछड़ा वर्ग के उद्यमियों (₹2 लाख तक) और स्वयं सहायता समूहों (₹4 लाख तक) को बैंक ऋणों पर **5% सीधी ब्याज छूट** देती है। यदि बैंक 9.5% लेता है, तो आपकी शुद्ध ब्याज दर मात्र 4.5% रह जाती है!`;
-      
-      matchedSchemes.push({
-        id: 'visvas-scheme',
-        name: 'VISVAS Scheme (5% Interest Subvention)',
-        subsidyHighlight: '5% Direct Interest Subvention via DBT'
-      });
-      suggestedPrompts.push('Can VISVAS be combined with Mudra Loan?', 'Who is the nodal agency for VISVAS?');
+        documentCard = {
+          schemeName: 'PMEGP & NSFDC Credit Linkage',
+          documents: [
+            { name: 'Aadhaar Card (linked to Mobile)', mandatory: true, status: 'Ready', howToGet: 'UIDAI Portal / Nearest CSC' },
+            { name: `${mergedCategory} Caste Certificate (Digital)`, mandatory: true, status: 'Ready', howToGet: 'State e-District / Tehsil Portal' },
+            { name: 'Udyam MSME Registration (100% Free)', mandatory: true, status: 'Missing', howToGet: 'udyamregistration.gov.in (Takes 10 mins)' },
+            { name: 'Bank Statement (Last 6 Months)', mandatory: true, status: 'Ready', howToGet: 'Net Banking or Bank Passbook Stamp' },
+            { name: 'Detailed Project Report (DPR / Viability)', mandatory: true, status: 'Ready', howToGet: 'Generated automatically by SchemeMatch AI' },
+            { name: 'Rent Agreement / Land Ownership Proof', mandatory: false, status: 'Ready', howToGet: 'Local Panchayat or Municipality deed' }
+          ]
+        };
 
-    } else {
-      // General tailored response
-      const cat = updates.category || currentProfile?.category || 'Marginalized';
-      const sec = updates.sector || currentProfile?.sector || 'Enterprise';
-      const loc = updates.locationType || currentProfile?.locationType || 'Rural';
+        suggestedPrompts.push(
+          'How do I register for Udyam in 10 minutes?',
+          'Calculate my monthly EMI',
+          'Find nearest authorized channel partner'
+        );
+        break;
+      }
 
-      responseText = `Namaste! Based on your interest in **${sec}** as a **${cat}** entrepreneur in a **${loc}** area, our AI engine has mapped your profile. You are in a prime position to unlock up to **35% capital subsidy under PMEGP** and concessional 4%-6% credit under **MoSJE apex corporations** (NSFDC / NBCFDC / NDFDC). Would you like me to calculate your exact monthly EMI and generate a Bank-Ready Detailed Project Report (DPR)?`;
-      responseHindi = `नमस्ते! **${loc === 'Rural' ? 'ग्रामीण' : 'शहरी'}** क्षेत्र में **${cat}** उद्यमी के रूप में **${sec}** हेतु हमारे एआई इंजन ने आपका मिलान किया है। आप **पीएमईजीपी के तहत 35% तक सब्सिडी** और **MoSJE शीर्ष निगमों** के माध्यम से 4%-6% रियायती ऋण प्राप्त कर सकते हैं। क्या आप अपनी सटीक ईएमआई और बैंक-प्रोजेक्ट रिपोर्ट देखना चाहते हैं?`;
+      case 'partners': {
+        responseText = `We have located authorized Channel Partners (SCAs, Public Sector Banks, and District Industries Centres) ready to process your application under Government concessional credit mandates.`;
+        responseHindi = `हमने आपके लिए अधिकृत चैनल पार्टनर (राज्य चैनलाइजिंग एजेंसी, सरकारी बैंक, और जिला उद्योग केंद्र) चिन्हित किए हैं जो आपका आवेदन सीधे स्वीकार करेंगे।`;
+        responsePunjabi = `ਅਸੀਂ ਤੁਹਾਡੇ ਇਲਾਕੇ ਦੇ ਅਧਿਕਾਰਤ ਚੈਨਲ ਪਾਰਟਨਰ (ਸਰਕਾਰੀ ਬੈਂਕ ਅਤੇ ਜ਼ਿਲ੍ਹਾ ਉਦਯੋਗ ਕੇਂਦਰ) ਲੱਭੇ ਹਨ ਜੋ ਤੁਹਾਡੀ ਅਰਜ਼ੀ ਸਵੀਕਾਰ ਕਰਨਗੇ।`;
 
-      matchedSchemes.push(
-        {
-          id: 'pmegp-2026',
-          name: "Prime Minister's Employment Generation Programme (PMEGP)",
-          subsidyHighlight: '25% - 35% Capital Subsidy'
-        },
-        {
-          id: 'mudra-kishor',
-          name: 'PMMY Mudra Kishor / Tarun',
-          subsidyHighlight: 'Collateral-Free Loan up to ₹10 Lakhs'
-        }
-      );
-      suggestedPrompts.push('Calculate my monthly EMI and Subsidy', 'Check my Document Readiness', 'Generate Bank-Ready DPR');
+        partnerCard = {
+          nearestPartners: [
+            {
+              name: 'State Channelizing Agency (SCA) District Office',
+              type: 'Apex Channelizing Agency (SCA)',
+              distanceKm: 3.4,
+              address: 'Vikas Bhawan, Near Collectorate, Civil Lines',
+              schemeAuthorization: 'NSFDC, NBCFDC, NSKFDC direct concessional loans'
+            },
+            {
+              name: 'State Bank of India (SBI) SME Branch',
+              type: 'Public Sector Bank (PSB)',
+              distanceKm: 1.8,
+              address: 'Main Commercial Branch, Station Road',
+              schemeAuthorization: 'PMEGP, Stand-Up India, Mudra & CGTMSE'
+            },
+            {
+              name: 'District Industries Centre (DIC)',
+              type: 'DIC Nodal Office',
+              distanceKm: 4.2,
+              address: 'Industrial Estate, Phase 1',
+              schemeAuthorization: 'PMEGP Task Force Committee & PM Vishwakarma verification'
+            }
+          ]
+        };
+
+        suggestedPrompts.push(
+          'What documents should I carry to the SCA office?',
+          'Check eligibility for Stand-Up India',
+          'Simulate what-if I apply through a rural branch'
+        );
+        break;
+      }
+
+      case 'whatif': {
+        const baselineSub = Math.round(loanAmt * 0.15);
+        const improvedSub = Math.round(loanAmt * 0.35);
+        const baseEmi = this.calculateEmi(loanAmt - baselineSub, 10.5, 60);
+        const impEmi = this.calculateEmi(loanAmt - improvedSub, 7.5, 60);
+
+        responseText = `Here is your **What-If Eligibility Simulation**. Changing your enterprise location or formalizing documentation substantially boosts your government benefit:
+- **Baseline (Urban / General category)**: 15% Subsidy (₹${baselineSub.toLocaleString('en-IN')}) | EMI: ₹${baseEmi.toLocaleString('en-IN')}/mo
+- **Optimized (${mergedCategory} / Rural setting)**: **35% Subsidy (₹${improvedSub.toLocaleString('en-IN')})** | Concessional EMI: **₹${impEmi.toLocaleString('en-IN')}/mo**
+- **Net Monthly Savings**: ₹${(baseEmi - impEmi).toLocaleString('en-IN')}/month!`;
+
+        responseHindi = `यह आपका **व्हॉट-इफ (What-If) सिमुलेशन** है:
+- **सामान्य शहरी स्थिति**: 15% सब्सिडी (₹${baselineSub.toLocaleString('en-IN')}) | ईएमआई: ₹${baseEmi.toLocaleString('en-IN')}/माह
+- **अनुकूलित (${mergedCategory} / ग्रामीण)**: **35% सब्सिडी (₹${improvedSub.toLocaleString('en-IN')})** | रियायती ईएमआई: **₹${impEmi.toLocaleString('en-IN')}/माह**
+- **मासिक बचत**: ₹${(baseEmi - impEmi).toLocaleString('en-IN')}/माह!`;
+
+        responsePunjabi = `ਤੁਹਾਡਾ **ਵੱਟ-ਇਫ਼ ਸਿਮੂਲੇਸ਼ਨ (What-If)**:
+- **ਆਮ ਸ਼ਹਿਰੀ ਵਿਕਲਪ**: 15% ਸਬਸਿਡੀ | ਕਿਸ਼ਤ: ₹${baseEmi.toLocaleString('en-IN')}/ਮਹੀਨਾ
+- **ਅਨੁਕੂਲਿਤ (${mergedCategory} / ਪੇਂਡੂ)**: **35% ਸਬਸਿਡੀ (₹${improvedSub.toLocaleString('en-IN')})** | ਕਿਸ਼ਤ: **₹${impEmi.toLocaleString('en-IN')}/ਮਹੀਨਾ**
+- **ਕੁੱਲ ਮਾਸਿਕ ਬੱਚਤ**: ₹${(baseEmi - impEmi).toLocaleString('en-IN')}/ਮਹੀਨਾ!`;
+
+        whatIfCard = {
+          baselineSubsidy: baselineSub,
+          improvedSubsidy: improvedSub,
+          baselineEmi: baseEmi,
+          improvedEmi: impEmi,
+          recommendationTip: 'Establishing your manufacturing unit in a notified Rural Panchayat qualifies you for the top 35% capital subsidy bracket under PMEGP.'
+        };
+
+        suggestedPrompts.push(
+          'Check required documents for rural PMEGP',
+          'Find nearest rural bank branch',
+          'Calculate exact EMI for ₹10 Lakhs'
+        );
+        break;
+      }
+
+      case 'eligibility': {
+        responseText = `Here is your instant **Eligibility Verification Result** for top central schemes based on your profile. You meet 100% of the core socioeconomic guidelines.`;
+        responseHindi = `आपकी प्रोफ़ाइल के आधार पर शीर्ष केंद्रीय योजनाओं के लिए आपका **पात्रता सत्यापन परिणाम** तैयार है। आप सभी प्रमुख सामाजिक-आर्थिक दिशानिर्देशों को पूरा करते हैं।`;
+        responsePunjabi = `ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ ਦੇ ਅਨੁਸਾਰ ਮੁੱਖ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਲਈ ਤੁਹਾਡਾ **ਯੋਗਤਾ ਨਤੀਜਾ** ਤਿਆਰ ਹੈ। ਤੁਸੀਂ ਸਾਰੇ ਜ਼ਰੂਰੀ ਨਿਯਮਾਂ ਨੂੰ ਪੂਰਾ ਕਰਦੇ ਹੋ।`;
+
+        eligibilityCard = {
+          schemeName: "Prime Minister's Employment Generation Programme (PMEGP)",
+          matchScore: 96,
+          verdict: 'Eligible',
+          reasons: [
+            `Applicant belongs to designated special beneficiary category (${mergedCategory})`,
+            `Proposed unit location (${mergedLocation}) qualifies for apex subsidy bracket`,
+            `Applicant age and project outlay are within permissible limits`,
+            'Beneficiary promoter contribution of 5% meets minimal capital mandate'
+          ],
+          remedyTips: [
+            'Obtain free Udyam MSME registration before final bank disbursement',
+            'Keep digitized caste certificate ready for online DIC verification'
+          ]
+        };
+
+        suggestedPrompts.push(
+          'Show my loan and EMI breakdown',
+          'Download bank-ready document checklist',
+          'Connect with nearest Channel Partner'
+        );
+        break;
+      }
+
+      case 'recommendation':
+      default: {
+        responseText = `Namaste! Based on your profile (${mergedCategory} entrepreneur in a ${mergedLocation} area, requirement ₹${loanAmt.toLocaleString('en-IN')}), our AI engine has matched you with top high-impact schemes:
+1. **PMEGP**: Up to 35% Capital Grant & loan up to ₹50 Lakhs.
+2. **PM Vishwakarma**: ₹15,000 tool grant + 5% subsidized loan for traditional artisans.
+3. **Stand-Up India / NSFDC**: ₹10 Lakh to ₹1 Crore credit at concessional rates.`;
+
+        responseHindi = `नमस्ते! आपकी प्रोफ़ाइल (${mergedLocation === 'Rural' ? 'ग्रामीण' : 'शहरी'} क्षेत्र में ${mergedCategory} उद्यमी, आवश्यकता ₹${loanAmt.toLocaleString('en-IN')}) के आधार पर हमारे AI इंजन ने सर्वोत्तम योजनाएं खोजी हैं:
+1. **पीएमईजीपी (PMEGP)**: 35% तक पूंजीगत अनुदान एवं ₹50 लाख तक ऋण।
+2. **पीएम विश्वकर्मा**: ₹15,000 टूलकिट अनुदान + 5% रियायती ऋण।
+3. **स्टैंड-अप इंडिया / एनएसएफडीसी**: ₹10 लाख से ₹1 करोड़ तक का रियायती ऋण।`;
+
+        responsePunjabi = `ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ (${mergedCategory} ਉੱਦਮੀ, ${mergedLocation === 'Rural' ? 'ਪੇਂਡੂ' : 'ਸ਼ਹਿਰੀ'} ਖੇਤਰ, ਲੋੜ ₹${loanAmt.toLocaleString('en-IN')}) ਦੇ ਆਧਾਰ 'ਤੇ ਵਧੀਆ ਸਕੀਮਾਂ:
+1. **PMEGP**: 35% ਤੱਕ ਸਬਸਿਡੀ ਅਤੇ ₹50 ਲੱਖ ਤੱਕ ਕਰਜ਼ਾ।
+2. **PM ਵਿਸ਼ਵਕਰਮਾ**: ₹15,000 ਟੂਲਕਿੱਟ ਗ੍ਰਾਂਟ + 5% ਵਿਆਜ 'ਤੇ ਕਰਜ਼ਾ।
+3. **ਸਟੈਂਡ-ਅੱਪ ਇੰਡੀਆ / NSFDC**: ₹10 ਲੱਖ ਤੋਂ ₹1 ਕਰੋੜ ਤੱਕ ਕਰਜ਼ਾ।`;
+
+        matchedSchemes.push(
+          {
+            id: 'pmegp-2026',
+            name: "Prime Minister's Employment Generation Programme (PMEGP)",
+            subsidyHighlight: 'Up to 35% Capital Subsidy',
+            interestRate: '8.5% p.a.',
+            maxLoan: 5000000
+          },
+          {
+            id: 'pm-vishwakarma',
+            name: 'PM Vishwakarma Scheme for Artisans & Trades',
+            subsidyHighlight: '₹15,000 Toolkit + 5% Interest Loan',
+            interestRate: '5.0% Subsidized',
+            maxLoan: 300000
+          },
+          {
+            id: 'standup-india',
+            name: 'Stand-Up India Scheme for SC/ST & Women',
+            subsidyHighlight: 'Bank Credit from ₹10 Lakh to ₹1 Crore',
+            interestRate: 'MCLR + 3%',
+            maxLoan: 10000000
+          }
+        );
+
+        suggestedPrompts.push(
+          'Check my eligibility for PMEGP',
+          'Calculate my monthly EMI',
+          'What documents do I need to apply?'
+        );
+        break;
+      }
     }
 
     return {
-      id: `msg-${Date.now()}`,
+      id: `saathi-${Date.now()}`,
       sender: 'assistant',
       text: responseText,
       hindiText: responseHindi,
+      punjabiText: responsePunjabi,
       timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+      featureMode: detectedMode,
       matchedSchemes: matchedSchemes.length > 0 ? matchedSchemes : undefined,
+      emiCard,
+      documentCard,
+      partnerCard,
+      whatIfCard,
+      eligibilityCard,
       suggestedPrompts,
       extractedProfileUpdates: Object.keys(updates).length > 0 ? updates : undefined
     };
   }
 }
+

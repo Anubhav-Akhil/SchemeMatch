@@ -11,7 +11,7 @@ interface LanguageContextType {
   toggleTheme: () => void;
   t: Translations;
   isSpeaking: boolean;
-  speakText: (text: string) => void;
+  speakText: (text: string, langOverride?: SupportedLanguage) => void;
   stopSpeech: () => void;
   isChangingLanguage: boolean;
 }
@@ -50,8 +50,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  const speakText = (text: string) => {
-    SpeechAssistant.speak(text, language, (speaking) => {
+  const speakText = (text: string, langOverride?: SupportedLanguage) => {
+    SpeechAssistant.speak(text, langOverride || language, (speaking) => {
       setIsSpeaking(speaking);
     });
   };

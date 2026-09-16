@@ -196,20 +196,25 @@ app.get('/api/partners', (req: Request, res: Response) => {
   }
 });
 
-// Saathi AI Conversational Copilot (Powered by Groq Cloud)
+// Saathi AI Conversational Copilot (Powered by Groq Cloud + Domain Engine)
 app.post('/api/chat', async (req: Request, res: Response) => {
   try {
-    const { query, profile } = req.body;
+    const { query, profile, mode } = req.body;
     if (!query || typeof query !== 'string') {
       return res.status(400).json({ error: 'Query string is required' });
+    }
+
+    // Process through domain engine for feature modes, math calculations, cards, and translations
+    const deterministicReply = chatService.processMessage(query, profile, mode);
+
+    // If a dedicated feature mode is selected (emi, documents, partners, whatif, eligibility), serve immediate high-precision response
+    if (mode && mode !== 'general' && mode !== 'recommendation') {
+      return res.json(deterministicReply);
     }
 
     try {
       const aiResponse = await groqService.chatWithSaathi(query, profile, schemes);
       
-      // Also cross-reference with matching engine if query asks about schemes
-      const deterministicReply = chatService.processMessage(query, profile);
-
       // Merge entity extraction for maximum reliability
       const mergedUpdates = {
         ...(deterministicReply.extractedProfileUpdates || {}),
@@ -219,17 +224,23 @@ app.post('/api/chat', async (req: Request, res: Response) => {
       res.json({
         id: `saathi-${Date.now()}`,
         sender: 'assistant',
-        text: aiResponse.text,
-        hindiText: aiResponse.hindiText,
+        text: aiResponse.text || deterministicReply.text,
+        hindiText: aiResponse.hindiText || deterministicReply.hindiText,
+        punjabiText: deterministicReply.punjabiText,
         timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        featureMode: deterministicReply.featureMode,
         matchedSchemes: deterministicReply.matchedSchemes,
-        suggestedPrompts: aiResponse.suggestedPrompts,
+        emiCard: deterministicReply.emiCard,
+        documentCard: deterministicReply.documentCard,
+        partnerCard: deterministicReply.partnerCard,
+        whatIfCard: deterministicReply.whatIfCard,
+        eligibilityCard: deterministicReply.eligibilityCard,
+        suggestedPrompts: aiResponse.suggestedPrompts || deterministicReply.suggestedPrompts,
         extractedProfileUpdates: Object.keys(mergedUpdates).length > 0 ? mergedUpdates : undefined
       });
     } catch (groqErr) {
       console.warn('Groq AI chat encountered an issue, falling back to deterministic chat engine:', groqErr);
-      const fallbackReply = chatService.processMessage(query, profile);
-      res.json(fallbackReply);
+      res.json(deterministicReply);
     }
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Error processing chat query' });

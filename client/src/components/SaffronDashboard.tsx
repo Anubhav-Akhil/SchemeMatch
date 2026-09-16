@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
-import { ChatMessage } from '../types';
+import { ChatMessage, ChatFeatureMode } from '../types';
 import {
   LogOut, Sparkles, FileText, CheckCircle2, Scale, Compass,
   ArrowLeft, Building2, User as UserIcon, LayoutDashboard,
@@ -25,23 +25,43 @@ import { GapAnalyzer } from './GapAnalyzer';
 import { WhatIfSimulator } from './WhatIfSimulator';
 import { FinancialCalculator } from './FinancialCalculator';
 import { ChannelPartnerRouter } from './ChannelPartnerRouter';
+import {
+  FeatureChipsBar,
+  EmiCardView,
+  DocumentChecklistCardView,
+  PartnerFinderCardView,
+  WhatIfCardView,
+  EligibilityCardView
+} from './SaathiChatCards';
 
 /* ─── Inline Saathi AI Panel ──────────────────────────────────────── */
 const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   collapsed, onToggle
 }) => {
-  const { t, speakText, stopSpeech, isSpeaking, language } = useLanguage();
-  const { profile, setProfile, runMatching } = useProfile();
+  const { t, speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
+  const { profile, setProfile, runMatching, setSelectedSchemeModal } = useProfile();
+
+  const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
+  const [activeFeature, setActiveFeature] = useState<ChatFeatureMode>('recommendation');
+
+  useEffect(() => {
+    if (globalLang === 'hi') setChatLang('hi');
+    else if (globalLang === 'pa') setChatLang('pa');
+    else setChatLang('en');
+  }, [globalLang]);
+
   const [messages, setMessages] = useState<ChatMessage[]>([{
     id: 'msg-welcome',
     sender: 'assistant',
-    text: 'Namaste! I am Saathi AI — your personalized scheme discovery guide. Tell me about your work, location, or funding needs and I\'ll find the best government subsidies for you.',
-    hindiText: 'नमस्ते! मैं साथी AI हूँ। मुझे अपने कार्य, क्षेत्र और ऋण आवश्यकता के बारे में बताएं।',
+    text: 'Namaste! I am Saathi AI — your personalized scheme discovery guide. Select an assistant above or ask me any question.',
+    hindiText: 'नमस्ते! मैं साथी AI हूँ। ऊपर दिए गए विकल्पों से तुरंत अपनी पात्रता, ईएमआई और दस्तावेज़ जांचें।',
+    punjabiText: 'ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਮੈਂ ਸਾਥੀ AI ਹਾਂ। ਉੱਪਰ ਦਿੱਤੇ ਵਿਕਲਪਾਂ ਤੋਂ ਆਪਣੀ ਯੋਗਤਾ, ਕਿਸ਼ਤ (EMI) ਜਾਂ ਦਸਤਾਵੇਜ਼ ਚੈੱਕ ਕਰੋ।',
     timestamp: 'Just now',
     suggestedPrompts: [
       'What is PMEGP subsidy for rural SC women?',
-      'PM Vishwakarma toolkit grant details',
-      'How to get 5% VISVAS interest subvention?',
+      'Calculate my monthly EMI for 5 Lakhs',
+      'Show my document checklist',
+      'Find nearest authorized channel partner'
     ]
   }]);
   const [input, setInput] = useState('');
@@ -53,11 +73,16 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const sendMessage = async (q?: string) => {
-    const query = q || input;
-    if (!query.trim()) return;
+  const sendMessage = async (q?: string, overrideMode?: ChatFeatureMode) => {
+    const query = (q || input).trim();
+    if (!query) return;
+    const modeToUse = overrideMode || activeFeature;
+
     const userMsg: ChatMessage = {
-      id: `u-${Date.now()}`, sender: 'user', text: query,
+      id: `u-${Date.now()}`, 
+      sender: 'user', 
+      text: query,
+      featureMode: modeToUse,
       timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
     };
     setMessages(p => [...p, userMsg]);
@@ -67,11 +92,14 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
       const res = await fetch('http://localhost:5000/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, profile })
+        body: JSON.stringify({ query, profile, mode: modeToUse })
       });
       if (res.ok) {
         const reply: ChatMessage = await res.json();
         setMessages(p => [...p, reply]);
+        if (reply.featureMode) {
+          setActiveFeature(reply.featureMode);
+        }
         if (reply.extractedProfileUpdates) {
           const updated = { ...profile, ...reply.extractedProfileUpdates };
           setProfile(updated as any);
@@ -87,18 +115,42 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
     } finally { setIsLoading(false); }
   };
 
+  const handleSelectFeature = (mode: ChatFeatureMode, prompt: string) => {
+    setActiveFeature(mode);
+    sendMessage(prompt, mode);
+  };
+
   const toggleVoice = () => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) { alert('Voice not supported in this browser.'); return; }
     if (isRecording) { setIsRecording(false); return; }
     const r = new SR();
-    r.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
+    r.lang = chatLang === 'hi' ? 'hi-IN' : chatLang === 'pa' ? 'pa-IN' : 'en-IN';
     r.interimResults = false;
     setIsRecording(true);
-    r.onresult = (e: any) => { const t = e.results[0][0].transcript; setInput(t); setIsRecording(false); sendMessage(t); };
+    r.onresult = (e: any) => { 
+      const t = e.results[0][0].transcript; 
+      setInput(t); 
+      setIsRecording(false); 
+      sendMessage(t); 
+    };
     r.onerror = () => setIsRecording(false);
     r.onend = () => setIsRecording(false);
     r.start();
+  };
+
+  const getDisplayContent = (msg: ChatMessage) => {
+    if (chatLang === 'hi' && msg.hindiText) return msg.hindiText;
+    if (chatLang === 'pa' && msg.punjabiText) return msg.punjabiText;
+    return msg.text;
+  };
+
+  const handleAudioToggle = (msg: ChatMessage) => {
+    if (isSpeaking) {
+      stopSpeech();
+    } else {
+      speakText(getDisplayContent(msg), chatLang);
+    }
   };
 
   if (collapsed) {
@@ -150,13 +202,49 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             <div className="si-saathi-panel-name" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               Saathi AI <ArrowRight size={13} style={{ color: 'var(--si-nav-active)' }} />
             </div>
-            <div className="si-saathi-panel-sub">{language === 'hi' ? 'आपका योजना गाइड' : 'Your Scheme Guide'}</div>
+            <div className="si-saathi-panel-sub">
+              {chatLang === 'hi' ? 'स्मार्ट सहायक' : chatLang === 'pa' ? 'ਸਮਾਰਟ ਸਹਾਇਕ' : 'Smart Copilot'}
+            </div>
           </div>
         </div>
-        <button className="si-saathi-toggle-btn" onClick={onToggle} title="Collapse">
-          <ChevronRight size={16} />
-        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div className="saathi-lang-switcher">
+            <button 
+              type="button" 
+              className={`saathi-lang-btn ${chatLang === 'en' ? 'active' : ''}`}
+              onClick={() => setChatLang('en')}
+            >
+              EN
+            </button>
+            <button 
+              type="button" 
+              className={`saathi-lang-btn ${chatLang === 'hi' ? 'active' : ''}`}
+              onClick={() => setChatLang('hi')}
+            >
+              हिन्दी
+            </button>
+            <button 
+              type="button" 
+              className={`saathi-lang-btn ${chatLang === 'pa' ? 'active' : ''}`}
+              onClick={() => setChatLang('pa')}
+            >
+              ਪੰਜਾਬੀ
+            </button>
+          </div>
+
+          <button className="si-saathi-toggle-btn" onClick={onToggle} title="Collapse">
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
+
+      {/* Feature Chips Bar */}
+      <FeatureChipsBar 
+        activeMode={activeFeature} 
+        onSelectMode={handleSelectFeature} 
+        lang={chatLang}
+      />
 
       {/* Messages */}
       <div className="si-saathi-panel-body">
@@ -164,25 +252,57 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           <div key={msg.id} className={`si-chat-bubble ${msg.sender}`} style={{ alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}>
             {msg.sender === 'assistant' && (
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span className="si-chat-sender">Saathi AI</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <span className="si-chat-sender">Saathi AI</span>
+                  {msg.featureMode && (
+                    <span style={{ fontSize: '0.62rem', padding: '1px 5px', borderRadius: '3px', background: 'rgba(255, 111, 0, 0.1)', color: 'var(--primary-saffron)', fontWeight: 700 }}>
+                      {msg.featureMode.toUpperCase()}
+                    </span>
+                  )}
+                </div>
                 <button 
-                  onClick={() => {
-                    if (isSpeaking) {
-                      stopSpeech();
-                    } else {
-                      speakText(language === 'hi' && msg.hindiText ? msg.hindiText : msg.text);
-                    }
-                  }}
+                  type="button"
+                  onClick={() => handleAudioToggle(msg)}
                   style={{ background: 'transparent', color: isSpeaking ? '#059669' : 'var(--text-muted)', padding: '2px', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
                   title={isSpeaking ? 'Stop' : 'Listen'}
                 >
-                  {isSpeaking ? <VolumeX size={12} /> : <Volume2 size={12} />}
+                  {isSpeaking ? <VolumeX size={13} /> : <Volume2 size={13} />}
                 </button>
               </div>
             )}
-            <div style={{ whiteSpace: 'pre-line' }}>
-              {language === 'hi' && msg.hindiText ? msg.hindiText : msg.text}
+            <div style={{ whiteSpace: 'pre-line', fontSize: '0.82rem', lineHeight: '1.45' }}>
+              {getDisplayContent(msg)}
             </div>
+
+            {/* Matched Schemes */}
+            {msg.matchedSchemes && msg.matchedSchemes.length > 0 && (
+              <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                {msg.matchedSchemes.map(s => (
+                  <div key={s.id} style={{ padding: '6px 8px', background: 'var(--bg-surface-subtle)', borderRadius: '6px', border: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                    <div>
+                      <strong style={{ fontSize: '0.78rem', display: 'block' }}>{s.name}</strong>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--primary-saffron)', fontWeight: 600 }}>{s.subsidyHighlight}</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="card-quick-action"
+                      onClick={() => setSelectedSchemeModal({ id: s.id, name: s.name } as any)}
+                      style={{ fontSize: '0.66rem', padding: '2px 6px', flexShrink: 0 }}
+                    >
+                      {chatLang === 'hi' ? 'विवरण' : chatLang === 'pa' ? 'ਵੇਰਵਾ' : 'View'}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Rich Cards */}
+            {msg.emiCard && <EmiCardView card={msg.emiCard} onPromptClick={sendMessage} lang={chatLang} />}
+            {msg.documentCard && <DocumentChecklistCardView card={msg.documentCard} onPromptClick={sendMessage} lang={chatLang} />}
+            {msg.partnerCard && <PartnerFinderCardView card={msg.partnerCard} onPromptClick={sendMessage} lang={chatLang} />}
+            {msg.whatIfCard && <WhatIfCardView card={msg.whatIfCard} onPromptClick={sendMessage} lang={chatLang} />}
+            {msg.eligibilityCard && <EligibilityCardView card={msg.eligibilityCard} onPromptClick={sendMessage} lang={chatLang} />}
+
             {msg.suggestedPrompts && (
               <div className="si-suggested-prompts">
                 {msg.suggestedPrompts.map((p, i) => (
@@ -195,7 +315,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
         ))}
         {isLoading && (
           <div className="si-chat-bubble assistant" style={{ fontStyle: 'italic', fontSize: '0.78rem' }}>
-            {language === 'hi' ? 'योजनाएं खोज रहे हैं...' : 'Searching government schemes...'}
+            {chatLang === 'hi' ? 'योजना दिशानिर्देशों का विश्लेषण हो रहा है...' : chatLang === 'pa' ? 'ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਦੀ ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ...' : 'Analyzing government guidelines...'}
           </div>
         )}
         <div ref={endRef} />
@@ -203,7 +323,11 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
       {/* Footer */}
       <div className="si-saathi-panel-footer">
-        <button className={`si-saathi-mic-btn ${isRecording ? 'recording' : ''}`} onClick={toggleVoice} title="Voice Input">
+        <button 
+          className={`si-saathi-mic-btn ${isRecording ? 'recording' : ''}`} 
+          onClick={toggleVoice} 
+          title={`Voice Input (${chatLang.toUpperCase()})`}
+        >
           {isRecording ? <MicOff size={16} /> : <Mic size={16} />}
         </button>
         <input
@@ -212,7 +336,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
-          placeholder={isRecording ? (language === 'hi' ? 'सुन रहे हैं...' : 'Listening...') : (language === 'hi' ? 'योजनाओं के बारे में पूछें...' : 'Ask about schemes...')}
+          placeholder={isRecording ? (chatLang === 'hi' ? 'सुन रहे हैं...' : chatLang === 'pa' ? 'ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening...') : (chatLang === 'hi' ? 'योजनाओं के बारे में पूछें...' : chatLang === 'pa' ? 'ਸਕੀਮਾਂ ਬਾਰੇ ਪੁੱਛੋ...' : 'Ask about schemes, EMI, docs...')}
         />
         <button className="si-saathi-send-btn" onClick={() => sendMessage()} title="Send">
           <Send size={15} />
