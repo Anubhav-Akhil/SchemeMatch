@@ -1,12 +1,24 @@
 import React, { useState, useRef } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
+import { SupportedLanguage } from '../types';
 import { getLandingImage } from '../utils/landingImages';
 import { Sparkles, ExternalLink, ArrowRight, ShieldCheck } from 'lucide-react';
+
+const heroTooltips: Record<SupportedLanguage, { scheme: string; roadmap: string; dpr: string }> = {
+  en: { scheme: 'View Scheme Details & 35% Subsidy', roadmap: 'Open Application Roadmap', dpr: 'Generate Bank-Ready DPR' },
+  hi: { scheme: 'योजना विवरण व 35% सब्सिडी देखें', roadmap: 'आवेदन रोडमैप खोलें', dpr: 'बैंक-रेडी DPR बनाएं' },
+  te: { scheme: 'పథకం వివరాలు & 35% సబ్సిడీ చూడండి', roadmap: 'దరఖాస్తు రోడ్‌మ్యాప్ తెరవండి', dpr: 'బ్యాంక్-రెడీ DPR రూపొందించండి' },
+  pa: { scheme: 'ਸਕੀਮ ਵੇਰਵੇ ਅਤੇ 35% ਸਬਸਿਡੀ ਵੇਖੋ', roadmap: 'ਅਰਜ਼ੀ ਰੋਡਮੈਪ ਖੋਲ੍ਹੋ', dpr: 'ਬੈਂਕ-ਤਿਆਰ DPR ਬਣਾਓ' },
+  mr: { scheme: 'योजना तपशील व 35% अनुदान पहा', roadmap: 'अर्ज रोडमॅप उघडा', dpr: 'बँक-सज्ज DPR तयार करा' },
+  bn: { scheme: 'প্রকল্পের বিবরণ ও ৩৫% ভর্তুকি দেখুন', roadmap: 'আবেদন রোডম্যাপ খুলুন', dpr: 'ব্যাংক-রেডি DPR তৈরি করুন' }
+};
 
 export const HeroScrollWindow: React.FC = () => {
   const { setActiveTab, navigateToFeature, setSelectedSchemeModal, matchResults } = useProfile();
   const { t, language, theme } = useLanguage();
+
+  const tt = heroTooltips[language] || heroTooltips.en;
 
   const targetHeroImg = getLandingImage('hero', language, theme);
   const [displayedImg, setDisplayedImg] = useState<string>(targetHeroImg);
@@ -130,70 +142,37 @@ export const HeroScrollWindow: React.FC = () => {
               }}
             />
 
-            {/* Interactive Animated Hotspot 1: PMEGP 98% Match Header */}
+            {/* Interactive Hotspot 1: Scheme Details */}
             <div
               className="hero-hotspot hotspot-header"
               onClick={handleOpenPmegp}
-              onMouseEnter={() => setActiveTooltip('Click to view Scheme Details & 35% Rural Subsidy')}
+              onMouseEnter={() => setActiveTooltip(tt.scheme)}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Click to view Scheme Details & 35% Rural Subsidy"
+              title="View Scheme Details"
             >
               <div className="hotspot-pulse-ring" />
             </div>
 
-            {/* Interactive Animated Hotspot 2: Fast-Track Application Button */}
+            {/* Interactive Hotspot 2: Application Roadmap */}
             <div
               className="hero-hotspot hotspot-fast-track"
               onClick={() => navigateToFeature('roadmap')}
-              onMouseEnter={() => setActiveTooltip('Open 6-Stage Application Roadmap')}
+              onMouseEnter={() => setActiveTooltip(tt.roadmap)}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Open 6-Stage Application Roadmap"
+              title="Application Roadmap"
             >
               <div className="hotspot-pulse-ring blue" />
             </div>
 
-            {/* Interactive Animated Hotspot 3: Upload Doc Action Required */}
-            <div
-              className="hero-hotspot hotspot-upload-doc"
-              onClick={() => navigateToFeature('documents')}
-              onMouseEnter={() => setActiveTooltip('Open Document Readiness Scanner')}
-              onMouseLeave={() => setActiveTooltip(null)}
-              title="Open Document Readiness Scanner"
-            >
-              <div className="hotspot-pulse-ring blue" />
-            </div>
-
-            {/* Interactive Animated Hotspot 4: Auto-Gen with AI (DPR) */}
+            {/* Interactive Hotspot 3: DPR Generator */}
             <div
               className="hero-hotspot hotspot-auto-gen"
               onClick={() => navigateToFeature('dpr')}
-              onMouseEnter={() => setActiveTooltip('Generate Bank-Ready DPR (SIDBI/PMEGP)')}
+              onMouseEnter={() => setActiveTooltip(tt.dpr)}
               onMouseLeave={() => setActiveTooltip(null)}
-              title="Generate Bank-Ready DPR"
+              title="Generate DPR"
             >
               <div className="hotspot-pulse-ring gold" />
-            </div>
-
-            {/* Interactive Animated Hotspot 5: Run DPR Simulation Button */}
-            <div
-              className="hero-hotspot hotspot-run-simulation"
-              onClick={() => navigateToFeature('whatif')}
-              onMouseEnter={() => setActiveTooltip('Simulate ₹11.37 Lakhs Subsidy & 3-Year Cash Flows')}
-              onMouseLeave={() => setActiveTooltip(null)}
-              title="Run DPR Simulation"
-            >
-              <div className="hotspot-pulse-ring cyan" />
-            </div>
-
-            {/* Interactive Animated Hotspot 6: Financial Benefits & Subsidy Breakdown Table */}
-            <div
-              className="hero-hotspot hotspot-financial-breakdown"
-              onClick={() => navigateToFeature('calculator')}
-              onMouseEnter={() => setActiveTooltip('Explore Financial & EMI Subsidy Calculator')}
-              onMouseLeave={() => setActiveTooltip(null)}
-              title="Explore Financial Calculator"
-            >
-              <div className="hotspot-pulse-ring green" />
             </div>
 
             {/* Floating Interactive Live Tooltip */}

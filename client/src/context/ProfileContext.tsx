@@ -46,7 +46,7 @@ interface ProfileContextType {
 }
 
 const DEFAULT_PROFILE: UserProfile = {
-  fullName: 'Sunita Devi',
+  fullName: 'Entrepreneur',
   age: 32,
   gender: 'Female',
   category: 'SC',

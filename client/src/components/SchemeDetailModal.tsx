@@ -85,7 +85,7 @@ export const SchemeDetailModal: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Sparkles size={16} style={{ color: '#4F46E5' }} />
               <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-                Explainable Match Score (Powered by Groq AI)
+                Explainable Match Score (AI Intelligence)
               </span>
             </div>
             {loadingAi && (

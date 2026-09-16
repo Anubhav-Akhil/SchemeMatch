@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useProfile } from '../context/ProfileContext';
 import { ChatMessage } from '../types';
-import { Bot, MessageSquare, Send, Mic, MicOff, X, Sparkles, Volume2, ArrowRight, Check } from 'lucide-react';
+import { Bot, MessageSquare, Send, Mic, MicOff, X, Sparkles, Volume2, VolumeX, ArrowRight, Check } from 'lucide-react';
 
 export const SaathiAICopilot: React.FC = () => {
-  const { t, speakText, language } = useLanguage();
+  const { t, speakText, stopSpeech, isSpeaking, language } = useLanguage();
   const { profile, setProfile, runMatching, setSelectedSchemeModal, matchResults } = useProfile();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -186,11 +186,17 @@ export const SaathiAICopilot: React.FC = () => {
                       Saathi AI
                     </span>
                     <button
-                      onClick={() => speakText(language === 'hi' && msg.hindiText ? msg.hindiText : msg.text)}
-                      style={{ background: 'transparent', color: 'var(--text-muted)', padding: '2px' }}
-                      title="Listen text aloud"
+                      onClick={() => {
+                        if (isSpeaking) {
+                          stopSpeech();
+                        } else {
+                          speakText(language === 'hi' && msg.hindiText ? msg.hindiText : msg.text);
+                        }
+                      }}
+                      style={{ background: 'transparent', color: isSpeaking ? '#059669' : 'var(--text-muted)', padding: '2px', transition: 'color 0.2s' }}
+                      title={isSpeaking ? 'Stop Audio' : 'Listen text aloud'}
                     >
-                      <Volume2 size={14} />
+                      {isSpeaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
                     </button>
                   </div>
                 )}

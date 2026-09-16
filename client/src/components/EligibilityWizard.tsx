@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserProfile, SocialCategory, Gender, LocationType, SectorType, EducationLevel } from '../types';
-import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2, ArrowRight, IndianRupee, Award, AlertCircle } from 'lucide-react';
+import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2, ArrowRight, IndianRupee, Award, AlertCircle, Loader2 } from 'lucide-react';
 
 export const EligibilityWizard: React.FC = () => {
   const {
@@ -66,7 +66,7 @@ export const EligibilityWizard: React.FC = () => {
         });
 
         const missingNote = !extracted.category ? ' (Note: Caste category not detected, left unselected)' : '';
-        setExtractionNotice(`✨ Groq AI extracted profile with ${extracted.confidenceScore || 90}% confidence!${missingNote}`);
+        setExtractionNotice(`✨ AI extracted profile with ${extracted.confidenceScore || 90}% confidence!${missingNote}`);
         if (samplePrompt) setAiInputText(samplePrompt);
       }
     } catch (err) {
@@ -109,7 +109,7 @@ export const EligibilityWizard: React.FC = () => {
               AI Natural-Language Profile Extractor
             </span>
             <span style={{ fontSize: '0.65rem', background: '#6366F1', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
-              GROQ AI
+              AI ENGINE
             </span>
           </div>
         </div>
@@ -117,41 +117,37 @@ export const EligibilityWizard: React.FC = () => {
         <div style={{ display: 'flex', gap: '8px' }}>
           <input
             type="text"
-            placeholder="e.g. 34-yr SC woman in Bihar running tailoring unit, needs 4L loan"
+            placeholder="e.g. 30-yr man in rural UP doing tailoring business, needs 1.5L loan"
             value={aiInputText}
             onChange={(e) => setAiInputText(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAiExtraction(); } }}
             style={{
               flex: 1,
-              padding: '8px 12px',
+              padding: '9px 12px',
+              fontSize: '0.84rem',
               borderRadius: '8px',
-              fontSize: '0.8rem',
               border: '1px solid var(--border-subtle)',
-              background: 'var(--bg-surface)'
+              background: 'var(--bg-surface)',
+              color: 'var(--text-primary)'
             }}
           />
           <button
             type="button"
+            className="btn-primary"
+            disabled={isExtracting}
             onClick={() => handleAiExtraction()}
-            disabled={isExtracting || !aiInputText.trim()}
             style={{
+              padding: '8px 16px',
+              fontSize: '0.84rem',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '8px 14px',
-              borderRadius: '8px',
-              background: 'linear-gradient(135deg, #4F46E5, #6366F1)',
-              color: '#fff',
-              border: 'none',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              cursor: isExtracting ? 'wait' : 'pointer',
               whiteSpace: 'nowrap'
             }}
           >
             {isExtracting ? (
               <>
-                <RefreshCw size={14} className="animate-spin" />
+                <Loader2 size={14} className="spin" />
                 <span>Extracting...</span>
               </>
             ) : (
@@ -168,7 +164,7 @@ export const EligibilityWizard: React.FC = () => {
           <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Try:</span>
           <button
             type="button"
-            onClick={() => handleAiExtraction('Sunita, 34, SC woman in Bihar doing tailoring, needs 4L loan')}
+            onClick={() => handleAiExtraction('Sandeep Kumar, 30, man in rural UP doing tailoring business, needs 1.5L loan')}
             style={{
               fontSize: '0.68rem',
               padding: '2px 8px',
@@ -179,7 +175,7 @@ export const EligibilityWizard: React.FC = () => {
               cursor: 'pointer'
             }}
           >
-            👗 SC Tailor (Bihar, 4L)
+            🧵 Tailoring Enterprise (1.5L)
           </button>
           <button
             type="button"

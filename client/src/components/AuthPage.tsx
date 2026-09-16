@@ -225,10 +225,10 @@ export const AuthPage: React.FC = () => {
               “SchemeMatch identified a ₹9.5 Lakh capital grant under Stand-Up India for my textile enterprise in 10 minutes.”
             </p>
             <div className="new-auth-testimonial-author">
-              <div className="new-auth-author-avatar">SD</div>
+              <div className="new-auth-author-avatar">SE</div>
               <div className="new-auth-author-meta">
-                <div className="author-name">Sunita Devi</div>
-                <div className="author-desc">Solapur, Maharashtra • ₹9.5L Sanctioned</div>
+                <div className="author-name">Verified Beneficiary</div>
+                <div className="author-desc">Textile Enterprise • ₹9.5L Sanctioned</div>
               </div>
               <span className="new-auth-verified-badge">
                 <Check size={12} />
@@ -444,10 +444,10 @@ export const AuthPage: React.FC = () => {
               <button
                 type="button"
                 className="new-auth-demo-pill"
-                onClick={() => loginDemo('Sunita Devi (Demo)', 'sunita.devi@enterprise.in')}
+                onClick={() => loginDemo('Entrepreneur', 'entrepreneur@schemematch.gov.in')}
               >
                 <Sparkles size={13} className="text-amber" />
-                <span>⚡ Instant Demo Access (Sunita Devi • 96% Match)</span>
+                <span>⚡ Instant Demo Access (Verified Profile • 96% Match)</span>
               </button>
             </div>
           </div>
