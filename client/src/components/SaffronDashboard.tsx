@@ -324,11 +324,17 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
       {/* Footer */}
       <div className="si-saathi-panel-footer">
         <button 
-          className={`si-saathi-mic-btn ${isRecording ? 'recording' : ''}`} 
+          type="button"
+          className={`saathi-mic-toggle-btn ${isRecording ? 'on' : 'off'}`} 
           onClick={toggleVoice} 
-          title={`Voice Input (${chatLang.toUpperCase()})`}
+          title={isRecording ? 'Turn Mic OFF' : 'Turn Mic ON'}
+          style={{ padding: '5px 9px', fontSize: '0.74rem' }}
         >
-          {isRecording ? <MicOff size={16} /> : <Mic size={16} />}
+          {isRecording ? <Mic size={14} /> : <MicOff size={14} />}
+          <span>{isRecording ? 'ON' : 'OFF'}</span>
+          <div className="saathi-mic-toggle-indicator" style={{ width: '24px', height: '14px' }}>
+            <div className="saathi-mic-toggle-thumb" style={{ width: '10px', height: '10px' }} />
+          </div>
         </button>
         <input
           className="si-saathi-input"

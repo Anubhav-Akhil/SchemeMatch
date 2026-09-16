@@ -244,7 +244,10 @@ export const SaathiAICopilot: React.FC = () => {
           >
             {/* Top Bar */}
             <div className="chatbot-figma-top-bar">
-              <span className="chatbot-figma-title">Chat Bot UI</span>
+              <span className="chatbot-figma-title" style={{ fontWeight: 600, color: 'var(--text-primary, #0F172A)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <img src="/logo.png" alt="Saathi AI" style={{ width: '20px', height: '20px', borderRadius: '4px', objectFit: 'contain' }} />
+                Saathi AI
+              </span>
 
               <div className="chatbot-figma-actions">
                 {/* Language Switcher */}
@@ -416,24 +419,21 @@ export const SaathiAICopilot: React.FC = () => {
               </div>
             </div>
 
-            {/* Input Bar: exactly matching screenshot */}
+            {/* Input Bar: matching screenshot with mic on-off toggle */}
             <div className="chatbot-figma-input-container">
               <div className="chatbot-figma-input-box">
                 <button
                   type="button"
-                  className={`btn-secondary ${isRecordingVoice ? 'btn-success' : ''}`}
+                  className={`saathi-mic-toggle-btn ${isRecordingVoice ? 'on' : 'off'}`}
                   onClick={toggleVoiceInput}
-                  style={{ padding: '6px 10px', border: 'none', background: 'transparent', cursor: 'pointer', color: '#64748B' }}
-                  title={`Voice Input (${chatLang.toUpperCase()})`}
+                  title={isRecordingVoice ? 'Click to turn Mic OFF' : 'Click to turn Mic ON'}
+                  aria-pressed={isRecordingVoice}
                 >
-                  {isRecordingVoice ? (
-                    <div className="voice-recording-wave">
-                      <div className="voice-wave-dot" />
-                      <span>REC</span>
-                    </div>
-                  ) : (
-                    <Mic size={18} />
-                  )}
+                  {isRecordingVoice ? <Mic size={15} /> : <MicOff size={15} />}
+                  <span>{isRecordingVoice ? 'Mic: ON' : 'Mic: OFF'}</span>
+                  <div className="saathi-mic-toggle-indicator">
+                    <div className="saathi-mic-toggle-thumb" />
+                  </div>
                 </button>
 
                 <input

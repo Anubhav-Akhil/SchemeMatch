@@ -9453,5 +9453,85 @@ body.lang-transition-active {
   transform: translateX(2px) scale(1.05);
 }
 
+/* Mic On/Off Toggle Button */
+.saathi-mic-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  border: 1.5px solid #CBD5E1;
+  background: #F8FAFC;
+  color: #64748B;
+  flex-shrink: 0;
+}
+
+[data-theme='dark'] .saathi-mic-toggle-btn {
+  background: #1E293B;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #94A3B8;
+}
+
+.saathi-mic-toggle-btn:hover {
+  border-color: #94A3B8;
+  color: #334155;
+}
+
+[data-theme='dark'] .saathi-mic-toggle-btn:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #F1F5F9;
+}
+
+.saathi-mic-toggle-btn.on {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: #22C55E;
+  color: #15803D;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.28);
+}
+
+[data-theme='dark'] .saathi-mic-toggle-btn.on {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #4ADE80;
+  color: #4ADE80;
+  box-shadow: 0 0 14px rgba(74, 222, 128, 0.35);
+}
+
+/* Toggle switch pill inside the button */
+.saathi-mic-toggle-indicator {
+  width: 28px;
+  height: 16px;
+  border-radius: 999px;
+  background: #CBD5E1;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease;
+}
+
+.saathi-mic-toggle-btn.on .saathi-mic-toggle-indicator {
+  background: #22C55E;
+}
+
+.saathi-mic-toggle-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+
+.saathi-mic-toggle-btn.on .saathi-mic-toggle-thumb {
+  transform: translateX(12px);
+}
+
+
 
 
