@@ -143,13 +143,6 @@ export const AuthPage: React.FC = () => {
         <div className="new-auth-intel-hub">
           {/* Top Pill & Headline */}
           <div className="new-auth-hub-header">
-            <div className="new-auth-hub-badge">
-              <span className="new-auth-hub-pulse" />
-              <span>Affirmative Credit Intelligence</span>
-              <span className="new-auth-hub-dot">•</span>
-              <span className="text-muted">Live 2.4</span>
-            </div>
-
             <h2 className="new-auth-hub-title">
               Empowering Bharat’s Entrepreneurs with <span className="text-gradient-brand">AI-Driven Subsidies</span>
             </h2>
@@ -272,7 +265,6 @@ export const AuthPage: React.FC = () => {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <span className="new-auth-brand-name">SchemeMatch</span>
-                  <span className="new-auth-brand-badge">Workspace Pro</span>
                 </div>
                 <div className="new-auth-brand-tagline">Match • Apply • Grow</div>
               </div>
@@ -454,7 +446,7 @@ export const AuthPage: React.FC = () => {
 
           {/* Bottom Footer Row with Website Theme Info */}
           <div className="new-auth-footer-row">
-            <span className="new-auth-copyright">© 2026 SchemeMatch. Affirmative Credit Intelligence.</span>
+            <span className="new-auth-copyright">© 2026 SchemeMatch. All rights reserved.</span>
 
             <div className="new-auth-footer-nav">
               <button type="button" onClick={() => setCurrentView('landing')}>About</button>
