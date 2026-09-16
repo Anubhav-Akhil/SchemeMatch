@@ -12,6 +12,7 @@ import { DocumentService } from './services/documentService';
 import { SaathiChatService } from './services/chatService';
 import { GroqAIService } from './services/groqService';
 import { GeoSpatialPartnerRouterService, PartnerRoutingRequest } from './services/geoPartnerRouter';
+import { TtsService } from './services/ttsService';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,6 +27,7 @@ const documentService = new DocumentService();
 const chatService = new SaathiChatService(schemes);
 const groqService = new GroqAIService();
 const partnerRouterService = new GeoSpatialPartnerRouterService();
+const ttsService = new TtsService();
 
 // Health check
 app.get('/api/health', (req: Request, res: Response) => {
@@ -276,6 +278,22 @@ app.post('/api/ai/dpr-narrative', async (req: Request, res: Response) => {
     res.json(narrative);
   } catch (err: any) {
     res.status(500).json({ error: err.message || 'Error generating DPR narrative' });
+  }
+});
+
+// Text-To-Speech (Sarvam AI with ElevenLabs fallback)
+app.post('/api/tts', async (req: Request, res: Response) => {
+  try {
+    const { text, language, speaker } = req.body;
+    if (!text || typeof text !== 'string') {
+      return res.status(400).json({ error: 'Text is required for TTS speech synthesis.' });
+    }
+
+    const result = await ttsService.generateSpeech({ text, language, speaker });
+    res.json(result);
+  } catch (err: any) {
+    console.error('TTS endpoint error:', err);
+    res.status(500).json({ error: err.message || 'Error generating TTS speech' });
   }
 });
 
