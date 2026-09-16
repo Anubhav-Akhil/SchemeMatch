@@ -1952,13 +1952,16 @@ input:focus, select:focus, textarea:focus {
   transition: background 0.15s ease-out;
 }
 
-.hero-image-asset {
+.hero-image-asset,
+.sp-image-asset,
+.bento-image-asset {
   display: block;
   width: 100%;
   height: auto;
   user-select: none;
   pointer-events: none;
   image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
   transform: translateZ(0);
   backface-visibility: hidden;
 }

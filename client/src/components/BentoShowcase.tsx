@@ -6,25 +6,29 @@ import { Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const BentoShowcase: React.FC = () => {
   const { setActiveTab, navigateToFeature, selectPersona } = useProfile();
-  const { language } = useLanguage();
+  const { language, theme } = useLanguage();
 
-  const targetBentoImg = getLandingImage('bento', language);
+  const targetBentoImg = getLandingImage('bento', language, theme);
   const [displayedImg, setDisplayedImg] = useState<string>(targetBentoImg);
   const [isImgReady, setIsImgReady] = useState<boolean>(true);
 
   React.useEffect(() => {
     if (targetBentoImg === displayedImg) return;
-    setIsImgReady(false);
     const img = new Image();
     img.src = targetBentoImg;
-    img.onload = () => {
+    if (img.complete) {
       setDisplayedImg(targetBentoImg);
       setIsImgReady(true);
-    };
-    img.onerror = () => {
-      setDisplayedImg(targetBentoImg);
-      setIsImgReady(true);
-    };
+    } else {
+      img.onload = () => {
+        setDisplayedImg(targetBentoImg);
+        setIsImgReady(true);
+      };
+      img.onerror = () => {
+        setDisplayedImg(targetBentoImg);
+        setIsImgReady(true);
+      };
+    }
   }, [targetBentoImg]);
 
   // 3D Tilt State

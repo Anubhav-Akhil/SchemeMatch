@@ -6,25 +6,29 @@ import { Sparkles, ExternalLink, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const HeroScrollWindow: React.FC = () => {
   const { setActiveTab, navigateToFeature, setSelectedSchemeModal, matchResults } = useProfile();
-  const { t, language } = useLanguage();
+  const { t, language, theme } = useLanguage();
 
-  const targetHeroImg = getLandingImage('hero', language);
+  const targetHeroImg = getLandingImage('hero', language, theme);
   const [displayedImg, setDisplayedImg] = useState<string>(targetHeroImg);
   const [isImgReady, setIsImgReady] = useState<boolean>(true);
 
   React.useEffect(() => {
     if (targetHeroImg === displayedImg) return;
-    setIsImgReady(false);
     const img = new Image();
     img.src = targetHeroImg;
-    img.onload = () => {
+    if (img.complete) {
       setDisplayedImg(targetHeroImg);
       setIsImgReady(true);
-    };
-    img.onerror = () => {
-      setDisplayedImg(targetHeroImg);
-      setIsImgReady(true);
-    };
+    } else {
+      img.onload = () => {
+        setDisplayedImg(targetHeroImg);
+        setIsImgReady(true);
+      };
+      img.onerror = () => {
+        setDisplayedImg(targetHeroImg);
+        setIsImgReady(true);
+      };
+    }
   }, [targetHeroImg]);
 
   // 3D Tilt & Specular Glare State

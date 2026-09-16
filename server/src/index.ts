@@ -83,10 +83,32 @@ app.get('/api/personas', (req: Request, res: Response) => {
 // AI Scheme Matching Engine
 app.post('/api/match', (req: Request, res: Response) => {
   try {
-    const profile: UserProfile = req.body;
-    if (!profile || !profile.category || !profile.sector) {
-      return res.status(400).json({ error: 'Incomplete user profile. Category and sector are required.' });
+    const rawProfile: UserProfile = req.body;
+    if (!rawProfile) {
+      return res.status(400).json({ error: 'User profile is required.' });
     }
+
+    // Gracefully infer sector if not explicitly set
+    let inferredSector = rawProfile.sector;
+    if (!inferredSector) {
+      const tradeLower = (rawProfile.tradeType || '').toLowerCase();
+      if (tradeLower.includes('tailor') || tradeLower.includes('darzi') || tradeLower.includes('stitching') || tradeLower.includes('cloth') || tradeLower.includes('garment')) {
+        inferredSector = 'Textiles';
+      } else if (tradeLower.includes('weaver') || tradeLower.includes('potter') || tradeLower.includes('carpenter') || tradeLower.includes('artisan')) {
+        inferredSector = 'ArtisanHandicraft';
+      } else if (tradeLower.includes('street') || tradeLower.includes('vendor') || tradeLower.includes('thela') || tradeLower.includes('cart')) {
+        inferredSector = 'StreetVending';
+      } else {
+        inferredSector = 'Services';
+      }
+    }
+
+    const profile: UserProfile = {
+      ...rawProfile,
+      sector: inferredSector,
+      category: rawProfile.category || ('' as any),
+      locationType: rawProfile.locationType || ('' as any)
+    };
 
     const matches = matchingEngine.matchSchemes(profile);
     const topMatches = matches.filter((m) => m.isEligible);

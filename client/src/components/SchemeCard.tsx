@@ -9,8 +9,8 @@ interface SchemeCardProps {
 }
 
 export const SchemeCard: React.FC<SchemeCardProps> = ({ matchResult }) => {
-  const { scheme, matchScore, estimatedSubsidyAmount, estimatedLoanAmount, estimatedOwnContribution, estimatedMonthlyEmi, reasonsWhyMatched, conditionsToFulfill, subsidyOptimizationTip } = matchResult;
-  const { toggleCompareScheme, isSchemeCompared, setSelectedSchemeModal } = useProfile();
+  const { scheme, matchScore, isEligible, estimatedSubsidyAmount, estimatedLoanAmount, estimatedOwnContribution, estimatedMonthlyEmi, reasonsWhyMatched, conditionsToFulfill, subsidyOptimizationTip } = matchResult;
+  const { profile, toggleCompareScheme, isSchemeCompared, setSelectedSchemeModal } = useProfile();
   const { speakText, isSpeaking, language } = useLanguage();
 
   const isCompared = isSchemeCompared(scheme.id);
@@ -29,6 +29,16 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({ matchResult }) => {
       <div className="scheme-card-top">
         <div className="scheme-title-area">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
+            {matchScore >= 80 && isEligible && (
+              <span className="badge" style={{ background: 'linear-gradient(135deg, #10B981, #059669)', color: '#FFFFFF', fontWeight: 800 }}>
+                ⭐ RECOMMENDED SCHEME
+              </span>
+            )}
+            {scheme.id === 'pm-vishwakarma' && (profile.tradeType?.toLowerCase().includes('tailor') || profile.sector === 'Textiles') && (
+              <span className="badge" style={{ background: 'linear-gradient(135deg, #4F46E5, #6366F1)', color: '#FFFFFF', fontWeight: 800 }}>
+                🎯 RECOMMENDED FOR TAILORING
+              </span>
+            )}
             <span className="badge badge-indigo">
               {scheme.apexBody}
             </span>

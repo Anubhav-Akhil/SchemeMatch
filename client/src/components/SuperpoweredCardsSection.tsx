@@ -6,25 +6,29 @@ import { Sparkles, MapPin, Compass, CheckCircle2, ArrowRight, Building2, Scale, 
 
 export const SuperpoweredCardsSection: React.FC = () => {
   const { setActiveTab, navigateToFeature, setSelectedSchemeModal, matchResults } = useProfile();
-  const { t, language } = useLanguage();
+  const { t, language, theme } = useLanguage();
 
-  const targetSpImg = getLandingImage('superpowered', language);
+  const targetSpImg = getLandingImage('superpowered', language, theme);
   const [displayedImg, setDisplayedImg] = useState<string>(targetSpImg);
   const [isImgReady, setIsImgReady] = useState<boolean>(true);
 
   React.useEffect(() => {
     if (targetSpImg === displayedImg) return;
-    setIsImgReady(false);
     const img = new Image();
     img.src = targetSpImg;
-    img.onload = () => {
+    if (img.complete) {
       setDisplayedImg(targetSpImg);
       setIsImgReady(true);
-    };
-    img.onerror = () => {
-      setDisplayedImg(targetSpImg);
-      setIsImgReady(true);
-    };
+    } else {
+      img.onload = () => {
+        setDisplayedImg(targetSpImg);
+        setIsImgReady(true);
+      };
+      img.onerror = () => {
+        setDisplayedImg(targetSpImg);
+        setIsImgReady(true);
+      };
+    }
   }, [targetSpImg]);
 
   // 3D Tilt & Specular Glare State

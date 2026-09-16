@@ -499,9 +499,8 @@ export const SaffronDashboard: React.FC = () => {
                         <span className="si-scheme-card-name">{m.scheme.name}</span>
                         <span className="si-scheme-match-badge">{m.matchScore}%</span>
                       </div>
-                      <div className="si-scheme-card-ministry">{m.scheme.ministry}</div>
                       <div className="si-scheme-subsidy-chip">
-                        <IndianRupee size={11} /> {m.scheme.subsidyHighlight}
+                        <IndianRupee size={11} /> {m.estimatedSubsidyAmount > 0 ? `₹${(m.estimatedSubsidyAmount / 100000).toFixed(1)}L Subsidy` : m.scheme.categoryTag}
                       </div>
                       <div className="si-scheme-progress-bar">
                         <div className="si-scheme-progress-fill" style={{ width: `${m.matchScore}%` }} />
@@ -575,9 +574,15 @@ export const SaffronDashboard: React.FC = () => {
                     </div>
                     <div className="si-tab-panel-title">Smart Scheme Recommender</div>
                     <div className="si-tab-panel-sub">
-                      Found <strong>{matchResults.length} schemes</strong> with up to{' '}
+                      Recommendations tailored for <strong>{profile.fullName || 'Entrepreneur'}</strong>
+                      {profile.tradeType ? ` (${profile.tradeType})` : ''} · Found <strong>{matchResults.length} schemes</strong> with up to{' '}
                       <strong style={{ color: 'var(--si-success)' }}>₹{(totalPotentialSubsidy / 100000).toFixed(1)}L</strong> in grants.
                     </div>
+                    {!profile.category && (
+                      <div style={{ marginTop: '6px', fontSize: '0.75rem', color: '#D97706', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span>💡 Tip: Displaying open national schemes. Select your caste category (SC/ST/OBC) in Profile to unlock targeted MoSJE subsidies up to 35%!</span>
+                      </div>
+                    )}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Filter size={14} style={{ color: 'var(--text-muted)' }} />
