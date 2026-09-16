@@ -103,15 +103,36 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
   if (collapsed) {
     return (
-      <div className="si-saathi-panel collapsed">
-        <button className="si-saathi-toggle-btn" onClick={onToggle}
-          style={{ margin: '14px auto', display: 'flex' }} title="Expand Saathi AI">
-          <ChevronLeft size={16} />
+      <div
+        className="si-saathi-panel collapsed"
+        onClick={onToggle}
+        style={{ cursor: 'pointer' }}
+        title="Expand Saathi AI"
+      >
+        <button
+          className="si-saathi-toggle-btn"
+          onClick={(e) => { e.stopPropagation(); onToggle(); }}
+          style={{ margin: '14px auto', display: 'flex' }}
+          title="Expand Saathi AI"
+        >
+          <ChevronLeft size={18} />
         </button>
-        <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)',
-          fontSize: '0.72rem', fontWeight: 700, color: 'var(--si-nav-active)',
-          margin: '0 auto', letterSpacing: '0.08em', userSelect: 'none' }}>
-          Saathi AI
+        <div style={{
+          writingMode: 'vertical-rl',
+          textOrientation: 'mixed',
+          transform: 'rotate(180deg)',
+          fontSize: '0.74rem',
+          fontWeight: 700,
+          color: 'var(--si-nav-active)',
+          margin: '14px auto 0',
+          letterSpacing: '0.08em',
+          userSelect: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px'
+        }}>
+          <span>Saathi AI</span>
+          <ChevronLeft size={13} style={{ color: 'var(--si-nav-active)' }} />
         </div>
       </div>
     );
@@ -207,7 +228,7 @@ export const SaffronDashboard: React.FC = () => {
   const {
     activeTab, setActiveTab,
     matchResults, otherSchemes, totalPotentialSubsidy,
-    comparedSchemes, profile,
+    comparedSchemes, profile, hasCalculated,
     setSelectedSchemeModal
   } = useProfile();
   const { t, theme, toggleTheme, language, setLanguage } = useLanguage();
@@ -517,46 +538,80 @@ export const SaffronDashboard: React.FC = () => {
               {/* Horizontal Scheme Cards Scroller */}
               <div className="si-section-header">
                 <span className="si-section-title">🏛️ {nl.prioritySchemes}</span>
-                <button className="si-view-all-btn" onClick={() => setActiveTab('matcher')}>
-                  {nl.viewAll} ({matchResults.length}) <ArrowRight size={13} />
-                </button>
+                {hasCalculated && matchResults.length > 0 && (
+                  <button className="si-view-all-btn" onClick={() => setActiveTab('matcher')}>
+                    {nl.viewAll} ({matchResults.length}) <ArrowRight size={13} />
+                  </button>
+                )}
               </div>
-              <div className="si-scheme-scroller">
-                {matchResults.slice(0, 6).map(m => (
-                  <div
-                    key={m.scheme.id}
-                    className="si-scheme-card"
-                    onClick={() => setSelectedSchemeModal(m)}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    {/* Tricolor top strip */}
-                    <div className="si-scheme-card-tricolor">
-                      <span className="tc-s" /><span className="tc-w" /><span className="tc-g" />
+              {hasCalculated && matchResults.length > 0 ? (
+                <div className="si-scheme-scroller">
+                  {matchResults.slice(0, 6).map(m => (
+                    <div
+                      key={m.scheme.id}
+                      className="si-scheme-card"
+                      onClick={() => setSelectedSchemeModal(m)}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      {/* Tricolor top strip */}
+                      <div className="si-scheme-card-tricolor">
+                        <span className="tc-s" /><span className="tc-w" /><span className="tc-g" />
+                      </div>
+                      <div className="si-scheme-card-body">
+                        <div className="si-scheme-card-top">
+                          <span className="si-scheme-card-name">{m.scheme.name}</span>
+                          <span className="si-scheme-match-badge">{m.matchScore}%</span>
+                        </div>
+                        <div className="si-scheme-subsidy-chip">
+                          <IndianRupee size={11} /> {m.estimatedSubsidyAmount > 0 ? `₹${(m.estimatedSubsidyAmount / 100000).toFixed(1)}L` : m.scheme.categoryTag}
+                        </div>
+                        <div className="si-scheme-progress-bar">
+                          <div className="si-scheme-progress-fill" style={{ width: `${m.matchScore}%` }} />
+                        </div>
+                        <div className="si-scheme-card-footer">
+                          <button className="si-scheme-apply-btn" onClick={e => { e.stopPropagation(); setActiveTab('dpr'); }}>
+                            {language === 'hi' ? 'DPR बनाएं' : 'Generate DPR'}
+                          </button>
+                          <button className="si-scheme-compare-btn" onClick={e => { e.stopPropagation(); setActiveTab('comparison'); }}>
+                            {language === 'hi' ? 'तुलना करें' : 'Compare'}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="si-scheme-card-body">
-                      <div className="si-scheme-card-top">
-                        <span className="si-scheme-card-name">{m.scheme.name}</span>
-                        <span className="si-scheme-match-badge">{m.matchScore}%</span>
-                      </div>
-                      <div className="si-scheme-subsidy-chip">
-                        <IndianRupee size={11} /> {m.estimatedSubsidyAmount > 0 ? `₹${(m.estimatedSubsidyAmount / 100000).toFixed(1)}L` : m.scheme.categoryTag}
-                      </div>
-                      <div className="si-scheme-progress-bar">
-                        <div className="si-scheme-progress-fill" style={{ width: `${m.matchScore}%` }} />
-                      </div>
-                      <div className="si-scheme-card-footer">
-                        <button className="si-scheme-apply-btn" onClick={e => { e.stopPropagation(); setActiveTab('dpr'); }}>
-                          {language === 'hi' ? 'DPR बनाएं' : 'Generate DPR'}
-                        </button>
-                        <button className="si-scheme-compare-btn" onClick={e => { e.stopPropagation(); setActiveTab('comparison'); }}>
-                          {language === 'hi' ? 'तुलना करें' : 'Compare'}
-                        </button>
-                      </div>
-                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{
+                  padding: '24px 20px',
+                  background: 'var(--si-card-bg)',
+                  border: '1.5px dashed var(--si-card-border)',
+                  borderRadius: '14px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '12px',
+                  marginBottom: '20px'
+                }}>
+                  <div>
+                    <strong style={{ fontSize: '0.94rem', color: 'var(--si-indigo)', display: 'block', marginBottom: '4px' }}>
+                      {language === 'hi' ? 'पात्र योजनाएं खोजने के लिए प्रोफ़ाइल गणना करें' : 'Calculate your profile to discover eligible schemes'}
+                    </strong>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                      {language === 'hi' ? 'कोई पूर्व-चयनित योजनाएं नहीं हैं। अपनी व्यापार आवश्यकताएं दर्ज करें।' : 'No schemes loaded yet. Enter your business requirements to unlock subsidies.'}
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <button
+                    className="btn-primary"
+                    onClick={() => setActiveTab('profile')}
+                    style={{ padding: '8px 18px', fontSize: '0.84rem' }}
+                  >
+                    <span>{language === 'hi' ? 'गणना शुरू करें' : 'Calculate Schemes'}</span>
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              )}
 
               {/* Module Grid */}
               <div className="si-section-header">
@@ -640,21 +695,52 @@ export const SaffronDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                {filteredMatches.map(m => <SchemeCard key={m.scheme.id} matchResult={m} />)}
-              </div>
-              {otherSchemes.length > 0 && (
-                <div style={{ marginTop: '36px', paddingTop: '24px', borderTop: '1.5px dashed var(--si-card-border)' }}>
-                  <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--si-indigo)', marginBottom: '6px' }}>
-                    {language === 'hi' ? `सशर्त योजनाएं (${otherSchemes.length})` : `Conditional Schemes (${otherSchemes.length})`}
-                  </div>
-                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '14px' }}>
-                    {language === 'hi' ? 'इनमें कुछ दस्तावेज़ अद्यतन या विशेष मानदंड पूर्ति आवश्यक है।' : 'These need minor documentation updates or specific criteria to be met.'}
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                    {otherSchemes.slice(0, 3).map(m => <SchemeCard key={m.scheme.id} matchResult={m} />)}
-                  </div>
+              {!hasCalculated || matchResults.length === 0 ? (
+                <div style={{
+                  padding: '48px 24px',
+                  textAlign: 'center',
+                  background: 'var(--si-card-bg)',
+                  border: '1.5px dashed var(--si-card-border)',
+                  borderRadius: '16px',
+                  margin: '20px 0'
+                }}>
+                  <Target size={44} style={{ color: 'var(--primary-saffron)', margin: '0 auto 14px' }} />
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--si-indigo)', marginBottom: '8px' }}>
+                    {language === 'hi' ? 'अभी कोई योजनाएं परिकलित नहीं हैं' : 'No Schemes Calculated Yet'}
+                  </h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: '540px', margin: '0 auto 20px', lineHeight: 1.6 }}>
+                    {language === 'hi' 
+                      ? 'कृपया AI प्रोफ़ाइल निष्कर्षण में अपनी जानकारी दर्ज करें और अपनी योग्य सब्सिडी खोजने के लिए "पात्र योजनाओं की गणना करें" पर क्लिक करें।'
+                      : 'Please enter your details in AI Profile Extraction and click "Calculate Eligible Schemes & Subsidies" to discover your personalized schemes and grants.'}
+                  </p>
+                  <button
+                    className="btn-primary"
+                    onClick={() => setActiveTab('profile')}
+                    style={{ padding: '10px 24px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                  >
+                    <span>{language === 'hi' ? 'प्रोफ़ाइल भरें और गणना करें' : 'Go to Profile & Calculate Schemes'}</span>
+                    <ArrowRight size={16} />
+                  </button>
                 </div>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    {filteredMatches.map(m => <SchemeCard key={m.scheme.id} matchResult={m} />)}
+                  </div>
+                  {otherSchemes.length > 0 && (
+                    <div style={{ marginTop: '36px', paddingTop: '24px', borderTop: '1.5px dashed var(--si-card-border)' }}>
+                      <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--si-indigo)', marginBottom: '6px' }}>
+                        {language === 'hi' ? `सशर्त योजनाएं (${otherSchemes.length})` : `Conditional Schemes (${otherSchemes.length})`}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '14px' }}>
+                        {language === 'hi' ? 'इनमें कुछ दस्तावेज़ अद्यतन या विशेष मानदंड पूर्ति आवश्यक है।' : 'These need minor documentation updates or specific criteria to be met.'}
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                        {otherSchemes.slice(0, 3).map(m => <SchemeCard key={m.scheme.id} matchResult={m} />)}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}

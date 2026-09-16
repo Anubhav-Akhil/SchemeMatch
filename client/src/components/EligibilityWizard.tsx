@@ -11,6 +11,7 @@ export const EligibilityWizard: React.FC = () => {
     updateProfileField,
     runMatching,
     isLoadingMatches,
+    hasCalculated,
     matchResults,
     totalPotentialSubsidy,
     setActiveTab
@@ -286,9 +287,9 @@ export const EligibilityWizard: React.FC = () => {
               <input
                 id="wizard-full-name"
                 type="text"
-                value={profile.fullName}
+                placeholder="e.g. Ramesh Kumar"
+                value={profile.fullName || ''}
                 onChange={(e) => updateProfileField('fullName', e.target.value)}
-                required
                 style={{ width: '100%' }}
               />
             </div>
@@ -382,7 +383,7 @@ export const EligibilityWizard: React.FC = () => {
                 <input
                   id="wizard-state"
                   type="text"
-                  placeholder="-- Not specified in text (e.g. Bihar, UP) --"
+                  placeholder="e.g. Uttar Pradesh, Bihar, Maharashtra"
                   value={profile.state || ''}
                   onChange={(e) => updateProfileField('state', e.target.value)}
                   style={{
@@ -466,8 +467,9 @@ export const EligibilityWizard: React.FC = () => {
                   id="wizard-loan-amount"
                   type="number"
                   step="10000"
-                  value={profile.requiredLoanAmount}
-                  onChange={(e) => updateProfileField('requiredLoanAmount', parseInt(e.target.value, 10) || 10000)}
+                  value={profile.requiredLoanAmount || ''}
+                  onChange={(e) => updateProfileField('requiredLoanAmount', parseInt(e.target.value, 10) || 0)}
+                  placeholder="e.g. 150000"
                   style={{ width: '100%' }}
                 />
               </div>
@@ -478,8 +480,9 @@ export const EligibilityWizard: React.FC = () => {
                   id="wizard-total-project-cost"
                   type="number"
                   step="10000"
-                  value={profile.totalProjectCost}
-                  onChange={(e) => updateProfileField('totalProjectCost', parseInt(e.target.value, 10) || 10000)}
+                  value={profile.totalProjectCost || ''}
+                  onChange={(e) => updateProfileField('totalProjectCost', parseInt(e.target.value, 10) || 0)}
+                  placeholder="e.g. 200000"
                   style={{ width: '100%' }}
                 />
               </div>
@@ -491,8 +494,9 @@ export const EligibilityWizard: React.FC = () => {
                 id="wizard-margin-amount"
                 type="number"
                 step="5000"
-                value={profile.promoterContributionAvailable}
+                value={profile.promoterContributionAvailable || ''}
                 onChange={(e) => updateProfileField('promoterContributionAvailable', parseInt(e.target.value, 10) || 0)}
+                placeholder="e.g. 10000"
                 style={{ width: '100%' }}
               />
               <small style={{ color: 'var(--emerald-growth)', fontSize: '0.75rem', fontWeight: 600 }}>
@@ -582,7 +586,7 @@ export const EligibilityWizard: React.FC = () => {
         </button>
 
         {/* Instant Calculation Results & Subsidy Preview */}
-        {matchResults.length > 0 && (
+        {hasCalculated && matchResults.length > 0 && (
           <div style={{
             marginTop: '16px',
             padding: '14px 16px',

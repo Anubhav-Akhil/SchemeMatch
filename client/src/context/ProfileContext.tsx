@@ -13,6 +13,7 @@ interface ProfileContextType {
   matchResults: SchemeMatchResult[];
   otherSchemes: SchemeMatchResult[];
   isLoadingMatches: boolean;
+  hasCalculated: boolean;
   runMatching: (profileToMatch?: UserProfile) => Promise<void>;
   
   // Tabs & Navigation
@@ -45,30 +46,30 @@ interface ProfileContextType {
   fetchAllSchemes: () => Promise<Scheme[]>;
 }
 
-const DEFAULT_PROFILE: UserProfile = {
-  fullName: 'Entrepreneur',
-  age: 32,
-  gender: 'Female',
-  category: 'SC',
+export const EMPTY_PROFILE: UserProfile = {
+  fullName: '',
+  age: '' as any,
+  gender: '',
+  category: '',
   isDifferentlyAbled: false,
-  locationType: 'Rural',
-  state: 'Uttar Pradesh',
-  district: 'Varanasi',
-  annualFamilyIncome: 140000,
-  educationLevel: '8thPass',
-  enterpriseStage: 'NewEnterprise',
-  sector: 'ArtisanHandicraft',
-  tradeType: 'Weaver / Handloom',
-  businessName: 'Devi Silk Sarees & Border Loom',
-  businessDescription: 'Micro weaving unit producing handloom sarees and designer ethnic silk borders.',
-  requiredLoanAmount: 250000,
-  totalProjectCost: 265000,
-  promoterContributionAvailable: 15000,
+  locationType: '',
+  state: '',
+  district: '',
+  annualFamilyIncome: '' as any,
+  educationLevel: '' as any,
+  enterpriseStage: '' as any,
+  sector: '' as any,
+  tradeType: '',
+  businessName: '',
+  businessDescription: '',
+  requiredLoanAmount: '' as any,
+  totalProjectCost: '' as any,
+  promoterContributionAvailable: '' as any,
   hasExistingUdyam: false,
-  hasCasteCertificate: true,
-  hasBankStatement6Months: true,
-  hasLandOrRentDeed: true,
-  hasSkillTrainingCertificate: true,
+  hasCasteCertificate: false,
+  hasBankStatement6Months: false,
+  hasLandOrRentDeed: false,
+  hasSkillTrainingCertificate: false,
   hasProjectReport: false
 };
 
@@ -76,15 +77,16 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { setCurrentView } = useAuth();
-  const [profile, setProfile] = useState<UserProfile>(DEFAULT_PROFILE);
+  const [profile, setProfile] = useState<UserProfile>(EMPTY_PROFILE);
   const [personas, setPersonas] = useState<PersonaProfile[]>(SAMPLE_PERSONAS);
-  const [selectedPersonaId, setSelectedPersonaId] = useState<string>('sunita-devi');
+  const [selectedPersonaId, setSelectedPersonaId] = useState<string>('');
   const [matchResults, setMatchResults] = useState<SchemeMatchResult[]>([]);
   const [otherSchemes, setOtherSchemes] = useState<SchemeMatchResult[]>([]);
   const [isLoadingMatches, setIsLoadingMatches] = useState<boolean>(false);
+  const [hasCalculated, setHasCalculated] = useState<boolean>(false);
   const [totalPotentialSubsidy, setTotalPotentialSubsidy] = useState<number>(0);
 
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap'>('matcher');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'matcher' | 'gap' | 'whatif' | 'calculator' | 'partners' | 'documents' | 'dpr' | 'comparison' | 'roadmap'>('profile');
   const [comparedSchemes, setComparedSchemes] = useState<Scheme[]>([]);
   const [selectedSchemeModal, setSelectedSchemeModal] = useState<SchemeMatchResult | null>(null);
   const [uploadedDocIds, setUploadedDocIds] = useState<string[]>(['aadhaar-card', 'caste-certificate', 'bank-statement']);
@@ -141,6 +143,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setMatchResults(data.topMatches || []);
         setOtherSchemes(data.otherSchemes || []);
         setTotalPotentialSubsidy(data.totalPotentialSubsidy || 0);
+        setHasCalculated(true);
       }
     } catch (err) {
       console.error('Error running AI scheme match:', err);
@@ -149,10 +152,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  // Initial match on mount
-  useEffect(() => {
-    runMatching(DEFAULT_PROFILE);
-  }, []);
+  // Do NOT auto-run matching on mount so schemes are only calculated upon user action
 
   const selectPersona = (personaId: string) => {
     setSelectedPersonaId(personaId);
@@ -238,6 +238,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     matchResults,
     otherSchemes,
     isLoadingMatches,
+    hasCalculated,
     runMatching,
     activeTab,
     setActiveTab,
