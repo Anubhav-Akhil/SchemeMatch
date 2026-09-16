@@ -100,7 +100,12 @@ export const HeroScrollWindow: React.FC = () => {
           <span className="hero-scroll-highlight">
             {t.landing.heroHeadingLine2}
             <span className="hero-cursor-line" />
-            <span className="hero-cursor-tag">{t.landing.heroCursorTag}</span>
+            <span className="hero-cursor-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" style={{ flexShrink: 0 }}>
+                <path d="M3 3l7 18 3-7 7-3L3 3z" />
+              </svg>
+              <span>{t.landing.heroCursorTag}</span>
+            </span>
           </span>
         </h1>
 

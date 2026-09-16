@@ -482,7 +482,6 @@ export const MainAppDashboard: React.FC = () => {
           {activeTab === 'profile' && (
             <div className="ws-single-panel">
               <div style={{ marginBottom: '20px' }}>
-                <span className="badge badge-indigo">Module 1 of 10</span>
                 <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '8px 0 4px 0' }}>
                   AI Profile Extraction & Demographic Alignment
                 </h1>
@@ -500,7 +499,6 @@ export const MainAppDashboard: React.FC = () => {
               <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                    <span className="badge badge-indigo">Module 2 of 10</span>
                     <span className="badge badge-emerald">Affirmative Engine Active</span>
                   </div>
                   <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 6px 0' }}>

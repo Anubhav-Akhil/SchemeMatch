@@ -151,7 +151,7 @@ export const SaathiAICopilot: React.FC = () => {
       >
         <img src="/logo.png" alt="Saathi AI" style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#FFFFFF', padding: '1px' }} />
         <span>Ask Saathi AI</span>
-        <Sparkles size={16} />
+        <ArrowRight size={16} />
       </button>
 
       {/* Expandable Drawer */}

@@ -205,10 +205,6 @@ export const ChannelPartnerRouter: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span className="badge badge-indigo" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Compass size={13} />
-                Feature 8 of 10
-              </span>
               <span className="badge badge-emerald" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <ShieldCheck size={13} />
                 Geo-Spatial Partner Locator & Router

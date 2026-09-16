@@ -126,7 +126,9 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             <Sparkles size={14} />
           </div>
           <div>
-            <div className="si-saathi-panel-name">Saathi AI</div>
+            <div className="si-saathi-panel-name" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              Saathi AI <ArrowRight size={13} style={{ color: 'var(--si-nav-active)' }} />
+            </div>
             <div className="si-saathi-panel-sub">{language === 'hi' ? 'आपका योजना गाइड' : 'Your Scheme Guide'}</div>
           </div>
         </div>
