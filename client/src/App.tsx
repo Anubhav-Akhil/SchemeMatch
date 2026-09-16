@@ -4,6 +4,7 @@ import { ProfileProvider, useProfile } from './context/ProfileContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthPage } from './components/AuthPage';
 import { MainAppDashboard } from './components/MainAppDashboard';
+import { SaffronDashboard } from './components/SaffronDashboard';
 import { Header } from './components/Header';
 import { HeroScrollWindow } from './components/HeroScrollWindow';
 import { SuperpoweredCardsSection } from './components/SuperpoweredCardsSection';
@@ -67,7 +68,7 @@ const MainAppContent: React.FC = () => {
   }
 
   if (currentView === 'app') {
-    return <MainAppDashboard />;
+    return <SaffronDashboard />;
   }
 
   // Filter schemes on landing interactive preview
