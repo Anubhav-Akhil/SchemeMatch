@@ -20,8 +20,8 @@ export class TtsService {
   private cache: Map<string, TtsResponse> = new Map();
 
   constructor() {
-    this.sarvamApiKey = process.env.SARVAM_API_KEY || 'sk_ohm78s0d_rSuSyLYskgC1SzPQxCwFrYQT';
-    this.elevenLabsApiKey = process.env.ELEVENLABS_API_KEY || 'sk_ca64e4a7ffa3711a4895c46106f01ed0ecb16cd9e7bf54d4';
+    this.sarvamApiKey = process.env.SARVAM_API_KEY || '';
+    this.elevenLabsApiKey = process.env.ELEVENLABS_API_KEY || '';
   }
 
   private mapLangCode(lang: string = 'en'): string {
