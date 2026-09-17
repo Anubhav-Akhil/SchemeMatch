@@ -226,7 +226,7 @@ export const SaathiAICopilot: React.FC = () => {
         <img 
           src="/logo.png" 
           alt="Saathi AI" 
-          style={{ width: '22px', height: '22px', borderRadius: '4px', background: '#FFFFFF', padding: '1px' }} 
+          style={{ width: '22px', height: '22px', objectFit: 'contain' }} 
         />
         <span>Ask Saathi AI</span>
         <ArrowRight size={16} />
