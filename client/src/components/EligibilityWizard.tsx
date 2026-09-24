@@ -3,6 +3,7 @@ import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserProfile, SocialCategory, Gender, LocationType, SectorType, EducationLevel } from '../types';
 import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2, ArrowRight, IndianRupee, Award, AlertCircle, Loader2 } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export const EligibilityWizard: React.FC = () => {
   const {
@@ -32,7 +33,7 @@ export const EligibilityWizard: React.FC = () => {
     setExtractionNotice(null);
 
     try {
-      const res = await fetch('http://localhost:5000/api/ai/extract-profile', {
+      const res = await fetch(`${API_BASE_URL}/api/ai/extract-profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: textToProcess })

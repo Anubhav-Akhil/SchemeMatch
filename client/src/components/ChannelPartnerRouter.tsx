@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { EvaluatedPartner, PartnerRoutingResult } from '../types';
+import { API_BASE_URL } from '../config';
 import {
   Building2,
   MapPin,
@@ -136,7 +137,7 @@ export const ChannelPartnerRouter: React.FC = () => {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/partners/route', {
+      const res = await fetch(`${API_BASE_URL}/api/partners/route`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

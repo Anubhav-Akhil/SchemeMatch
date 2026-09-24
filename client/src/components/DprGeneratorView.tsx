@@ -3,6 +3,7 @@ import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { DprRequest, DprFinancialModel } from '../types';
 import { FileSpreadsheet, Printer, RefreshCw, CheckCircle2, TrendingUp, ShieldCheck, DollarSign, Calculator } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export const DprGeneratorView: React.FC = () => {
   const { profile } = useProfile();
@@ -45,7 +46,7 @@ export const DprGeneratorView: React.FC = () => {
   const generateDpr = async () => {
     setIsGenerating(true);
     try {
-      const res = await fetch('http://localhost:5000/api/dpr/generate', {
+      const res = await fetch(`${API_BASE_URL}/api/dpr/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dprInput)

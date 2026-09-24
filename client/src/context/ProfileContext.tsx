@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserProfile, SchemeMatchResult, PersonaProfile, Scheme } from '../types';
 import { SAMPLE_PERSONAS } from '../data/samplePersonas';
 import { useAuth } from './AuthContext';
+import { API_BASE_URL } from '../config';
 
 interface ProfileContextType {
   profile: UserProfile;
@@ -96,7 +97,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Method to fetch all government schemes from backend repository
   const fetchAllSchemes = async (): Promise<Scheme[]> => {
     try {
-      const res = await fetch('http://localhost:5000/api/schemes');
+      const res = await fetch(`${API_BASE_URL}/api/schemes`);
       if (res.ok) {
         const data = await res.json();
         const list = data.schemes || [];
@@ -113,7 +114,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     const fetchPersonas = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/personas');
+        const res = await fetch(`${API_BASE_URL}/api/personas`);
         if (res.ok) {
           const data = await res.json();
           if (data.personas && data.personas.length > 0) {
@@ -133,7 +134,7 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setIsLoadingMatches(true);
     const targetProfile = profileToMatch || profile;
     try {
-      const res = await fetch('http://localhost:5000/api/match', {
+      const res = await fetch(`${API_BASE_URL}/api/match`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(targetProfile)

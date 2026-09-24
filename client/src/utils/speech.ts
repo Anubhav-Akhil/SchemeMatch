@@ -1,4 +1,5 @@
 import { SupportedLanguage } from '../types';
+import { API_BASE_URL } from '../config';
 
 export class SpeechAssistant {
   private static isSpeaking = false;
@@ -38,7 +39,7 @@ export class SpeechAssistant {
 
     // 4. Request high-fidelity Indic/English audio from Sarvam AI / ElevenLabs via backend
     try {
-      const response = await fetch('http://localhost:5000/api/tts', {
+      const response = await fetch(`${API_BASE_URL}/api/tts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

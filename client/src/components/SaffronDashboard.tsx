@@ -12,6 +12,7 @@ import {
   IndianRupee, Award, Filter, RefreshCw
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import { API_BASE_URL } from '../config';
 
 // Feature components
 import { EligibilityWizard } from './EligibilityWizard';
@@ -130,7 +131,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5000/api/chat', {
+      const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

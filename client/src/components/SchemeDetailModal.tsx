@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { X, ExternalLink, Check, Volume2, VolumeX, ShieldCheck, Clock, FileText, Building, Sparkles, RefreshCw } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export const SchemeDetailModal: React.FC = () => {
   const { selectedSchemeModal, setSelectedSchemeModal, profile } = useProfile();
@@ -20,7 +21,7 @@ export const SchemeDetailModal: React.FC = () => {
     if (!selectedSchemeModal) return;
     setLoadingAi(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/explain-match', {
+      const res = await fetch(`${API_BASE_URL}/api/ai/explain-match`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -3,6 +3,7 @@ import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { DocumentReadinessReport, DocumentVerificationItem } from '../types';
 import { FileCheck2, Upload, AlertCircle, CheckCircle2, ExternalLink, RefreshCw, ShieldAlert, ArrowRight } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export const DocumentReadiness: React.FC = () => {
   const { profile, uploadedDocIds, toggleDocumentUpload, setActiveTab } = useProfile();
@@ -15,7 +16,7 @@ export const DocumentReadiness: React.FC = () => {
   const fetchDocumentAnalysis = async () => {
     setIsScanning(true);
     try {
-      const res = await fetch('http://localhost:5000/api/documents/analyze', {
+      const res = await fetch(`${API_BASE_URL}/api/documents/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
