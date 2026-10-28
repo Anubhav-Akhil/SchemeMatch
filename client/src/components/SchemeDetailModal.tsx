@@ -3,6 +3,7 @@ import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { X, ExternalLink, Check, Volume2, VolumeX, ShieldCheck, Clock, FileText, Building, Sparkles, RefreshCw } from 'lucide-react';
 import { API_BASE_URL } from '../config';
+import { getSchemeDetailNarrationText, getSchemeLocalizedName, getSchemeLocalizedSummary } from '../utils/schemeTranslations';
 
 export const SchemeDetailModal: React.FC = () => {
   const { selectedSchemeModal, setSelectedSchemeModal, profile } = useProfile();
@@ -49,29 +50,8 @@ export const SchemeDetailModal: React.FC = () => {
     if (isSpeaking) {
       stopSpeech();
     } else {
-      let text = '';
-      const loanFmt = `₹${scheme.maxLoanAmount.toLocaleString('en-IN')}`;
-      switch (language) {
-        case 'hi':
-          text = `${scheme.hindiName || scheme.name}। ${scheme.hindiSummary || scheme.detailedOverview}। अधिकतम ऋण राशि ${loanFmt}। नोडल एजेंसी: ${scheme.nodalAgency}।`;
-          break;
-        case 'te':
-          text = `${scheme.name} పథకం. ${scheme.detailedOverview}. గరిష్ట రుణ మొత్తం ${loanFmt}. నోడల్ ఏజెన్సీ: ${scheme.nodalAgency}.`;
-          break;
-        case 'pa':
-          text = `${scheme.name} ਸਕੀਮ. ${scheme.detailedOverview}. ਵੱਧ ਤੋਂ ਵੱਧ ਕਰਜ਼ਾ ${loanFmt}. ਨੋਡਲ ਏਜੰਸੀ: ${scheme.nodalAgency}.`;
-          break;
-        case 'mr':
-          text = `${scheme.hindiName || scheme.name} योजना. ${scheme.hindiSummary || scheme.detailedOverview}। कमाल कर्ज मर्यादा ${loanFmt}। नोडल एजन्सी: ${scheme.nodalAgency}।`;
-          break;
-        case 'bn':
-          text = `${scheme.hindiName || scheme.name} প্রকল্প। ${scheme.hindiSummary || scheme.detailedOverview}। সর্বোচ্চ ঋণ সীমা ${loanFmt}। নোডাল এজেন্সি: ${scheme.nodalAgency}।`;
-          break;
-        default:
-          text = `${scheme.name}. ${scheme.detailedOverview}. Maximum loan limit is ${loanFmt}. Nodal agency is ${scheme.nodalAgency}.`;
-          break;
-      }
-      speakText(text);
+      const text = getSchemeDetailNarrationText(scheme, language);
+      speakText(text, language);
     }
   };
 
@@ -87,7 +67,7 @@ export const SchemeDetailModal: React.FC = () => {
               <span className="badge badge-emerald">{matchScore}% Match</span>
             </div>
             <h2 style={{ fontSize: '1.45rem', marginBottom: '4px' }}>{scheme.name}</h2>
-            <div style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>{scheme.hindiName}</div>
+            <div style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>{getSchemeLocalizedName(scheme.id, language) || scheme.hindiName}</div>
           </div>
 
           <button
@@ -178,7 +158,7 @@ export const SchemeDetailModal: React.FC = () => {
             </button>
           </div>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', lineHeight: '1.6' }}>
-            {scheme.detailedOverview}
+            {getSchemeLocalizedSummary(scheme, language) || scheme.detailedOverview}
           </p>
         </div>
 

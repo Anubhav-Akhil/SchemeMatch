@@ -92,6 +92,26 @@ app.post('/api/match', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'User profile is required.' });
     }
 
+    const hasCriteria = Boolean(
+      (rawProfile.category && String(rawProfile.category).trim()) ||
+      (rawProfile.age && Number(rawProfile.age) > 0) ||
+      (rawProfile.gender && String(rawProfile.gender).trim()) ||
+      (rawProfile.sector && String(rawProfile.sector).trim()) ||
+      (rawProfile.tradeType && String(rawProfile.tradeType).trim()) ||
+      (rawProfile.requiredLoanAmount && Number(rawProfile.requiredLoanAmount) > 0) ||
+      (rawProfile.totalProjectCost && Number(rawProfile.totalProjectCost) > 0)
+    );
+
+    if (!hasCriteria) {
+      return res.json({
+        count: 0,
+        topMatches: [],
+        otherSchemes: [],
+        totalPotentialSubsidy: 0,
+        notice: 'Please fill in profile criteria to calculate personalized schemes.'
+      });
+    }
+
     // Gracefully infer sector if not explicitly set
     let inferredSector = rawProfile.sector;
     if (!inferredSector) {
@@ -199,7 +219,7 @@ app.get('/api/partners', (req: Request, res: Response) => {
 // Saathi AI Conversational Copilot (Powered by Groq Cloud + Domain Engine)
 app.post('/api/chat', async (req: Request, res: Response) => {
   try {
-    const { query, profile, mode } = req.body;
+    const { query, profile, mode, history } = req.body;
     if (!query || typeof query !== 'string') {
       return res.status(400).json({ error: 'Query string is required' });
     }
@@ -213,7 +233,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
     }
 
     try {
-      const aiResponse = await groqService.chatWithSaathi(query, profile, schemes);
+      const aiResponse = await groqService.chatWithSaathi(query, profile, schemes, history);
       
       // Merge entity extraction for maximum reliability
       const mergedUpdates = {

@@ -1,6 +1,8 @@
 import { SupportedLanguage } from '../types';
 import { API_BASE_URL } from '../config';
 
+const DEFAULT_SARVAM_KEY = 'sk_ohm78s0d_rSuSyLYskgC1SzPQxCwFrYQT';
+
 export class SpeechAssistant {
   private static isSpeaking = false;
   private static activeCallback: ((speaking: boolean) => void) | null = null;
@@ -9,7 +11,7 @@ export class SpeechAssistant {
 
   public static async speak(
     text: string,
-    lang: SupportedLanguage = 'hi',
+    lang: SupportedLanguage = 'en',
     onStateChange?: (speaking: boolean) => void
   ) {
     // 1. Immediately stop any currently playing speech/audio
@@ -25,7 +27,7 @@ export class SpeechAssistant {
     // 3. Clean markdown formatting, currency symbols, and extra whitespace
     const cleanText = text
       .replace(/[*_#`[\]()]/g, ' ')
-      .replace(/₹/g, 'Rupees ')
+      .replace(/₹/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
 
@@ -37,7 +39,17 @@ export class SpeechAssistant {
     const abortController = new AbortController();
     this.currentAbortController = abortController;
 
-    // 4. Request high-fidelity Indic/English audio from Sarvam AI / ElevenLabs via backend
+    const langCodeMap: Record<SupportedLanguage, string> = {
+      en: 'en-IN',
+      hi: 'hi-IN',
+      te: 'te-IN',
+      pa: 'pa-IN',
+      mr: 'mr-IN',
+      bn: 'bn-IN'
+    };
+    const targetLangCode = langCodeMap[lang] || 'en-IN';
+
+    // 4. Tier 1: Request high-fidelity Indic/English audio from backend endpoint
     try {
       const response = await fetch(`${API_BASE_URL}/api/tts`, {
         method: 'POST',
@@ -51,46 +63,118 @@ export class SpeechAssistant {
         signal: abortController.signal
       });
 
-      if (!response.ok) {
-        throw new Error(`TTS server responded with ${response.status}`);
+      if (response.ok) {
+        const data = (await response.json()) as { audioBase64?: string; format?: string; source?: string };
+
+        if (abortController.signal.aborted || !this.isSpeaking) {
+          return;
+        }
+
+        if (data.audioBase64) {
+          await this.playBase64Audio(data.audioBase64, abortController, cleanText, lang);
+          return;
+        }
       }
-
-      const data = (await response.json()) as { audioBase64?: string; format?: string; source?: string };
-
-      // If playback was cancelled while the network request was in-flight, discard
-      if (abortController.signal.aborted || !this.isSpeaking) {
+    } catch (backendErr: any) {
+      if (backendErr.name === 'AbortError') {
         return;
       }
+      console.warn('Backend TTS endpoint unreachable, checking direct Sarvam fallback:', backendErr.message);
+    }
 
-      if (data.audioBase64) {
-        const audio = new Audio(data.audioBase64);
+    // If playback was cancelled during network roundtrip, halt
+    if (abortController.signal.aborted || !this.isSpeaking) {
+      return;
+    }
+
+    // 5. Tier 2: Direct Sarvam AI synthesis from client (Native Indic voices: te, mr, bn, pa, hi, en)
+    const sarvamApiKey = (import.meta.env.VITE_SARVAM_API_KEY as string) || DEFAULT_SARVAM_KEY;
+    if (sarvamApiKey) {
+      try {
+        const sarvamRes = await fetch('https://api.sarvam.ai/text-to-speech', {
+          method: 'POST',
+          headers: {
+            'api-subscription-key': sarvamApiKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            inputs: [cleanText],
+            target_language_code: targetLangCode,
+            speaker: 'ritu',
+            model: 'bulbul:v3'
+          }),
+          signal: abortController.signal
+        });
+
+        if (sarvamRes.ok) {
+          const data = (await sarvamRes.json()) as { audios?: string[] };
+          if (data.audios && data.audios[0]) {
+            if (abortController.signal.aborted || !this.isSpeaking) {
+              return;
+            }
+            const audioDataUri = `data:audio/wav;base64,${data.audios[0]}`;
+            await this.playBase64Audio(audioDataUri, abortController, cleanText, lang);
+            return;
+          }
+        } else {
+          const errText = await sarvamRes.text();
+          console.warn(`Direct Sarvam TTS returned ${sarvamRes.status}: ${errText.slice(0, 140)}`);
+        }
+      } catch (sarvamErr: any) {
+        if (sarvamErr.name === 'AbortError') {
+          return;
+        }
+        console.warn('Direct Sarvam AI synthesis failed, falling back to browser SpeechSynthesis:', sarvamErr.message);
+      }
+    }
+
+    // 6. Tier 3: Browser SpeechSynthesis Fallback
+    if (!abortController.signal.aborted && this.isSpeaking) {
+      this.speakBrowserFallback(cleanText, lang);
+    }
+  }
+
+  private static playBase64Audio(
+    audioUri: string,
+    abortController: AbortController,
+    cleanText: string,
+    lang: SupportedLanguage
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      try {
+        const audio = new Audio(audioUri);
         this.currentAudio = audio;
 
         audio.onended = () => {
           this.stop();
+          resolve();
         };
 
         audio.onerror = (err) => {
-          console.warn('Audio playback error, attempting browser fallback:', err);
-          this.speakBrowserFallback(cleanText, lang);
+          console.warn('Audio playback error, falling back to browser SpeechSynthesis:', err);
+          if (!abortController.signal.aborted && this.isSpeaking) {
+            this.speakBrowserFallback(cleanText, lang);
+          }
+          resolve();
         };
 
-        await audio.play();
-        return;
-      } else {
-        throw new Error('No audio payload returned by TTS server');
+        audio.play().then(() => {
+          resolve();
+        }).catch((err) => {
+          console.warn('Audio play() promise rejected (e.g. browser autoplay restrictions):', err);
+          if (!abortController.signal.aborted && this.isSpeaking) {
+            this.speakBrowserFallback(cleanText, lang);
+          }
+          resolve();
+        });
+      } catch (err) {
+        console.warn('Audio instantiation failed, using browser fallback:', err);
+        if (!abortController.signal.aborted && this.isSpeaking) {
+          this.speakBrowserFallback(cleanText, lang);
+        }
+        resolve();
       }
-    } catch (err: any) {
-      if (err.name === 'AbortError') {
-        // User stopped or switched speech intentionally
-        return;
-      }
-      console.warn('Backend TTS failed, falling back to browser SpeechSynthesis:', err.message);
-      
-      if (!abortController.signal.aborted && this.isSpeaking) {
-        this.speakBrowserFallback(cleanText, lang);
-      }
-    }
+    });
   }
 
   private static speakBrowserFallback(cleanText: string, lang: SupportedLanguage) {
@@ -113,7 +197,28 @@ export class SpeechAssistant {
         bn: 'bn-IN'
       };
 
-      utterance.lang = langMap[lang] || 'hi-IN';
+      const requestedLocale = langMap[lang] || 'en-IN';
+      const voices = window.speechSynthesis.getVoices();
+
+      // Find an exact language voice, partial match, or best Indian voice fallback
+      const exactVoice = voices.find((v) => v.lang.toLowerCase().replace('_', '-') === requestedLocale.toLowerCase());
+      const prefixVoice = voices.find((v) => v.lang.toLowerCase().startsWith(lang.toLowerCase()));
+      const indicVoice = voices.find((v) => v.lang.toLowerCase().includes('in') || v.lang.toLowerCase().startsWith('hi'));
+
+      if (exactVoice) {
+        utterance.voice = exactVoice;
+        utterance.lang = exactVoice.lang;
+      } else if (prefixVoice) {
+        utterance.voice = prefixVoice;
+        utterance.lang = prefixVoice.lang;
+      } else if (indicVoice) {
+        // Fall back to available Indic/English voice to ensure speech plays rather than failing silently
+        utterance.voice = indicVoice;
+        utterance.lang = indicVoice.lang;
+      } else {
+        utterance.lang = requestedLocale;
+      }
+
       utterance.rate = 0.95;
       utterance.pitch = 1.0;
 
@@ -127,7 +232,7 @@ export class SpeechAssistant {
       };
 
       utterance.onerror = (e) => {
-        console.error('Browser speech error:', e);
+        console.error('Browser speech synthesis error:', e);
         this.stop();
       };
 
@@ -157,7 +262,7 @@ export class SpeechAssistant {
     }
 
     // Cancel browser SpeechSynthesis if active
-    if ('speechSynthesis' in window) {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       try {
         window.speechSynthesis.cancel();
       } catch (e) {
@@ -177,4 +282,3 @@ export class SpeechAssistant {
     return this.isSpeaking;
   }
 }
-

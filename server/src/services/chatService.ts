@@ -296,17 +296,17 @@ export class SaathiChatService {
       }
 
       case 'recommendation': {
-        responseText = `Namaste! Based on your profile (${mergedCategory} entrepreneur in a ${mergedLocation} area, requirement ₹${loanAmt.toLocaleString('en-IN')}), our AI engine has matched you with top high-impact schemes:
+        responseText = `Here are the top high-impact government schemes matching your profile (${mergedCategory} entrepreneur in a ${mergedLocation} area, requirement ₹${loanAmt.toLocaleString('en-IN')}):
 1. **PMEGP**: Up to 35% Capital Grant & loan up to ₹50 Lakhs.
 2. **PM Vishwakarma**: ₹15,000 tool grant + 5% subsidized loan for traditional artisans.
 3. **Stand-Up India / NSFDC**: ₹10 Lakh to ₹1 Crore credit at concessional rates.`;
 
-        responseHindi = `नमस्ते! आपकी प्रोफ़ाइल (${mergedLocation === 'Rural' ? 'ग्रामीण' : 'शहरी'} क्षेत्र में ${mergedCategory} उद्यमी, आवश्यकता ₹${loanAmt.toLocaleString('en-IN')}) के आधार पर हमारे AI इंजन ने सर्वोत्तम योजनाएं खोजी हैं:
+        responseHindi = `आपकी प्रोफ़ाइल (${mergedLocation === 'Rural' ? 'ग्रामीण' : 'शहरी'} क्षेत्र में ${mergedCategory} उद्यमी, आवश्यकता ₹${loanAmt.toLocaleString('en-IN')}) के आधार पर सर्वश्रेष्ठ योजनाएं:
 1. **पीएमईजीपी (PMEGP)**: 35% तक पूंजीगत अनुदान एवं ₹50 लाख तक ऋण।
 2. **पीएम विश्वकर्मा**: ₹15,000 टूलकिट अनुदान + 5% रियायती ऋण।
 3. **स्टैंड-अप इंडिया / एनएसएफडीसी**: ₹10 लाख से ₹1 करोड़ तक का रियायती ऋण।`;
 
-        responsePunjabi = `ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ (${mergedCategory} ਉੱਦਮੀ, ${mergedLocation === 'Rural' ? 'ਪੇਂਡੂ' : 'ਸ਼ਹਿਰੀ'} ਖੇਤਰ, ਲੋੜ ₹${loanAmt.toLocaleString('en-IN')}) ਦੇ ਆਧਾਰ 'ਤੇ ਵਧੀਆ ਸਕੀਮਾਂ:
+        responsePunjabi = `ਤੁਹਾਡੀ ਪ੍ਰੋਫਾਈਲ (${mergedCategory} ਉੱਦਮੀ, ${mergedLocation === 'Rural' ? 'ਪੇਂਡੂ' : 'ਸ਼ਹਿਰੀ'} ਖੇਤਰ, ਲੋੜ ₹${loanAmt.toLocaleString('en-IN')}) ਦੇ ਆਧਾਰ 'ਤੇ ਵਧੀਆ ਸਕੀਮਾਂ:
 1. **PMEGP**: 35% ਤੱਕ ਸਬਸਿਡੀ ਅਤੇ ₹50 ਲੱਖ ਤੱਕ ਕਰਜ਼ਾ।
 2. **PM ਵਿਸ਼ਵਕਰਮਾ**: ₹15,000 ਟੂਲਕਿੱਟ ਗ੍ਰਾਂਟ + 5% ਵਿਆਜ 'ਤੇ ਕਰਜ਼ਾ।
 3. **ਸਟੈਂਡ-ਅੱਪ ਇੰਡੀਆ / NSFDC**: ₹10 ਲੱਖ ਤੋਂ ₹1 ਕਰੋੜ ਤੱਕ ਕਰਜ਼ਾ।`;
@@ -348,13 +348,13 @@ export class SaathiChatService {
         const isGreeting = /^(hi|hello|hey|namaste|greetings|good morning|good afternoon|good evening|who are you|help|thanks|thank you|shukriya|ਧੰਨਵਾਦ)[\s!.,?]*$/i.test(q) || q.length < 5;
 
         if (isGreeting) {
-          responseText = `Hello! I am your AI assistant for government schemes and concessional credit. You can ask me anything about finding schemes, documents needed, calculating EMI, or where to apply. How can I help you today?`;
-          responseHindi = `नमस्ते! मैं सरकारी योजनाओं और रियायती ऋण के लिए आपका एआई सहायक हूँ। आप मुझसे योजना खोजने, आवश्यक दस्तावेज़ों, ईएमआई गणना या कहाँ आवेदन करें, इस बारे में कुछ भी पूछ सकते हैं। आज मैं आपकी क्या सहायता करूँ?`;
-          responsePunjabi = `ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਮੈਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਅਤੇ ਸਸਤੇ ਕਰਜ਼ਿਆਂ ਲਈ ਤੁਹਾਡਾ ਏਆਈ ਸਹਾਇਕ ਹਾਂ। ਤੁਸੀਂ ਸਕੀਮ ਲੱਭਣ, ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼ਾਂ, EMI ਗਣਨਾ ਜਾਂ ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛ ਸਕਦੇ ਹੋ।`;
+          responseText = `Hello! How can I help you today with government schemes, subsidies, or business loans?`;
+          responseHindi = `नमस्ते! आज मैं सरकारी योजनाओं, सब्सिडी या व्यावसायिक ऋण में आपकी क्या मदद कर सकता हूँ?`;
+          responsePunjabi = `ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਅੱਜ ਮੈਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ, ਸਬਸਿਡੀਆਂ ਜਾਂ ਵਪਾਰਕ ਕਰਜ਼ਿਆਂ ਵਿੱਚ ਤੁਹਾਡੀ ਕੀ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ?`;
         } else {
-          responseText = `I am here to help you navigate government schemes, subsidies, and loans. You can ask me any question about requirements, eligibility, EMIs, or authorized banks.`;
-          responseHindi = `मैं सरकारी योजनाओं, सब्सिडी और ऋणों में आपकी सहायता के लिए तैयार हूँ। आप पात्रता, ईएमआई, आवश्यक दस्तावेज़ या बैंकों के बारे में कोई भी प्रश्न पूछ सकते हैं।`;
-          responsePunjabi = `ਮੈਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ, ਸਬਸਿਡੀਆਂ ਅਤੇ ਕਰਜ਼ਿਆਂ ਵਿੱਚ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਹਾਜ਼ਰ ਹਾਂ। ਤੁਸੀਂ ਕੋਈ ਵੀ ਸਵਾਲ ਪੁੱਛ ਸਕਦੇ ਹੋ।`;
+          responseText = `I can help you explore government schemes, calculate EMIs and subsidies, or check document readiness. What specific trade or loan amount are you exploring?`;
+          responseHindi = `मैं सरकारी योजनाओं, सब्सिडी, ईएमआई या आवश्यक दस्तावेज़ों की जांच में सहायता कर सकता हूँ। आप किस कार्य या ऋण राशि के बारे में जानना चाहते हैं?`;
+          responsePunjabi = `ਮੈਂ ਸਰਕਾਰੀ ਸਕੀਮਾਂ, ਸਬਸਿਡੀਆਂ, EMI ਜਾਂ ਜ਼ਰੂਰੀ ਕਾਗਜ਼ਾਤ ਦੀ ਜਾਂਚ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕਦਾ ਹਾਂ।`;
         }
 
         suggestedPrompts.push(

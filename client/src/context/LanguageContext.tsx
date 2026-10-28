@@ -35,6 +35,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const setLanguage = (lang: SupportedLanguage) => {
     if (lang === language) return;
+    // Stop any active speech immediately on language switch
+    SpeechAssistant.stop();
+    setIsSpeaking(false);
+
     setIsChangingLanguage(true);
     document.body.classList.add('lang-transition-active');
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserProfile, SocialCategory, Gender, LocationType, SectorType, EducationLevel } from '../types';
@@ -24,6 +24,24 @@ export const EligibilityWizard: React.FC = () => {
   const [isExtracting, setIsExtracting] = useState<boolean>(false);
   const [extractionNotice, setExtractionNotice] = useState<string | null>(null);
   const [showAiBox, setShowAiBox] = useState<boolean>(true);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (validationError) {
+      const hasCriteria = Boolean(
+        (profile.category && String(profile.category).trim()) ||
+        (profile.age && Number(profile.age) > 0) ||
+        (profile.gender && String(profile.gender).trim()) ||
+        (profile.sector && String(profile.sector).trim()) ||
+        (profile.tradeType && String(profile.tradeType).trim()) ||
+        (profile.requiredLoanAmount && Number(profile.requiredLoanAmount) > 0) ||
+        (profile.totalProjectCost && Number(profile.totalProjectCost) > 0)
+      );
+      if (hasCriteria) {
+        setValidationError(null);
+      }
+    }
+  }, [profile, validationError]);
 
   const handleAiExtraction = async (samplePrompt?: string) => {
     const textToProcess = samplePrompt || aiInputText;
@@ -31,6 +49,7 @@ export const EligibilityWizard: React.FC = () => {
 
     setIsExtracting(true);
     setExtractionNotice(null);
+    setValidationError(null);
 
     try {
       const res = await fetch(`${API_BASE_URL}/api/ai/extract-profile`, {
@@ -81,6 +100,25 @@ export const EligibilityWizard: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const hasCriteria = Boolean(
+      (profile.category && String(profile.category).trim()) ||
+      (profile.age && Number(profile.age) > 0) ||
+      (profile.gender && String(profile.gender).trim()) ||
+      (profile.sector && String(profile.sector).trim()) ||
+      (profile.tradeType && String(profile.tradeType).trim()) ||
+      (profile.requiredLoanAmount && Number(profile.requiredLoanAmount) > 0) ||
+      (profile.totalProjectCost && Number(profile.totalProjectCost) > 0)
+    );
+
+    if (!hasCriteria) {
+      setValidationError(
+        'Please enter your basic profile details (such as Age, Social Category, Business Sector, or Loan Needed) or use the AI Natural-Language Profile Extractor above before calculating schemes. Personalized matching requires your criteria to evaluate government eligibility.'
+      );
+      return;
+    }
+
+    setValidationError(null);
     await runMatching(profile);
     // Directly navigate user to the Scheme Recommender so they immediately see the matched schemes and subsidies
     setActiveTab('matcher');
@@ -585,6 +623,29 @@ export const EligibilityWizard: React.FC = () => {
             </>
           )}
         </button>
+
+        {/* Validation Warning when clicking without filling profile */}
+        {validationError && (
+          <div style={{
+            marginTop: '12px',
+            padding: '12px 14px',
+            background: 'rgba(239, 68, 68, 0.08)',
+            border: '1.5px solid rgba(239, 68, 68, 0.4)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px',
+            color: '#DC2626',
+            fontSize: '0.84rem',
+            lineHeight: 1.5
+          }}>
+            <AlertCircle size={18} style={{ color: '#DC2626', flexShrink: 0, marginTop: '2px' }} />
+            <div>
+              <strong style={{ display: 'block', marginBottom: '2px' }}>Profile Details Required</strong>
+              <span>{validationError}</span>
+            </div>
+          </div>
+        )}
 
         {/* Instant Calculation Results & Subsidy Preview */}
         {hasCalculated && matchResults.length > 0 && (

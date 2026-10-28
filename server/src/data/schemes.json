@@ -9,7 +9,15 @@
     "summary": "Flagship credit-linked subsidy scheme offering 25% to 35% government subsidy for marginalized entrepreneurs to set up micro-enterprises.",
     "hindiSummary": "हाशिए पर रहने वाले उद्यमियों के लिए सूक्ष्म उद्यम स्थापित करने हेतु 25% से 35% सरकारी सब्सिडी प्रदान करने वाली प्रमुख योजना।",
     "detailedOverview": "PMEGP is a credit-linked subsidy programme aimed at generating self-employment opportunities through establishment of micro-enterprises in the non-farm sector. For special categories (SC, ST, OBC, Women, Differently-Abled, Minorities), the beneficiary margin money contribution is only 5% of project cost, and the subsidy is 35% in rural areas and 25% in urban areas.",
-    "targetGroups": ["SC", "ST", "OBC", "Women", "DifferentlyAbled", "Minorities", "ExServicemen"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "OBC",
+      "Women",
+      "DifferentlyAbled",
+      "Minorities",
+      "ExServicemen"
+    ],
     "minLoanAmount": 100000,
     "maxLoanAmount": 5000000,
     "subsidyRate": {
@@ -29,14 +37,37 @@
     "repaymentTenureYears": 7,
     "collateralRequirement": "CGTMSE Guarantee",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "8thPass",
-      "allowedSectors": ["Manufacturing", "Services", "ArtisanHandicraft", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -78,7 +109,11 @@
     "summary": "Bank loans between ₹10 Lakh and ₹1 Crore to at least one SC or ST borrower and at least one woman borrower per bank branch for greenfield enterprises.",
     "hindiSummary": "ग्रीनफील्ड उद्यम स्थापित करने हेतु प्रति बैंक शाखा कम से कम एक एससी/एसटी और एक महिला उद्यमी को ₹10 लाख से ₹1 करोड़ तक का ऋण।",
     "detailedOverview": "Stand-Up India facilitates bank loans between ₹10 Lakh and ₹100 Lakh to Scheduled Caste (SC), Scheduled Tribe (ST), and Women borrowers for setting up greenfield enterprises in manufacturing, services, agri-allied activities, or the trading sector. In non-individual enterprises, at least 51% shareholding must be held by SC/ST or Women.",
-    "targetGroups": ["SC", "ST", "Women"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "Women"
+    ],
     "minLoanAmount": 1000000,
     "maxLoanAmount": 10000000,
     "subsidyRate": {
@@ -98,14 +133,31 @@
     "repaymentTenureYears": 7,
     "collateralRequirement": "CGTMSE Guarantee",
     "eligibility": {
-      "allowedCategories": ["SC", "ST"],
-      "allowedGenders": ["Male", "Female", "Transgender"],
+      "allowedCategories": [
+        "SC",
+        "ST"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "Trading", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Trading",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar & PAN Card",
@@ -147,7 +199,14 @@
     "summary": "Holistic support with ₹15,000 modern toolkit incentive, skill training with ₹500/day stipend, and 5% subsidized collateral-free loans up to ₹3 Lakhs for 18 traditional trades.",
     "hindiSummary": "18 पारंपरिक व्यवसायों के लिए ₹15,000 आधुनिक टूलकिट प्रोत्साहन, ₹500/दिन वजीफे के साथ कौशल प्रशिक्षण और 5% रियायती ब्याज दर पर ₹3 लाख तक का ऋण।",
     "detailedOverview": "PM Vishwakarma covers 18 traditional artisanal trades (Carpenters, Blacksmiths, Potters, Cobblers, Weavers, Tailors, Barbers, Basket Makers, etc.). It offers basic & advanced skill training with ₹500 daily stipend, ₹15,000 digital e-voucher for modern toolkits, and collateral-free enterprise credit of ₹1 Lakh (Tranche 1) and ₹2 Lakh (Tranche 2) at a highly concessional interest rate of 5% with 8% interest subvention paid by MoMSME.",
-    "targetGroups": ["SC", "ST", "OBC", "ArtisanHandicraft", "Rural", "Women"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "OBC",
+      "ArtisanHandicraft",
+      "Rural",
+      "Women"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 300000,
     "subsidyRate": {
@@ -167,14 +226,35 @@
     "repaymentTenureYears": 3,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 70,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["ArtisanHandicraft", "Textiles", "Services"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"],
+      "allowedSectors": [
+        "ArtisanHandicraft",
+        "Textiles",
+        "Services"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ],
       "artisanTradesOnly": true
     },
     "mandatoryDocuments": [
@@ -214,7 +294,14 @@
     "summary": "Collateral-free working capital micro-loans of ₹10,000, ₹20,000, and ₹50,000 with 7% interest subsidy and cashback for digital transactions.",
     "hindiSummary": "स्ट्रीट वेंडरों के लिए 7% ब्याज सब्सिडी और डिजिटल लेन-देन पर कैशबैक के साथ ₹10,000, ₹20,000 और ₹50,000 का संपार्श्विक-मुक्त कार्यशील पूंजी ऋण।",
     "detailedOverview": "PM SVANidhi is a central sector scheme to facilitate working capital loans up to ₹10,000 (1st Tranche), ₹20,000 (2nd Tranche), and ₹50,000 (3rd Tranche) for urban street vendors. Timely repayment unlocks higher tranches, attracts an interest subsidy of 7% per annum credited directly to bank accounts, and monthly cashback up to ₹100 for digital payments.",
-    "targetGroups": ["StreetVending", "OBC", "SC", "ST", "Minorities", "Women"],
+    "targetGroups": [
+      "StreetVending",
+      "OBC",
+      "SC",
+      "ST",
+      "Minorities",
+      "Women"
+    ],
     "minLoanAmount": 10000,
     "maxLoanAmount": 50000,
     "subsidyRate": {
@@ -234,14 +321,34 @@
     "repaymentTenureYears": 1,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["StreetVending", "Trading", "Services"],
-      "allowedLocations": ["Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "StreetVending",
+        "Trading",
+        "Services"
+      ],
+      "allowedLocations": [
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -279,7 +386,9 @@
     "summary": "Term loans up to ₹50 Lakhs at 6% to 9% concessional interest rate covering up to 95% of the project cost for SC entrepreneurs.",
     "hindiSummary": "अनुसूचित जाति के उद्यमियों के लिए परियोजना लागत का 95% तक, 6% से 9% की रियायती ब्याज दर पर ₹50 लाख तक का सावधि ऋण।",
     "detailedOverview": "NSFDC assists Scheduled Caste entrepreneurs whose annual family income is up to ₹3,00,000. Term loans cover up to 95% of project cost (up to ₹50 Lakh) for viable revenue-generating business ventures in agriculture, transport, services, and manufacturing sectors. Concessional interest rates range between 6% to 9% per annum.",
-    "targetGroups": ["SC"],
+    "targetGroups": [
+      "SC"
+    ],
     "minLoanAmount": 100000,
     "maxLoanAmount": 5000000,
     "subsidyRate": {
@@ -299,14 +408,32 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Hypothecation of Assets",
     "eligibility": {
-      "allowedCategories": ["SC"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 300000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "Trading", "AgroAllied", "Textiles", "ArtisanHandicraft"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Trading",
+        "AgroAllied",
+        "Textiles",
+        "ArtisanHandicraft"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -346,7 +473,10 @@
     "summary": "Micro-finance credit up to ₹1,40,000 at an ultra-concessional 4% interest rate per annum specifically for Scheduled Caste women micro-entrepreneurs.",
     "hindiSummary": "अनुसूचित जाति की महिला सूक्ष्म उद्यमियों के लिए मात्र 4% वार्षिक रियायती ब्याज दर पर ₹1,40,000 तक का सूक्ष्म वित्त ऋण।",
     "detailedOverview": "Mahila Samriddhi Yojana provides micro-finance directly to women belonging to Scheduled Castes with annual family income up to ₹3 Lakh. Maximum project cost is ₹1,40,000 with up to 95% NSFDC funding. Beneficiaries pay an interest rate of only 4% per annum. Repayment is in 36 easy monthly installments.",
-    "targetGroups": ["SC", "Women"],
+    "targetGroups": [
+      "SC",
+      "Women"
+    ],
     "minLoanAmount": 25000,
     "maxLoanAmount": 140000,
     "subsidyRate": {
@@ -366,14 +496,28 @@
     "repaymentTenureYears": 3,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC"],
-      "allowedGenders": ["Female"],
+      "allowedCategories": [
+        "SC"
+      ],
+      "allowedGenders": [
+        "Female"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 300000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Services", "Trading", "ArtisanHandicraft", "Textiles", "AgroAllied"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Services",
+        "Trading",
+        "ArtisanHandicraft",
+        "Textiles",
+        "AgroAllied"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -411,7 +555,10 @@
     "summary": "Concessional micro-credit up to ₹2,00,000 at only 4% per annum interest rate for Scheduled Tribe women entrepreneurs.",
     "hindiSummary": "अनुसूचित जनजाति की महिला उद्यमियों के लिए मात्र 4% प्रति वर्ष ब्याज दर पर ₹2,00,000 तक का रियायती सूक्ष्म ऋण।",
     "detailedOverview": "AMSY is an exclusive scheme for the economic development of Scheduled Tribe women. NSTFDC provides term loans up to 90% of project cost (up to ₹2 Lakh) at a subsidized interest rate of 4% per annum. Promoters need to contribute only 2% to 5%, and state agencies provide subsidy up to ₹10,000. Repayment period is up to 5 years.",
-    "targetGroups": ["ST", "Women"],
+    "targetGroups": [
+      "ST",
+      "Women"
+    ],
     "minLoanAmount": 20000,
     "maxLoanAmount": 200000,
     "subsidyRate": {
@@ -431,14 +578,28 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["ST"],
-      "allowedGenders": ["Female"],
+      "allowedCategories": [
+        "ST"
+      ],
+      "allowedGenders": [
+        "Female"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 300000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["ArtisanHandicraft", "AgroAllied", "Trading", "Services", "Textiles"],
-      "allowedLocations": ["Rural", "Semi-Urban", "Urban"]
+      "allowedSectors": [
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "Trading",
+        "Services",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban",
+        "Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -476,7 +637,10 @@
     "summary": "Term loans up to ₹2,00,000 at a low 5% interest rate per annum for women entrepreneurs belonging to Other Backward Classes (OBCs).",
     "hindiSummary": "अन्य पिछड़ा वर्ग (ओबीसी) की महिला उद्यमियों के लिए 5% वार्षिक कम ब्याज दर पर ₹2,00,000 तक का सावधि ऋण।",
     "detailedOverview": "New Swarnima aims to instill self-reliance among women belonging to Backward Classes living below double the poverty line (annual family income up to ₹3,00,000). The scheme finances up to 95% of project cost (max ₹2,00,000) at 5% per annum interest rate. Repayment is in quarterly installments over 8 years (including moratorium).",
-    "targetGroups": ["OBC", "Women"],
+    "targetGroups": [
+      "OBC",
+      "Women"
+    ],
     "minLoanAmount": 25000,
     "maxLoanAmount": 200000,
     "subsidyRate": {
@@ -496,14 +660,29 @@
     "repaymentTenureYears": 8,
     "collateralRequirement": "Hypothecation of Assets",
     "eligibility": {
-      "allowedCategories": ["OBC"],
-      "allowedGenders": ["Female"],
+      "allowedCategories": [
+        "OBC"
+      ],
+      "allowedGenders": [
+        "Female"
+      ],
       "minAge": 18,
       "maxAge": 55,
       "incomeCeilingAnnual": 300000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Services", "Trading", "ArtisanHandicraft", "AgroAllied", "Manufacturing", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Services",
+        "Trading",
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "Manufacturing",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -542,7 +721,11 @@
     "summary": "5% direct interest subvention on standard bank loans for SC and OBC Self-Help Groups (up to ₹4 Lakhs) and individual micro-borrowers (up to ₹2 Lakhs).",
     "hindiSummary": "अनुसूचित जाति और पिछड़ा वर्ग के स्वयं सहायता समूहों (₹4 लाख तक) और व्यक्तिगत सूक्ष्म उधारकर्ताओं (₹2 लाख तक) को बैंक ऋण पर 5% सीधी ब्याज छूट।",
     "detailedOverview": "VISVAS provides 5% interest subvention directly to the bank accounts of beneficiaries from SC and OBC categories who have availed business loans under standard bank credit or Mudra. For individual entrepreneurs, loan limit is up to ₹2 Lakh; for SHGs, up to ₹4 Lakh. The 5% subsidy significantly slashes commercial loan interest burden down to near zero or nominal rates.",
-    "targetGroups": ["SC", "OBC", "Women"],
+    "targetGroups": [
+      "SC",
+      "OBC",
+      "Women"
+    ],
     "minLoanAmount": 20000,
     "maxLoanAmount": 400000,
     "subsidyRate": {
@@ -562,14 +745,34 @@
     "repaymentTenureYears": 3,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "OBC"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "OBC"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 300000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "Trading", "ArtisanHandicraft", "AgroAllied", "StreetVending", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Trading",
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "StreetVending",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -607,7 +810,10 @@
     "summary": "Term loans up to ₹15 Lakhs at concessional interest rates (4% to 6% p.a.) with capital subsidy up to ₹5 Lakhs for manual scavengers & sanitation workers.",
     "hindiSummary": "सफाई कर्मचारियों और स्वच्छता कार्यकर्ताओं के पुनर्वास हेतु ₹5 लाख तक की पूंजीगत सब्सिडी के साथ 4% से 6% ब्याज पर ₹15 लाख तक का ऋण।",
     "detailedOverview": "NSKFDC empowers Safai Karamcharis, Manual Scavengers, and their dependents to achieve sustainable livelihoods through viable alternative self-employment projects. Under the Self Employment Scheme for Rehabilitation of Manual Scavengers (SRMS), upfront capital subsidy up to ₹5 Lakh is provided, with concessional interest rates of 4% to 6% p.a. and repayment tenure up to 7 years.",
-    "targetGroups": ["SafaiKaramchari", "SC"],
+    "targetGroups": [
+      "SafaiKaramchari",
+      "SC"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 1500000,
     "subsidyRate": {
@@ -627,14 +833,33 @@
     "repaymentTenureYears": 7,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SafaiKaramchari", "SC", "OBC"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SafaiKaramchari",
+        "SC",
+        "OBC"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Sanitation", "Services", "Trading", "Manufacturing", "AgroAllied"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"],
+      "allowedSectors": [
+        "Sanitation",
+        "Services",
+        "Trading",
+        "Manufacturing",
+        "AgroAllied"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ],
       "requiresSafaiKaramchari": true
     },
     "mandatoryDocuments": [
@@ -673,7 +898,10 @@
     "summary": "Concessional loans up to ₹50 Lakhs at 5% to 8% interest rate with special 1% rebate for women and timely repayment for PwD entrepreneurs.",
     "hindiSummary": "दिव्यांग उद्यमियों के लिए 5% से 8% ब्याज दर पर ₹50 लाख तक का रियायती ऋण, महिलाओं और समय पर भुगतान हेतु 1% अतिरिक्त छूट।",
     "detailedOverview": "NDFDC provides financial assistance to Persons with Disabilities (PwD / Divyangjan) with 40% or more disability for income-generating activities. Loan limits reach ₹50 Lakh for manufacturing/service and ₹5 Lakh for small business/trading. Interest rate is 5% to 8% p.a. with 1% special rebate for women entrepreneurs with disabilities.",
-    "targetGroups": ["DifferentlyAbled", "Women"],
+    "targetGroups": [
+      "DifferentlyAbled",
+      "Women"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 5000000,
     "subsidyRate": {
@@ -693,14 +921,38 @@
     "repaymentTenureYears": 7,
     "collateralRequirement": "Hypothecation of Assets",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Services", "Manufacturing", "Trading", "ArtisanHandicraft", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"],
+      "allowedSectors": [
+        "Services",
+        "Manufacturing",
+        "Trading",
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ],
       "requiresDisability": true
     },
     "mandatoryDocuments": [
@@ -739,7 +991,14 @@
     "summary": "Zero collateral micro-credit up to ₹50,000 for early-stage micro-enterprises, small vendors, tailors, and repair shops with minimal documentation.",
     "hindiSummary": "न्यूनतम दस्तावेज़ीकरण के साथ छोटे दुकानदारों, दर्जियों और मरम्मत की दुकानों के लिए ₹50,000 तक का कोलैटरल-मुक्त सूक्ष्म ऋण।",
     "detailedOverview": "MUDRA Shishu covers loans up to ₹50,000 for small businesses at ideation or early stage. It requires zero collateral, zero processing fee, and has simple documentation. It is delivered through scheduled commercial banks, regional rural banks (RRBs), and microfinance institutions (MFIs).",
-    "targetGroups": ["SC", "ST", "OBC", "Women", "StreetVending", "ArtisanHandicraft"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "OBC",
+      "Women",
+      "StreetVending",
+      "ArtisanHandicraft"
+    ],
     "minLoanAmount": 10000,
     "maxLoanAmount": 50000,
     "subsidyRate": {
@@ -759,14 +1018,39 @@
     "repaymentTenureYears": 3,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Services", "Trading", "ArtisanHandicraft", "Manufacturing", "StreetVending", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Services",
+        "Trading",
+        "ArtisanHandicraft",
+        "Manufacturing",
+        "StreetVending",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -804,7 +1088,13 @@
     "summary": "Collateral-free enterprise expansion loan from ₹50,000 up to ₹5,00,000 for purchasing machinery, equipment, or working capital inventory.",
     "hindiSummary": "मशीनरी, उपकरण या कार्यशील पूंजी की खरीद हेतु ₹50,000 से ₹5 लाख तक का संपार्श्विक-मुक्त उद्यम विस्तार ऋण।",
     "detailedOverview": "MUDRA Kishor caters to growing enterprises requiring capital between ₹50,000 and ₹5,00,000. It enables purchasing machinery, small commercial transport, inventory, or setting up a modern service shop without needing personal real estate collateral.",
-    "targetGroups": ["SC", "ST", "OBC", "Women", "DifferentlyAbled"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "OBC",
+      "Women",
+      "DifferentlyAbled"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 500000,
     "subsidyRate": {
@@ -824,14 +1114,38 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "Trading", "ArtisanHandicraft", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Trading",
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card & PAN Card",
@@ -869,7 +1183,13 @@
     "summary": "Substantial enterprise scaling loan from ₹5 Lakh up to ₹10 Lakh (extended up to ₹20 Lakhs under Tarun Plus in Union Budget 2024-25) for mature micro-enterprises.",
     "hindiSummary": "परिपक्व सूक्ष्म उद्यमों के विस्तार हेतु ₹5 लाख से ₹10 लाख (केंद्रीय बजट 2024-25 में ₹20 लाख तक विस्तारित) का ऋण।",
     "detailedOverview": "Tarun tier provides finance from ₹5 Lakh up to ₹10 Lakh, and the new Tarun Plus category expands limits up to ₹20 Lakh for entrepreneurs who have previously taken and successfully repaid Tarun loans. Loans are collateral-free with credit guarantee cover.",
-    "targetGroups": ["SC", "ST", "OBC", "Women", "General"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "OBC",
+      "Women",
+      "General"
+    ],
     "minLoanAmount": 500000,
     "maxLoanAmount": 2000000,
     "subsidyRate": {
@@ -889,14 +1209,37 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "CGTMSE Guarantee",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "Trading", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Trading",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar & PAN Card",
@@ -933,7 +1276,12 @@
     "summary": "100% collateral-free credit guarantee coverage up to ₹5 Crore with enhanced 85% guarantee coverage for SC/ST and Women entrepreneurs.",
     "hindiSummary": "एससी/एसटी और महिला उद्यमियों के लिए 85% संवर्धित गारंटी कवरेज के साथ ₹5 करोड़ तक का संपार्श्विक-मुक्त ऋण गारंटी कवर।",
     "detailedOverview": "CGTMSE facilitates credit access without requiring third-party collateral or personal real estate hypothecation. For SC/ST and Women entrepreneurs, the guarantee cover is increased to 85% (compared to 75% for general category), and annual guarantee fees are reduced by 10%, incentivizing banks to approve credit enthusiastically.",
-    "targetGroups": ["SC", "ST", "Women", "DifferentlyAbled"],
+    "targetGroups": [
+      "SC",
+      "ST",
+      "Women",
+      "DifferentlyAbled"
+    ],
     "minLoanAmount": 100000,
     "maxLoanAmount": 50000000,
     "subsidyRate": {
@@ -953,14 +1301,37 @@
     "repaymentTenureYears": 7,
     "collateralRequirement": "CGTMSE Guarantee",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "ArtisanHandicraft", "Textiles", "AgroAllied"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "ArtisanHandicraft",
+        "Textiles",
+        "AgroAllied"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar & PAN",
@@ -998,7 +1369,12 @@
     "summary": "Government grant up to 30% of total project cost for non-governmental organizations / SHGs promoting women entrepreneurship.",
     "hindiSummary": "महिला उद्यमिता को बढ़ावा देने वाले स्वयं सहायता समूहों और गैर-सरकारी संगठनों के माध्यम से परियोजना लागत का 30% तक सरकारी अनुदान।",
     "detailedOverview": "TREAD envisages economic empowerment of women through micro-enterprises. Government of India provides a grant up to 30% of total project cost as appraised by lending institutions, with the remaining 70% financed as a loan by bank/financial institution to poor/marginalized women entrepreneurs.",
-    "targetGroups": ["Women", "SC", "ST", "OBC"],
+    "targetGroups": [
+      "Women",
+      "SC",
+      "ST",
+      "OBC"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 3000000,
     "subsidyRate": {
@@ -1018,14 +1394,35 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "CGTMSE Guarantee",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Female"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Female"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["ArtisanHandicraft", "Services", "Manufacturing", "Textiles", "AgroAllied", "Trading"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "ArtisanHandicraft",
+        "Services",
+        "Manufacturing",
+        "Textiles",
+        "AgroAllied",
+        "Trading"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -1061,7 +1458,9 @@
     "summary": "Equity funding up to ₹30 Lakhs over 3 years for innovative tech and commercial startups founded by Scheduled Caste youth.",
     "hindiSummary": "अनुसूचित जाति के युवाओं द्वारा शुरू किए गए नवोन्मेषी टेक और वाणिज्यिक स्टार्टअप्स के लिए 3 वर्षों में ₹30 लाख तक की इक्विटी फंडिंग।",
     "detailedOverview": "ASIIM was launched under the Venture Capital Fund for Scheduled Castes (VCF-SC) by MoSJE to promote innovation and enterprise among SC students and youth in higher education institutions and incubators. It provides equity support of ₹30 Lakhs over 3 years (₹10 Lakh/year) to turn validated ideas into commercially viable enterprises.",
-    "targetGroups": ["SC"],
+    "targetGroups": [
+      "SC"
+    ],
     "minLoanAmount": 500000,
     "maxLoanAmount": 3000000,
     "subsidyRate": {
@@ -1081,14 +1480,30 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 45,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Graduate",
-      "allowedSectors": ["Services", "Manufacturing", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Urban", "Semi-Urban", "Rural"]
+      "allowedSectors": [
+        "Services",
+        "Manufacturing",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Urban",
+        "Semi-Urban",
+        "Rural"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -1127,7 +1542,12 @@
     "summary": "100% free government skill & entrepreneurship development with stipend up to ₹1,500/month and direct credit linkage with MoSJE apex loan schemes.",
     "hindiSummary": "₹1,500/माह तक वजीफे के साथ 100% मुफ्त सरकारी कौशल एवं उद्यमिता प्रशिक्षण और MoSJE शीर्ष ऋण योजनाओं से सीधा जुड़ाव।",
     "detailedOverview": "PM-DAKSH is MoSJE's flagship skilling portal for SC, OBC, EBC, DNT, Sanitation Workers, and Waste Pickers. It provides free training in high-demand trades, upskilling, and entrepreneurship development programmes (EDP). Trainees receive wage compensation/stipend and direct single-window forwarding to NSFDC/NBCFDC for credit sanction.",
-    "targetGroups": ["SC", "OBC", "SafaiKaramchari", "DNT"],
+    "targetGroups": [
+      "SC",
+      "OBC",
+      "SafaiKaramchari",
+      "DNT"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 500000,
     "subsidyRate": {
@@ -1147,14 +1567,35 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "OBC", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "OBC",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 45,
       "incomeCeilingAnnual": 300000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Services", "Manufacturing", "ArtisanHandicraft", "Sanitation", "Textiles", "Trading"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Services",
+        "Manufacturing",
+        "ArtisanHandicraft",
+        "Sanitation",
+        "Textiles",
+        "Trading"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -1192,7 +1633,14 @@
     "summary": "75% upfront capital subsidy on motorized traditional ratts and spinning machines for rural women coir artisans.",
     "hindiSummary": "ग्रामीण महिला कॉयर कारीगरों के लिए मोटर चालित पारंपरिक चरखे और कताई मशीनों पर 75% अग्रिम पूंजीगत सब्सिडी।",
     "detailedOverview": "Mahila Coir Yojana aims at women empowerment in the coir industry by providing 75% subsidy on the cost of motorized ratts and motorized traditional ratts. The remaining 25% is met through beneficiary contribution or bank loan. It also includes 2 months training with stipend.",
-    "targetGroups": ["Women", "Rural", "ArtisanHandicraft", "SC", "ST", "OBC"],
+    "targetGroups": [
+      "Women",
+      "Rural",
+      "ArtisanHandicraft",
+      "SC",
+      "ST",
+      "OBC"
+    ],
     "minLoanAmount": 10000,
     "maxLoanAmount": 100000,
     "subsidyRate": {
@@ -1212,14 +1660,31 @@
     "repaymentTenureYears": 3,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Female"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Female"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["ArtisanHandicraft", "Manufacturing", "Textiles"],
-      "allowedLocations": ["Rural", "Semi-Urban"]
+      "allowedSectors": [
+        "ArtisanHandicraft",
+        "Manufacturing",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -1257,7 +1722,14 @@
     "summary": "100% grant funding up to ₹2.5 Crore (Regular Clusters) and ₹5 Crore (Major Clusters) for setting up Common Facility Centres (CFC) for artisan cooperatives.",
     "hindiSummary": "कारीगर सहकारी समितियों के लिए साझा सुविधा केंद्र (CFC) स्थापित करने हेतु ₹2.5 करोड़ से ₹5 करोड़ तक का 100% सरकारी अनुदान।",
     "detailedOverview": "SFURTI organizes traditional artisans and rural craftspeople into clusters to make them competitive. The scheme provides up to ₹2.5 Crore for Regular Clusters (up to 500 artisans) and up to ₹5 Crore for Major Clusters. Funding covers 100% grant for Common Facility Centres (CFCs), raw material banks, modern machinery, design training, and packaging.",
-    "targetGroups": ["ArtisanHandicraft", "Rural", "SC", "ST", "OBC", "Women"],
+    "targetGroups": [
+      "ArtisanHandicraft",
+      "Rural",
+      "SC",
+      "ST",
+      "OBC",
+      "Women"
+    ],
     "minLoanAmount": 500000,
     "maxLoanAmount": 25000000,
     "subsidyRate": {
@@ -1277,14 +1749,35 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["ArtisanHandicraft", "Textiles", "AgroAllied", "Manufacturing"],
-      "allowedLocations": ["Rural", "Semi-Urban"]
+      "allowedSectors": [
+        "ArtisanHandicraft",
+        "Textiles",
+        "AgroAllied",
+        "Manufacturing"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Cluster Artisan List / SHG Federations Registration",
@@ -1322,7 +1815,14 @@
     "summary": "100% government-funded training, biometric assessment, and direct placement/self-employment credit linkage in handloom, handicrafts, and apparel.",
     "hindiSummary": "हथकरघा, हस्तशिल्प और परिधान क्षेत्र में 100% सरकारी वित्त पोषित प्रशिक्षण, बायोमेट्रिक मूल्यांकन और स्वरोजगार ऋण लिंकेज।",
     "detailedOverview": "SAMARTH provides demand-driven, placement-oriented skilling programme for marginalized traditional textile artisans, handloom weavers, and women. After certified training, beneficiaries are assisted with credit linkages through Mudra and Weavers Credit Card schemes for establishing micro garmenting or weaving units.",
-    "targetGroups": ["Textiles", "ArtisanHandicraft", "Women", "SC", "ST", "OBC"],
+    "targetGroups": [
+      "Textiles",
+      "ArtisanHandicraft",
+      "Women",
+      "SC",
+      "ST",
+      "OBC"
+    ],
     "minLoanAmount": 50000,
     "maxLoanAmount": 500000,
     "subsidyRate": {
@@ -1342,14 +1842,34 @@
     "repaymentTenureYears": 3,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST", "OBC", "General", "Minority", "SafaiKaramchari", "DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 55,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Textiles", "ArtisanHandicraft"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Textiles",
+        "ArtisanHandicraft"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -1384,7 +1904,10 @@
     "summary": "100% subsidy on Single Point Registration fee, 80% subsidy on testing/certification, and direct access to 4% mandatory CPSE public procurement quota for SC/ST enterprises.",
     "hindiSummary": "एकल बिंदु पंजीकरण शुल्क पर 100% सब्सिडी, परीक्षण/प्रमाणन पर 80% सब्सिडी और केंद्रीय सार्वजनिक उपक्रमों में 4% अनिवार्य खरीद कोटा का लाभ।",
     "detailedOverview": "NSSH supports SC/ST entrepreneurs in fulfilling the mandatory 4% procurement policy target by Central Public Sector Enterprises (CPSEs). It offers 100% fee subsidy for Single Point Registration Scheme (SPRS), 80% subsidy for Bunkar/Artisan testing certifications, reimbursement of 80% exhibition stall charges, and special marketing tie-ups with GeM portal.",
-    "targetGroups": ["SC", "ST"],
+    "targetGroups": [
+      "SC",
+      "ST"
+    ],
     "minLoanAmount": 100000,
     "maxLoanAmount": 10000000,
     "subsidyRate": {
@@ -1404,14 +1927,33 @@
     "repaymentTenureYears": 0,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["SC", "ST"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "SC",
+        "ST"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 65,
       "incomeCeilingAnnual": 0,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["Manufacturing", "Services", "Trading", "Textiles", "ArtisanHandicraft", "AgroAllied"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Trading",
+        "Textiles",
+        "ArtisanHandicraft",
+        "AgroAllied"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar & PAN",
@@ -1450,7 +1992,9 @@
     "summary": "Comprehensive livelihood micro-grants and subsidized loans through NSFDC/NBCFDC for members of De-Notified, Nomadic and Semi-Nomadic Tribes.",
     "hindiSummary": "विमुक्त, घुमंतू और अर्ध-घुमंतू जनजातियों के सदस्यों के लिए NSFDC/NBCFDC के माध्यम से व्यापक आजीविका अनुदान और रियायती ऋण।",
     "detailedOverview": "SEED (Scheme for Economic Empowerment of DNTs) was formulated by the Ministry of Social Justice & Empowerment to facilitate livelihood generation, skill training, health insurance, and housing for DNT/NT/SNT communities not covered under standard SC/ST/OBC classifications. Beneficiaries receive prioritized micro-loans at 4% interest rate with capital grants.",
-    "targetGroups": ["DNT"],
+    "targetGroups": [
+      "DNT"
+    ],
     "minLoanAmount": 20000,
     "maxLoanAmount": 500000,
     "subsidyRate": {
@@ -1470,14 +2014,31 @@
     "repaymentTenureYears": 5,
     "collateralRequirement": "Nil / Collateral-Free",
     "eligibility": {
-      "allowedCategories": ["DNT"],
-      "allowedGenders": ["Male", "Female", "Transgender", "Other"],
+      "allowedCategories": [
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
       "minAge": 18,
       "maxAge": 60,
       "incomeCeilingAnnual": 250000,
       "requiredEducation": "Below8th",
-      "allowedSectors": ["ArtisanHandicraft", "Services", "Trading", "AgroAllied", "Textiles"],
-      "allowedLocations": ["Rural", "Urban", "Semi-Urban"]
+      "allowedSectors": [
+        "ArtisanHandicraft",
+        "Services",
+        "Trading",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
     },
     "mandatoryDocuments": [
       "Aadhaar Card",
@@ -1503,6 +2064,1098 @@
       "शून्य मार्जिन मनी की आवश्यकता।",
       "मात्र 4% की रियायती ब्याज दर।",
       "भ्रमणशील व्यापार, पारंपरिक धातु शिल्प, पशुपालन और लोक कलाओं के लिए उपयोगी।"
+    ]
+  },
+  {
+    "id": "pmfme-scheme",
+    "name": "Pradhan Mantri Formalisation of Micro food processing Enterprises (PMFME)",
+    "hindiName": "प्रधानमंत्री सूक्ष्म खाद्य प्रसंस्करण उद्यम औपचारिकीकरण योजना (पीएमएफएमई)",
+    "ministry": "Ministry of Food Processing Industries (MoFPI)",
+    "apexBody": "MoFPI / National Nodal Agency",
+    "categoryTag": "Credit Linked Capital Subsidy",
+    "summary": "35% credit-linked capital subsidy up to ₹10 Lakhs with bank credit for modernizing and setting up micro food processing enterprises.",
+    "hindiSummary": "सूक्ष्म खाद्य प्रसंस्करण इकाइयों की स्थापना व आधुनिकीकरण हेतु ₹10 लाख तक 35% क्रेडिट-लिंक्ड पूंजीगत सब्सिडी।",
+    "detailedOverview": "PMFME is a Centrally Sponsored Scheme aimed at enhancing the competitiveness of existing micro-enterprises in the unorganized segment of the food processing industry. It provides financial, technical and business support for upgradation of micro food processing units with 35% subsidy on eligible project cost up to ₹10 Lakhs.",
+    "targetGroups": [
+      "SC",
+      "ST",
+      "OBC",
+      "Women",
+      "General",
+      "Minorities"
+    ],
+    "minLoanAmount": 100000,
+    "maxLoanAmount": 10000000,
+    "subsidyRate": {
+      "generalUrban": 35,
+      "generalRural": 35,
+      "specialUrban": 35,
+      "specialRural": 35,
+      "maxSubsidyAmount": 1000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 10
+    },
+    "interestRatePerAnnum": "8.5% - 10.5% (Commercial Bank Rate)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 6,
+    "repaymentTenureYears": 7,
+    "collateralRequirement": "CGTMSE Guarantee",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "8thPass",
+      "allowedSectors": [
+        "AgroAllied",
+        "Manufacturing",
+        "Services"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Aadhaar Card",
+      "PAN Card",
+      "Detailed Project Report (DPR)",
+      "Bank Account Statement (6 months)",
+      "FSSAI Registration or intent declaration",
+      "Udyam MSME Registration"
+    ],
+    "recommendedDocuments": [
+      "Food Safety Training Certificate",
+      "Electricity Bill of Premises"
+    ],
+    "officialPortalUrl": "https://pmfme.mofpi.gov.in",
+    "applicationMode": "Online National PMFME Portal",
+    "nodalAgency": "State Nodal Agencies (SNA) / MoFPI",
+    "averageProcessingDays": 20,
+    "keyHighlights": [
+      "35% upfront capital subsidy capped at ₹10 Lakhs.",
+      "Integrates with One District One Product (ODOP) focus crops and foods.",
+      "Special credit linkage through commercial and regional rural banks.",
+      "Technical training and seed capital support for SHG members."
+    ],
+    "hindiKeyHighlights": [
+      "परियोजना लागत पर ₹10 लाख तक 35% पूंजीगत सब्सिडी।",
+      "एक जिला एक उत्पाद (ODOP) आधारित प्रसंस्करण को प्राथमिकता।",
+      "वाणिज्यिक और ग्रामीण बैंकों के माध्यम से सुगम ऋण वितरण।",
+      "स्वयं सहायता समूहों के सदस्यों हेतु बीज पूंजी एवं तकनीकी मार्गदर्शन।"
+    ]
+  },
+  {
+    "id": "ahidf-dairy-livestock",
+    "name": "Animal Husbandry Infrastructure Development Fund (AHIDF) & Dairy Scheme",
+    "hindiName": "पशुपालन अवसंरचना विकास कोष एवं डेयरी उद्यमिता योजना (एएचआईडीएफ)",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "apexBody": "Department of Animal Husbandry & Dairying (DAHD) / NABARD",
+    "categoryTag": "Interest Subvention & Credit Guarantee",
+    "summary": "3% interest subvention and up to 25% credit guarantee coverage for dairy processing, animal feed plants, and modern livestock farm infrastructure.",
+    "hindiSummary": "डेयरी प्रसंस्करण, पशु आहार संयंत्र और आधुनिक पशुपालन हेतु 3% ब्याज छूट एवं ₹2 करोड़ तक क्रेडिट गारंटी।",
+    "detailedOverview": "AHIDF provides institutional credit for incentivize investments by micro, small and medium enterprises, individual entrepreneurs, and cooperatives in dairy processing, value addition infrastructure, meat processing, animal feed plants, and breed multiplication farms with 3% interest subvention for 8 years.",
+    "targetGroups": [
+      "General",
+      "OBC",
+      "SC",
+      "ST",
+      "Women"
+    ],
+    "minLoanAmount": 500000,
+    "maxLoanAmount": 50000000,
+    "subsidyRate": {
+      "generalUrban": 25,
+      "generalRural": 33,
+      "specialUrban": 25,
+      "specialRural": 33,
+      "maxSubsidyAmount": 3000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 15,
+      "specialCategory": 10
+    },
+    "interestRatePerAnnum": "6.5% - 8.5% (After 3% Subvention)",
+    "interestSubventionPercent": 3,
+    "moratoriumPeriodMonths": 24,
+    "repaymentTenureYears": 8,
+    "collateralRequirement": "Credit Guarantee Coverage up to 25%",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "AgroAllied",
+        "Manufacturing"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban",
+        "Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Aadhaar Card",
+      "Land Ownership Deed or 10-year Lease Deed",
+      "Techno-Economic Feasibility Report (TEFR/DPR)",
+      "Bank Statement (Last 12 months)",
+      "Pollution Control Board Consent / Clearance"
+    ],
+    "recommendedDocuments": [
+      "Veterinary / Dairy Training Certificate"
+    ],
+    "officialPortalUrl": "https://ahidf.udyamimitra.in",
+    "applicationMode": "Online Udyami Mitra AHIDF Portal",
+    "nodalAgency": "DAHD & NABARD",
+    "averageProcessingDays": 30,
+    "keyHighlights": [
+      "3% direct interest subvention for entire 8-year loan tenure.",
+      "Up to 2 years moratorium on principal repayment.",
+      "NABARD credit guarantee protection for micro borrowers.",
+      "Covers modern milk chillers, curd/ghee units, and cattle feed manufacturing."
+    ],
+    "hindiKeyHighlights": [
+      "पूरे 8 वर्षों के ऋण काल हेतु 3% प्रत्यक्ष ब्याज छूट।",
+      "मूलधन अदायगी पर 2 वर्ष तक का ग्रेस पीरियड।",
+      "नाबार्ड द्वारा सूक्ष्म उद्यमियों हेतु क्रेडिट गारंटी सुरक्षा।",
+      "आधुनिक दूध चिलिंग, घी-पनीर इकाई एवं पशु आहार निर्माण शामिल।"
+    ]
+  },
+  {
+    "id": "clcss-technology-scheme",
+    "name": "Credit Linked Capital Subsidy for Technology Upgradation (CLCSS / MSME Champions)",
+    "hindiName": "प्रौद्योगिकी उन्नयन हेतु क्रेडिट लिंक्ड पूंजीगत सब्सिडी योजना (सीएलसीएसएस)",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises (MoMSME)",
+    "apexBody": "Office of DC-MSME / SIDBI",
+    "categoryTag": "Technology Upgradation Subsidy",
+    "summary": "15% upfront capital subsidy up to ₹15 Lakhs for micro and small enterprises to induct state-of-the-art machinery and plant technology.",
+    "hindiSummary": "सूक्ष्म व लघु उद्योगों को उन्नत मशीनरी और प्लांट प्रौद्योगिकी लगाने हेतु ₹15 लाख तक 15% अग्रिम पूंजीगत सब्सिडी।",
+    "detailedOverview": "CLCSS provides an upfront 15% capital subsidy (up to ₹15 Lakhs on a maximum loan of ₹1 Crore) to micro and small enterprises for modernization of plant and machinery across 51 specified sub-sectors including khadi, coir, garments, plastic, and food products.",
+    "targetGroups": [
+      "General",
+      "SC",
+      "ST",
+      "OBC",
+      "Women"
+    ],
+    "minLoanAmount": 200000,
+    "maxLoanAmount": 10000000,
+    "subsidyRate": {
+      "generalUrban": 15,
+      "generalRural": 15,
+      "specialUrban": 15,
+      "specialRural": 15,
+      "maxSubsidyAmount": 1500000
+    },
+    "promoterContributionMinPercent": {
+      "general": 15,
+      "specialCategory": 10
+    },
+    "interestRatePerAnnum": "8.0% - 10.5% (Commercial Lending Rate)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 6,
+    "repaymentTenureYears": 7,
+    "collateralRequirement": "CGTMSE Guarantee / Hypothecation of Machinery",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "Manufacturing",
+        "Textiles",
+        "AgroAllied",
+        "ArtisanHandicraft"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Udyam MSME Registration Certificate",
+      "Machinery Proforma Invoice / Quotations",
+      "Bank Loan Sanction Letter",
+      "Audited Balance Sheets (for existing units)",
+      "PAN Card & Aadhaar Card"
+    ],
+    "recommendedDocuments": [
+      "ISO / ZED Certification"
+    ],
+    "officialPortalUrl": "https://champions.gov.in",
+    "applicationMode": "Online through Lending Financial Institutions",
+    "nodalAgency": "Office of Development Commissioner (MSME) & SIDBI",
+    "averageProcessingDays": 25,
+    "keyHighlights": [
+      "15% upfront capital subsidy credited directly to term loan account.",
+      "Reduces production cost and carbon footprint through modern automated machinery.",
+      "Applies across 51 major manufacturing and processing sub-sectors.",
+      "Seamless integration with public sector bank lending."
+    ],
+    "hindiKeyHighlights": [
+      "टर्म लोन खाते में 15% अग्रिम पूंजी सब्सिडी का सीधा समायोजन।",
+      "आधुनिक स्वचालित मशीनों से उत्पादन लागत में कमी और दक्षता में सुधार।",
+      "51 प्रमुख विनिर्माण व प्रसंस्करण उप-क्षेत्रों में मान्य।",
+      "सरकारी बैंकों के ऋण से सरल और त्वरित जुड़ाव।"
+    ]
+  },
+  {
+    "id": "pm-kusum-component-a",
+    "name": "PM-KUSUM Scheme (Solar Enterprise & Clean Energy Agrivoltaic Plants)",
+    "hindiName": "प्रधानमंत्री कुसुम योजना (सौर ऊर्जा उद्यम एवं कृषि संयंत्र)",
+    "ministry": "Ministry of New and Renewable Energy (MNRE)",
+    "apexBody": "MNRE / State Renewable Energy Development Agencies",
+    "categoryTag": "Renewable Clean Energy Enterprise",
+    "summary": "Government grant and commercial power purchase agreement (PPA) for rural farmers and entrepreneurs to set up 500 kW to 2 MW decentralized solar plants.",
+    "hindiSummary": "ग्रामीण उद्यमियों एवं कृषकों हेतु 500 kW से 2 MW तक सौर संयंत्र स्थापित करने के लिए सरकारी अनुदान एवं निश्चित आय।",
+    "detailedOverview": "PM-KUSUM Component A supports individual farmers, farmer groups, and rural entrepreneurs to set up grid-connected renewable solar power plants of 500 kW to 2 MW capacity on barren or cultivable agricultural land. State DISCOMs purchase power under 25-year PPAs ensuring stable revenue.",
+    "targetGroups": [
+      "General",
+      "OBC",
+      "SC",
+      "ST",
+      "Women"
+    ],
+    "minLoanAmount": 1000000,
+    "maxLoanAmount": 40000000,
+    "subsidyRate": {
+      "generalUrban": 30,
+      "generalRural": 30,
+      "specialUrban": 30,
+      "specialRural": 50,
+      "maxSubsidyAmount": 5000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 5
+    },
+    "interestRatePerAnnum": "7.5% - 9.0% (Green Energy Concessional)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 12,
+    "repaymentTenureYears": 10,
+    "collateralRequirement": "Hypothecation of Solar Assets & PPA Assignment",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 70,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "AgroAllied",
+        "Services",
+        "Manufacturing"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Land Record (Khasra / Khatauni) showing clear title or lease",
+      "DISCOM Feasibility / Connectivity Letter",
+      "Detailed Project Report (DPR)",
+      "Aadhaar Card and Bank Account Statement"
+    ],
+    "recommendedDocuments": [
+      "Solar EPC Contract Quotation"
+    ],
+    "officialPortalUrl": "https://pmkusum.mnre.gov.in",
+    "applicationMode": "State Renewable Energy Agency Online Portal",
+    "nodalAgency": "MNRE & State DISCOMs",
+    "averageProcessingDays": 35,
+    "keyHighlights": [
+      "Guaranteed 25-year commercial Power Purchase Agreement (PPA) with DISCOMs.",
+      "Fixed predictable tariff income of ₹3.00 to ₹3.50 per unit.",
+      "Green energy concessional financing backed by IREDA and nationalized banks.",
+      "Dual land utilization: Solar generation above and shade-tolerant crops below."
+    ],
+    "hindiKeyHighlights": [
+      "बिजली वितरण कंपनियों के साथ 25 वर्षों का सुरक्षित बिजली खरीद अनुबंध (PPA)।",
+      "प्रति यूनिट ₹3.00 से ₹3.50 की तय मासिक व्यावसायिक आय।",
+      "इरेडा (IREDA) एवं बैंकों द्वारा हरित ऊर्जा हेतु रियायती ऋण।",
+      "ऊपर सौर ऊर्जा उत्पादन और नीचे छायादार फसलों की दोहरी खेती।"
+    ]
+  },
+  {
+    "id": "pmmsy-fisheries-scheme",
+    "name": "Pradhan Mantri Matsya Sampada Yojana (PMMSY - Fisheries & Aquaculture)",
+    "hindiName": "प्रधानमंत्री मत्स्य संपदा योजना (पीएमएमएसवाई)",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "apexBody": "National Fisheries Development Board (NFDB)",
+    "categoryTag": "Aquaculture & Fisheries Grant",
+    "summary": "40% (General) to 60% (SC/ST/Women) government capital subsidy for modern fish farming, biofloc units, fish feed mills, and refrigerated transport.",
+    "hindiSummary": "मत्स्य पालन, बायोफ्लोक इकाइयों और मत्स्य परिवहन हेतु सामान्य वर्ग को 40% तथा महिला/एससी/एसटी को 60% सरकारी सब्सिडी।",
+    "detailedOverview": "PMMSY is a flagship scheme designed to address critical gaps in fish production, productivity, technology, post-harvest infrastructure, and traceability. It offers up to 60% capital grant for SC/ST and Women beneficiaries and 40% for General applicants for establishing modern aquaculture ponds, hatcheries, and feed units.",
+    "targetGroups": [
+      "Women",
+      "SC",
+      "ST",
+      "OBC",
+      "General"
+    ],
+    "minLoanAmount": 200000,
+    "maxLoanAmount": 10000000,
+    "subsidyRate": {
+      "generalUrban": 40,
+      "generalRural": 40,
+      "specialUrban": 60,
+      "specialRural": 60,
+      "maxSubsidyAmount": 6000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 5
+    },
+    "interestRatePerAnnum": "7.0% - 9.5% (Priority Sector Lending)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 6,
+    "repaymentTenureYears": 7,
+    "collateralRequirement": "CGTMSE / Pledged Aquaculture Assets",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "AgroAllied",
+        "Manufacturing",
+        "Services"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban",
+        "Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Aadhaar Card",
+      "Land Ownership Documents or Registered Water Body Lease",
+      "Detailed Project Report (DPR)",
+      "Bank Account Statement",
+      "District Fisheries Officer Approval Recommendation"
+    ],
+    "recommendedDocuments": [
+      "Aquaculture / Biofloc Training Certificate from KVK/NFDB"
+    ],
+    "officialPortalUrl": "https://pmmsy.dof.gov.in",
+    "applicationMode": "District Fisheries Office / PMMSY Portal",
+    "nodalAgency": "Department of Fisheries & NFDB",
+    "averageProcessingDays": 25,
+    "keyHighlights": [
+      "Up to 60% direct capital subsidy for SC, ST, and Women entrepreneurs.",
+      "Biofloc technology and recirculatory aquaculture systems (RAS) supported.",
+      "Subsidized refrigerated vehicles and two-wheelers with ice-boxes.",
+      "Priority credit linkage through Kisan Credit Card (KCC) for Fisheries."
+    ],
+    "hindiKeyHighlights": [
+      "एससी, एसटी एवं महिला उद्यमियों हेतु 60% तक भारी पूंजीगत सब्सिडी।",
+      "कम पानी और जमीन में बायोफ्लोक व आरएएस (RAS) तकनीक को प्रोत्साहन।",
+      "मत्स्य परिवहन हेतु इंसुलेटेड वैन और आइस-बॉक्स युक्त वाहनों पर अनुदान।",
+      "मत्स्य पालन हेतु किसान क्रेडिट कार्ड (KCC) से सुगम कार्यशील पूंजी।"
+    ]
+  },
+  {
+    "id": "vcf-sc-venture-fund",
+    "name": "Venture Capital Fund for Scheduled Castes (VCF-SC)",
+    "hindiName": "अनुसूचित जातियों हेतु वेंचर कैपिटल फंड (वीसीएफ-एससी)",
+    "ministry": "Ministry of Social Justice and Empowerment (MoSJE)",
+    "apexBody": "IFCI Venture Capital Funds Ltd.",
+    "categoryTag": "MoSJE Equity & Growth Capital",
+    "summary": "Concessional equity and debt financing from ₹20 Lakhs to ₹15 Crores at 4% to 8% interest to promote SC-owned manufacturing and tech ventures.",
+    "hindiSummary": "अनुसूचित जाति के उद्यमियों के विनिर्माण और वाणिज्यिक उपक्रमों हेतु ₹20 लाख से ₹15 करोड़ तक 4%-8% रियायती पूंजी।",
+    "detailedOverview": "VCF-SC is a dedicated initiative under MoSJE to promote entrepreneurship among the Scheduled Castes who are oriented towards innovation and growth technologies. The fund provides concessional financial assistance from ₹20 Lakhs up to ₹15 Crores with up to 60% female equity orientation for SC women.",
+    "targetGroups": [
+      "SC"
+    ],
+    "minLoanAmount": 2000000,
+    "maxLoanAmount": 150000000,
+    "subsidyRate": {
+      "generalUrban": 20,
+      "generalRural": 25,
+      "specialUrban": 25,
+      "specialRural": 30,
+      "maxSubsidyAmount": 5000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 5
+    },
+    "interestRatePerAnnum": "4% p.a. (Women) / 6% - 8% p.a. (Men)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 18,
+    "repaymentTenureYears": 10,
+    "collateralRequirement": "Asset Backed / Corporate Guarantee",
+    "eligibility": {
+      "allowedCategories": [
+        "SC"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "10thPass",
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Textiles",
+        "AgroAllied"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Caste Certificate issued by Competent Authority",
+      "Company / Enterprise Registration (MCA / RoC / Partnership)",
+      "Detailed Project Report (DPR) with 5-year Financial Projections",
+      "Audited Financial Statements (if existing enterprise)",
+      "Promoters Net Worth Statement"
+    ],
+    "recommendedDocuments": [
+      "Patent / Trademark or DPIIT Startup Recognition"
+    ],
+    "officialPortalUrl": "https://www.vcfsc.in",
+    "applicationMode": "Online VCF-SC IFCI Portal",
+    "nodalAgency": "IFCI Venture Capital Funds Ltd & MoSJE",
+    "averageProcessingDays": 40,
+    "keyHighlights": [
+      "Direct venture equity and long-term soft loans up to ₹15 Crores.",
+      "Ultra-low 4% interest rate for SC Women entrepreneurs.",
+      "Enables scaling from micro enterprises into mid-sized industrial corporations.",
+      "Comprehensive incubation and handholding by apex venture teams."
+    ],
+    "hindiKeyHighlights": [
+      "₹15 करोड़ तक की प्रत्यक्ष वेंचर इक्विटी एवं दीर्घकालिक रियायती ऋण।",
+      "अनुसूचित जाति की महिला उद्यमियों हेतु केवल 4% वार्षिक ब्याज दर।",
+      "सूक्ष्म इकाइयों को बड़े औद्योगिक निगमों में बदलने हेतु वित्तीय संबल।",
+      "आईएफसीआई (IFCI) शीर्ष टीमों द्वारा मेंटरशिप एवं निरंतर मार्गदर्शन।"
+    ]
+  },
+  {
+    "id": "vcf-bc-backward-classes",
+    "name": "Venture Capital Fund for Other Backward Classes (VCF-BC)",
+    "hindiName": "अन्य पिछड़े वर्गों हेतु वेंचर कैपिटल फंड (वीसीएफ-बीसी)",
+    "ministry": "Ministry of Social Justice and Empowerment (MoSJE)",
+    "apexBody": "IFCI Venture Capital Funds Ltd.",
+    "categoryTag": "OBC Entrepreneurial Growth Fund",
+    "summary": "Equity and soft-loan investment up to ₹5 Crores at 4% to 8% interest rate for OBC-promoted companies with modern manufacturing or service scope.",
+    "hindiSummary": "अन्य पिछड़ा वर्ग (ओबीसी) के उद्यमियों को ₹5 करोड़ तक 4% से 8% की रियायती दर पर इक्विटी एवं ऋण सहायता।",
+    "detailedOverview": "VCF-BC is an initiative by the Ministry of Social Justice and Empowerment to provide venture capital assistance to Other Backward Classes (OBC) entrepreneurs. The fund promotes wealth creation and employment generation by investing equity and soft-debt from ₹20 Lakhs to ₹5 Crores in viable commercial ventures.",
+    "targetGroups": [
+      "OBC"
+    ],
+    "minLoanAmount": 2000000,
+    "maxLoanAmount": 50000000,
+    "subsidyRate": {
+      "generalUrban": 20,
+      "generalRural": 25,
+      "specialUrban": 25,
+      "specialRural": 30,
+      "maxSubsidyAmount": 3000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 8
+    },
+    "interestRatePerAnnum": "4% p.a. (Women) / 6% - 8% p.a. (Men)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 18,
+    "repaymentTenureYears": 8,
+    "collateralRequirement": "Asset Backed / Project Asset Hypothecation",
+    "eligibility": {
+      "allowedCategories": [
+        "OBC"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "10thPass",
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Textiles",
+        "AgroAllied"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "OBC Non-Creamy Layer (NCL) Certificate",
+      "Enterprise Registration (MSME Udyam / MCA / LLP)",
+      "Detailed Project Report (DPR)",
+      "Bank Account Statement (12 months)"
+    ],
+    "recommendedDocuments": [
+      "Industry Experience / Professional Diploma"
+    ],
+    "officialPortalUrl": "https://www.vcfbc.in",
+    "applicationMode": "Online IFCI Venture Portal",
+    "nodalAgency": "IFCI Venture & MoSJE",
+    "averageProcessingDays": 35,
+    "keyHighlights": [
+      "Substantial capital infusion up to ₹5 Crores.",
+      "4% concessional benchmark for OBC Women and Divyangjan applicants.",
+      "Long 18-month moratorium to stabilize commercial operations.",
+      "Supports modern technology induction and export-oriented capacity."
+    ],
+    "hindiKeyHighlights": [
+      "₹5 करोड़ तक का बड़ा वित्तीय सहयोग व पूंजीगत निवेश।",
+      "ओबीसी महिला व दिव्यांग आवेदकों हेतु 4% रियायती ब्याज दर।",
+      "कारोबार स्थिर करने हेतु 18 महीने की आरामदायक अधिस्थगन अवधि।",
+      "आधुनिक तकनीक अपनाने और निर्यात क्षमता विकसित करने में सहायक।"
+    ]
+  },
+  {
+    "id": "day-nrlm-women-shg",
+    "name": "Deendayal Antyodaya Yojana - National Rural Livelihoods Mission (DAY-NRLM)",
+    "hindiName": "दीनदयाल अंत्योदय योजना - राष्ट्रीय ग्रामीण आजीविका मिशन (डीएवाई-एनआरएलएम)",
+    "ministry": "Ministry of Rural Development (MoRD)",
+    "apexBody": "State Rural Livelihoods Mission (SRLM) / NABARD",
+    "categoryTag": "Rural Women Livelihood Credit",
+    "summary": "Collateral-free micro-enterprise credit up to ₹20 Lakhs with 7% interest rate and 3% interest subvention for rural women self-help enterprises.",
+    "hindiSummary": "ग्रामीण महिला स्वयं सहायता समूहों के उद्यमों हेतु 7% ब्याज दर और 3% अतिरिक्त छूट के साथ ₹20 लाख तक संपार्श्विक-मुक्त ऋण।",
+    "detailedOverview": "DAY-NRLM aims at eliminating rural poverty through promoting diversified and gainful self-employment for women. It facilitates institutional credit linkages up to ₹20 Lakhs collateral-free with effective interest rate reduced to 4% (after 3% prompt repayment subvention) for collective and micro-enterprises.",
+    "targetGroups": [
+      "Women",
+      "SC",
+      "ST",
+      "OBC",
+      "General"
+    ],
+    "minLoanAmount": 50000,
+    "maxLoanAmount": 2000000,
+    "subsidyRate": {
+      "generalUrban": 25,
+      "generalRural": 35,
+      "specialUrban": 25,
+      "specialRural": 35,
+      "maxSubsidyAmount": 500000
+    },
+    "promoterContributionMinPercent": {
+      "general": 5,
+      "specialCategory": 0
+    },
+    "interestRatePerAnnum": "4% - 7% (Effective after Subvention)",
+    "interestSubventionPercent": 3,
+    "moratoriumPeriodMonths": 6,
+    "repaymentTenureYears": 5,
+    "collateralRequirement": "Nil (Collateral-Free up to ₹20 Lakhs)",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Female"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "Textiles",
+        "ArtisanHandicraft",
+        "AgroAllied",
+        "Services",
+        "Retail"
+      ],
+      "allowedLocations": [
+        "Rural"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Aadhaar Card of Members",
+      "SHG / Enterprise Bank Passbook",
+      "Micro-Credit Plan (MCP) / Business Proposal",
+      "Village Organization (VO) Endorsement Letter"
+    ],
+    "recommendedDocuments": [
+      "Livelihood Training Certificate"
+    ],
+    "officialPortalUrl": "https://aajeevika.gov.in",
+    "applicationMode": "Block Mission Management Unit (BMMU) & Bank Branch",
+    "nodalAgency": "State Rural Livelihoods Mission (SRLM)",
+    "averageProcessingDays": 14,
+    "keyHighlights": [
+      "100% collateral-free credit up to ₹20 Lakhs.",
+      "Net effective interest rate as low as 4% per annum upon prompt repayment.",
+      "Direct Revolving Fund (RF) and Community Investment Fund (CIF) grants.",
+      "Priority marketing support through Saras Melas and Government e-Marketplace (GeM)."
+    ],
+    "hindiKeyHighlights": [
+      "₹20 लाख तक पूरी तरह से जमानत-मुक्त (कोलैटरल-फ्री) ऋण।",
+      "समय पर भुगतान पर 3% अतिरिक्त छूट के साथ मात्र 4% प्रभावी ब्याज।",
+      "रिवॉल्विंग फंड और सामुदायिक निवेश कोष से अतिरिक्त अनुदान।",
+      "सरस मेलों और सरकारी ई-मार्केटप्लेस (GeM) के माध्यम से बाजार लिंकेज।"
+    ]
+  },
+  {
+    "id": "sidbi-smile-scheme",
+    "name": "SIDBI Make in India Soft Loan Fund for Micro Enterprises (SMILE)",
+    "hindiName": "सिडबी मेक इन इंडिया सॉफ्ट लोन फंड (स्माइल)",
+    "ministry": "Ministry of Finance",
+    "apexBody": "Small Industries Development Bank of India (SIDBI)",
+    "categoryTag": "Soft Loan & Quasi-Equity",
+    "summary": "Soft loan assistance with low promoter contribution of 15% and 3-year moratorium to establish competitive micro & small manufacturing units.",
+    "hindiSummary": "मात्र 15% प्रमोटर मार्जिन और 3 साल की अधिस्थगन अवधि के साथ सूक्ष्म विनिर्माण उद्यमों हेतु सिडबी सॉफ्ट लोन।",
+    "detailedOverview": "SMILE is launched under Make in India to provide soft loans in the nature of quasi-equity and term loans on relatively soft terms to MSMEs. Focus is on 25 identified Make in India sectors with emphasis on modern machinery, clean technologies, and higher value addition.",
+    "targetGroups": [
+      "General",
+      "OBC",
+      "SC",
+      "ST",
+      "Women"
+    ],
+    "minLoanAmount": 1000000,
+    "maxLoanAmount": 25000000,
+    "subsidyRate": {
+      "generalUrban": 15,
+      "generalRural": 20,
+      "specialUrban": 20,
+      "specialRural": 25,
+      "maxSubsidyAmount": 2500000
+    },
+    "promoterContributionMinPercent": {
+      "general": 15,
+      "specialCategory": 10
+    },
+    "interestRatePerAnnum": "8.35% - 9.75% (Concessional SIDBI Base Rate)",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 36,
+    "repaymentTenureYears": 10,
+    "collateralRequirement": "Pari-passu charge on Assets / CGTMSE",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "Manufacturing",
+        "Services",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Udyam MSME Certificate",
+      "Detailed Project Report (DPR)",
+      "Financial Projections (3 years)",
+      "Promoters Identity and Address Proof",
+      "Bank Account Statement (12 months)"
+    ],
+    "recommendedDocuments": [
+      "Pollution / Municipal Clearances"
+    ],
+    "officialPortalUrl": "https://www.sidbi.in/en/products-and-services/smile",
+    "applicationMode": "Online Direct at SIDBI Portal",
+    "nodalAgency": "SIDBI",
+    "averageProcessingDays": 21,
+    "keyHighlights": [
+      "Soft loan in nature of quasi-equity with lower debt servicing pressure.",
+      "Generous moratorium up to 36 months on principal repayment.",
+      "Promoter contribution reduced to only 15% (10% for special categories).",
+      "Quick credit evaluation through SIDBI specialized MSME branches."
+    ],
+    "hindiKeyHighlights": [
+      "क्वासी-इक्विटी के रूप में सॉफ्ट लोन, जिससे शुरुआती वित्तीय दबाव कम होता है।",
+      "मूलधन वापसी हेतु 36 महीने (3 वर्ष) का लंबा ग्रेस पीरियड।",
+      "प्रमोटर मार्जिन मात्र 15% (आरक्षित वर्गों हेतु 10%)।",
+      "सिडबी की विशेष शाखाओं द्वारा तेज और पारदर्शी ऋण स्वीकृति।"
+    ]
+  },
+  {
+    "id": "aspire-rural-incubation",
+    "name": "ASPIRE Scheme for Rural Innovation & Livelihood Business Incubators",
+    "hindiName": "एस्पायर योजना - ग्रामीण नवाचार एवं आजीविका उद्भवन (ASPIRE)",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises (MoMSME)",
+    "apexBody": "Office of DC-MSME / SIDBI",
+    "categoryTag": "Agro-Rural Business Incubation",
+    "summary": "Government grant up to ₹1 Crore for creating Livelihood Business Incubators (LBI) that skill and finance rural entrepreneurs in agro-allied fields.",
+    "hindiSummary": "ग्रामीण एवं कृषि आधारित सूक्ष्म उद्यमों के प्रशिक्षण और स्थापना हेतु ₹1 करोड़ तक का सरकारी अनुदान।",
+    "detailedOverview": "ASPIRE was launched to set up a network of technology centers and incubation centers to accelerate entrepreneurship and promote start-ups for innovation in agro-industry. It provides one-time 100% grant of up to ₹100 Lakhs for procurement of plant and machinery for rural livelihood business incubators.",
+    "targetGroups": [
+      "General",
+      "OBC",
+      "SC",
+      "ST",
+      "Women"
+    ],
+    "minLoanAmount": 500000,
+    "maxLoanAmount": 10000000,
+    "subsidyRate": {
+      "generalUrban": 25,
+      "generalRural": 35,
+      "specialUrban": 30,
+      "specialRural": 40,
+      "maxSubsidyAmount": 2000000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 5
+    },
+    "interestRatePerAnnum": "8.0% - 9.5% p.a.",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 12,
+    "repaymentTenureYears": 7,
+    "collateralRequirement": "CGTMSE / Institutional Charge",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "8thPass",
+      "allowedSectors": [
+        "AgroAllied",
+        "Manufacturing",
+        "ArtisanHandicraft"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Aadhaar Card",
+      "Udyam MSME Registration",
+      "Detailed Project Plan (Agro-rural Focus)",
+      "Bank Account Statement",
+      "Incubator Training / Skill Certificate"
+    ],
+    "recommendedDocuments": [
+      "Land Possession / Lease Agreement"
+    ],
+    "officialPortalUrl": "https://aspire.msme.gov.in",
+    "applicationMode": "MoMSME ASPIRE Online Portal",
+    "nodalAgency": "MoMSME & NSIC",
+    "averageProcessingDays": 25,
+    "keyHighlights": [
+      "100% capital grant up to ₹1 Crore for specialized equipment.",
+      "Empowers rural youth with self-employment in value-added agriculture.",
+      "Direct credit linkage with commercial banks for graduated incubatees.",
+      "Covers honey processing, bio-fertilizers, solar dehydrators, and packaging."
+    ],
+    "hindiKeyHighlights": [
+      "विशेष मशीनरी व उपकरणों पर ₹1 करोड़ तक का 100% सरकारी अनुदान।",
+      "ग्रामीण युवाओं को मूल्यवर्धित कृषि में स्वरोजगार के बेहतरीन अवसर।",
+      "प्रशिक्षित उद्यमियों हेतु बैंकों से तत्काल रियायती ऋण लिंकेज।",
+      "शहद प्रसंस्करण, जैविक खाद, सौर डिहाइड्रेटर और पैकेजिंग इकाइयों को प्रोत्साहन।"
+    ]
+  },
+  {
+    "id": "zed-certification-scheme",
+    "name": "MSME Sustainable (ZED - Zero Defect Zero Effect) Certification & Subsidy",
+    "hindiName": "एमएसएमई जेड (जीरो डिफेक्ट जीरो इफेक्ट) प्रमाणन व वित्तीय सहायता योजना",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises (MoMSME)",
+    "apexBody": "Quality Council of India (QCI) / MoMSME",
+    "categoryTag": "Quality Standards & Financial Grant",
+    "summary": "Up to 80% government financial subsidy on certification, green technology adoption, and technical consultancy fees for micro enterprises.",
+    "hindiSummary": "गुणवत्ता सुधार, पर्यावरण अनुकूल तकनीकों और प्रमाणन शुल्क पर सूक्ष्म उद्यमों को 80% तक की प्रत्यक्ष सरकारी सब्सिडी।",
+    "detailedOverview": "MSME Sustainable (ZED) Certification Scheme motivates and incentivizes MSMEs for manufacturing of quality products using zero-defect production processes without causing adverse effect on the environment. Micro enterprises receive 80% financial subsidy on certification, handholding support up to ₹2 Lakhs, and 0.5% interest concession from banks.",
+    "targetGroups": [
+      "General",
+      "OBC",
+      "SC",
+      "ST",
+      "Women"
+    ],
+    "minLoanAmount": 50000,
+    "maxLoanAmount": 5000000,
+    "subsidyRate": {
+      "generalUrban": 80,
+      "generalRural": 80,
+      "specialUrban": 85,
+      "specialRural": 85,
+      "maxSubsidyAmount": 500000
+    },
+    "promoterContributionMinPercent": {
+      "general": 5,
+      "specialCategory": 0
+    },
+    "interestRatePerAnnum": "7.5% - 9.0% (With 0.5% Bank ZED Rebate)",
+    "interestSubventionPercent": 0.5,
+    "moratoriumPeriodMonths": 6,
+    "repaymentTenureYears": 5,
+    "collateralRequirement": "Nil for Grants / CGTMSE for Loans",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "Manufacturing",
+        "Textiles",
+        "AgroAllied",
+        "ArtisanHandicraft"
+      ],
+      "allowedLocations": [
+        "Rural",
+        "Urban",
+        "Semi-Urban"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Udyam MSME Registration Certificate",
+      "PAN Card & Aadhaar Card",
+      "Manufacturing Unit Electricity Bill / Factory License",
+      "Bank Account Details"
+    ],
+    "recommendedDocuments": [
+      "Existing Quality / Safety Certificates"
+    ],
+    "officialPortalUrl": "https://zed.msme.gov.in",
+    "applicationMode": "Online ZED Portal",
+    "nodalAgency": "Quality Council of India (QCI) & MoMSME",
+    "averageProcessingDays": 15,
+    "keyHighlights": [
+      "80% direct subsidy on Bronze, Silver, and Gold ZED certifications.",
+      "Additional 0.5% interest rate rebate on bank loan processing and interest.",
+      "Handholding consultancy support up to ₹2 Lakhs per unit.",
+      "Preference in public procurement and government vendor tenders."
+    ],
+    "hindiKeyHighlights": [
+      "ब्रॉन्ज, सिल्वर व गोल्ड जेड प्रमाणन पर 80% की सीधी सरकारी सब्सिडी।",
+      "बैंक ऋण प्रसंस्करण एवं ब्याज दर पर 0.5% की अतिरिक्त रियायत।",
+      "इकाई सुधार हेतु ₹2 लाख तक का विशेषज्ञ परामर्श मार्गदर्शन।",
+      "सरकारी खरीद और टेंडरों में वरीयता और छूट की सुविधा।"
+    ]
+  },
+  {
+    "id": "svamitva-credit-linkage",
+    "name": "SVAMITVA Scheme - Rural Property Card Monetization & Bank Credit",
+    "hindiName": "स्वामित्व योजना - ग्रामीण संपत्ति कार्ड आधारित बैंक ऋण लिंकेज",
+    "ministry": "Ministry of Panchayati Raj",
+    "apexBody": "Ministry of Panchayati Raj / Survey of India / Public Sector Banks",
+    "categoryTag": "Rural Collateral Asset Monetization",
+    "summary": "Enables rural entrepreneurs to use government-issued SVAMITVA Property Cards as legal collateral to secure bank term loans and cash credit for village businesses.",
+    "hindiSummary": "ग्रामीण उद्यमियों को स्वामित्व संपत्ति कार्ड के आधार पर बैंकों से बिना किसी अड़चन के व्यापार ऋण प्राप्त करने की सुविधा।",
+    "detailedOverview": "SVAMITVA (Survey of Villages and Mapping with Improvised Technology in Village Areas) uses drone technology to map inhabited land parcels in rural abadi areas and issues legal Property Cards. Rural entrepreneurs can monetize this asset as legitimate financial collateral with public sector banks to access micro-enterprise credit without third-party guarantors.",
+    "targetGroups": [
+      "General",
+      "OBC",
+      "SC",
+      "ST",
+      "Women"
+    ],
+    "minLoanAmount": 100000,
+    "maxLoanAmount": 5000000,
+    "subsidyRate": {
+      "generalUrban": 20,
+      "generalRural": 25,
+      "specialUrban": 25,
+      "specialRural": 35,
+      "maxSubsidyAmount": 1250000
+    },
+    "promoterContributionMinPercent": {
+      "general": 10,
+      "specialCategory": 5
+    },
+    "interestRatePerAnnum": "8.0% - 10.0% p.a.",
+    "interestSubventionPercent": 0,
+    "moratoriumPeriodMonths": 6,
+    "repaymentTenureYears": 7,
+    "collateralRequirement": "Mortgage / Pledge of SVAMITVA Property Card",
+    "eligibility": {
+      "allowedCategories": [
+        "SC",
+        "ST",
+        "OBC",
+        "General",
+        "Minority",
+        "SafaiKaramchari",
+        "DNT"
+      ],
+      "allowedGenders": [
+        "Male",
+        "Female",
+        "Transgender",
+        "Other"
+      ],
+      "minAge": 18,
+      "maxAge": 65,
+      "incomeCeilingAnnual": 0,
+      "requiredEducation": "None",
+      "allowedSectors": [
+        "Services",
+        "Retail",
+        "Manufacturing",
+        "AgroAllied",
+        "Textiles"
+      ],
+      "allowedLocations": [
+        "Rural"
+      ]
+    },
+    "mandatoryDocuments": [
+      "Official SVAMITVA Property Card issued by State Revenue / Panchayat",
+      "Aadhaar Card",
+      "Business Plan / Machinery Quotation",
+      "Bank Account Passbook"
+    ],
+    "recommendedDocuments": [
+      "Gram Panchayat NOC / Trade Recommendation"
+    ],
+    "officialPortalUrl": "https://svamitva.nic.in",
+    "applicationMode": "Panchayat Office & Partner Bank Branches",
+    "nodalAgency": "Ministry of Panchayati Raj & State Revenue Departments",
+    "averageProcessingDays": 18,
+    "keyHighlights": [
+      "Drone-mapped clear title property card accepted across nationalized banks.",
+      "Eliminates reliance on informal moneylenders with high interest rates.",
+      "Unlocks enterprise capital for rural grocery, workshops, clinics, and manufacturing.",
+      "Zero registration disputes due to GIS-verified spatial boundaries."
+    ],
+    "hindiKeyHighlights": [
+      "ड्रोन आधारित सटीक स्वामित्व संपत्ति कार्ड सभी सरकारी बैंकों में मान्य।",
+      "साहूकारों के चंगुल से मुक्ति और कम ब्याज पर औपचारिक बैंक ऋण।",
+      "ग्रामीण दुकान, वर्कशॉप, क्लीनिक एवं छोटे उद्योगों हेतु तत्काल पूंजी।",
+      "जीआईएस-सत्यापित सीमाओं के कारण संपत्ति विवादों से पूर्ण सुरक्षा।"
     ]
   }
 ]

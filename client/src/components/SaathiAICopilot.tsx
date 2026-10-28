@@ -118,13 +118,19 @@ export const SaathiAICopilot: React.FC = () => {
     setIsLoading(true);
 
     try {
+      const chatHistory = messages.slice(-6).map((m) => ({
+        role: m.sender === 'user' ? 'user' : 'assistant',
+        content: m.text
+      }));
+
       const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: q,
           profile,
-          mode
+          mode,
+          history: chatHistory
         })
       });
 

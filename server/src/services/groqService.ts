@@ -33,7 +33,7 @@ export class GroqAIService {
       model,
       messages,
       temperature: options.temperature ?? 0.3,
-      max_tokens: options.maxTokens ?? 1024
+      max_tokens: options.maxTokens ?? 2048
     };
 
     if (options.jsonMode) {
@@ -74,14 +74,15 @@ export class GroqAIService {
   public async chatWithSaathi(
     userQuery: string,
     currentProfile?: Partial<UserProfile>,
-    schemesList?: Scheme[]
+    schemesList?: Scheme[],
+    conversationHistory?: { role: 'user' | 'assistant'; content: string }[]
   ): Promise<{
     text: string;
     hindiText?: string;
     extractedProfileUpdates?: Partial<UserProfile>;
     suggestedPrompts?: string[];
   }> {
-    const schemeContext = (schemesList || []).slice(0, 8).map(s => (
+    const schemeContext = (schemesList || []).slice(0, 12).map(s => (
       `- ${s.name} (${s.categoryTag}): Max Loan Rs.${s.maxLoanAmount.toLocaleString('en-IN')}, Subsidy: ${s.subsidyRate?.specialRural || s.subsidyRate?.specialUrban || 25}%, Target: ${s.targetGroups.join(', ')}`
     )).join('\n');
 
@@ -95,8 +96,15 @@ export class GroqAIService {
       requiredLoan: currentProfile.requiredLoanAmount
     }) : 'Not provided yet';
 
-    const systemPrompt = `You are "Saathi AI" (साथी AI), an empathetic, expert government scheme advisory copilot for marginalized and micro-entrepreneurs in India under the Ministry of Social Justice and Empowerment (MoSJE).
-Your goal is to guide SC, ST, OBC, Divyang, Women, and Safai Karamchari entrepreneurs to national credit subsidies, lower interest loans, and bankable project advice.
+    const systemPrompt = `You are Saathi AI, an intelligent, empathetic, and expert conversational advisor for Indian government schemes, subsidies, loans, and entrepreneurship under the Ministry of Social Justice and Empowerment (MoSJE).
+
+CONVERSATIONAL BEHAVIOR (CRITICAL):
+- Speak naturally, directly, and conversationally — exactly like ChatGPT or Gemini.
+- NEVER start your replies with repetitive robotic introductions like "Namaste! I am Saathi AI, your dedicated guide for government business schemes..." or "Hello, I am Saathi AI...".
+- Jump straight into directly answering what the user asked with clarity, warmth, and actionable advice.
+- Only introduce who you are if the user explicitly asks "Who are you?" or "Introduce yourself".
+- If the user greets with a simple "hi" or "hello", reply with a brief, friendly, natural greeting (e.g., "Hello! How can I help you today with government schemes, subsidies, or business loans?") without a lengthy robotic spiel.
+- Keep responses concise, well-formatted, and easy to read on mobile screens (use short bullet points for scheme numbers, subsidies, or document requirements).
 
 Available Schemes Context:
 ${schemeContext}
@@ -105,13 +113,13 @@ Current User Profile:
 ${profileContext}
 
 Instructions:
-1. Respond warmly and authoritatively in English, with brief Hindi/Hinglish terms where appropriate for empathy.
+1. Respond conversationally, concisely, and authoritatively in English, with brief Hindi/Hinglish terms where appropriate for empathy.
 2. Directly answer the user's question, mentioning relevant scheme names, estimated subsidies, and loan caps.
 3. If the user mentions any personal or business details (like their age, gender, caste category SC/ST/OBC, state/city, loan amount, trade/business type), extract them into a JSON block so their profile updates.
 4. Always respond in valid JSON with this exact schema:
 {
-  "text": "Your helpful response to the user in English",
-  "hindiText": "Your helpful response in simple conversational Hindi (Devanagari)",
+  "text": "Your natural, direct, conversational response in English (jump straight to answering, NO repetitive 'Namaste! I am Saathi AI' intros)",
+  "hindiText": "Your natural, direct conversational response in simple Hindi (Devanagari)",
   "extractedProfileUpdates": {
     "category": "SC" | "ST" | "OBC" | "General" | "Minority" | "SafaiKaramchari" (only if detected),
     "gender": "Female" | "Male" | "Other" (only if detected),
@@ -124,17 +132,28 @@ Instructions:
   "suggestedPrompts": ["Next question prompt 1", "Next question prompt 2", "Next question prompt 3"]
 }`;
 
-    const userPrompt = `User question: "${userQuery}"`;
+    const messagesToSend: GroqMessage[] = [
+      { role: 'system', content: systemPrompt }
+    ];
+
+    if (conversationHistory && conversationHistory.length > 0) {
+      const recentHistory = conversationHistory.slice(-6);
+      for (const h of recentHistory) {
+        messagesToSend.push({
+          role: h.role === 'assistant' ? 'assistant' : 'user',
+          content: h.content
+        });
+      }
+    }
+
+    messagesToSend.push({ role: 'user', content: userQuery });
 
     try {
-      const rawJson = await this.callGroq([
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ], { jsonMode: true, temperature: 0.3 });
+      const rawJson = await this.callGroq(messagesToSend, { jsonMode: true, temperature: 0.3 });
 
       const parsed = JSON.parse(rawJson);
       return {
-        text: parsed.text || 'I am ready to help you find the best government schemes.',
+        text: parsed.text || 'I am ready to help you explore government schemes and subsidies.',
         hindiText: parsed.hindiText || 'मैं आपकी सरकारी योजनाओं की सहायता के लिए तैयार हूँ।',
         extractedProfileUpdates: parsed.extractedProfileUpdates && Object.keys(parsed.extractedProfileUpdates).length > 0
           ? parsed.extractedProfileUpdates
@@ -148,7 +167,7 @@ Instructions:
     } catch (err) {
       console.warn('Groq Saathi Chat fallback:', err);
       return {
-        text: `Based on your request "${userQuery}", I recommend exploring PMEGP (up to 35% capital subsidy for SC/ST/Women) and Stand-Up India (Rs. 10L to 1 Cr loans). Would you like to check your full eligibility score?`,
+        text: `Based on your question about "${userQuery}", I recommend exploring PMEGP (up to 35% capital subsidy for SC/ST/Women) and Stand-Up India (Rs. 10L to 1 Cr loans). Would you like to check your full eligibility score?`,
         hindiText: `आपके प्रश्न के अनुसार, PMEGP (35% तक सब्सिडी) और स्टैंड-अप इंडिया आपके लिए सबसे उपयुक्त योजनाएं हैं।`,
         suggestedPrompts: [
           'Show me all eligible schemes',

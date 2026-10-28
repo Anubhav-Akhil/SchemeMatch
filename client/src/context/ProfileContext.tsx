@@ -141,10 +141,11 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
       });
       if (res.ok) {
         const data = await res.json();
-        setMatchResults(data.topMatches || []);
+        const matches = data.topMatches || [];
+        setMatchResults(matches);
         setOtherSchemes(data.otherSchemes || []);
         setTotalPotentialSubsidy(data.totalPotentialSubsidy || 0);
-        setHasCalculated(true);
+        setHasCalculated(matches.length > 0);
       }
     } catch (err) {
       console.error('Error running AI scheme match:', err);

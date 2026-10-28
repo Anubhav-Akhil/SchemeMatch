@@ -3,6 +3,7 @@ import { SchemeMatchResult, SupportedLanguage } from '../types';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { Volume2, VolumeX, ExternalLink, Check, AlertTriangle, Lightbulb, Scale, Eye, Sparkles } from 'lucide-react';
+import { getSchemeNarrationText, getSchemeLocalizedName, getSchemeLocalizedSummary } from '../utils/schemeTranslations';
 
 interface SchemeCardProps {
   matchResult: SchemeMatchResult;
@@ -73,12 +74,16 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({ matchResult }) => {
   const [isThisPlaying, setIsThisPlaying] = useState(false);
   const cardIdRef = useRef(`card-${scheme.id}-${Date.now()}`);
 
-  // When global isSpeaking goes false, reset this card's playing state
+  // When global isSpeaking goes false or language changes, reset this card's playing state
   useEffect(() => {
     if (!isSpeaking) {
       setIsThisPlaying(false);
     }
   }, [isSpeaking]);
+
+  useEffect(() => {
+    setIsThisPlaying(false);
+  }, [language]);
 
   const handleToggleAudio = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -88,34 +93,9 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({ matchResult }) => {
       stopSpeech();
       setIsThisPlaying(false);
     } else {
-      // Build narration text based on selected language
-      const subsidyFmt = `₹${estimatedSubsidyAmount.toLocaleString('en-IN')}`;
-      const loanFmt = `₹${estimatedLoanAmount.toLocaleString('en-IN')}`;
-      const rate = scheme.interestRatePerAnnum;
-
-      let narrationText: string;
-      switch (language) {
-        case 'hi':
-          narrationText = `${scheme.hindiName || scheme.name}। ${scheme.hindiSummary || scheme.summary}। अनुमानित पूंजी सब्सिडी: ${subsidyFmt}। आवश्यक बैंक ऋण: ${loanFmt}। रियायती ब्याज दर: ${rate}।`;
-          break;
-        case 'te':
-          narrationText = `${scheme.name} పథకం. ${scheme.summary}. అర్హత కలిగిన క్యాపిటల్ సబ్సిడీ: ${subsidyFmt}. అవసరమైన బ్యాంకు రుణం: ${loanFmt}. రాయితీ వడ్డీ రేటు: ${rate}.`;
-          break;
-        case 'pa':
-          narrationText = `${scheme.name} ਸਕੀਮ. ${scheme.summary}. ਅਨੁਮਾਨਿਤ ਪੂੰਜੀ ਸਬਸਿਡੀ: ${subsidyFmt}. ਲੋੜੀਂਦਾ ਬੈਂਕ ਕਰਜ਼ਾ: ${loanFmt}. ਵਿਆਜ ਦਰ: ${rate}.`;
-          break;
-        case 'mr':
-          narrationText = `${scheme.hindiName || scheme.name} योजना. ${scheme.hindiSummary || scheme.summary}। अंदाजित भांडवली अनुदान: ${subsidyFmt}। आवश्यक बँक कर्ज: ${loanFmt}। सवलतीचा व्याजदर: ${rate}।`;
-          break;
-        case 'bn':
-          narrationText = `${scheme.hindiName || scheme.name} প্রকল্প। ${scheme.hindiSummary || scheme.summary}। আনুমানিক মূলধন ভর্তুকি: ${subsidyFmt}। প্রয়োজনীয় ব্যাংক ঋণ: ${loanFmt}। সুদের হার: ${rate}।`;
-          break;
-        default:
-          narrationText = `${scheme.name}. ${scheme.summary}. Eligible Capital Subsidy: ${subsidyFmt}. Estimated loan: ${loanFmt}. Concessional interest rate: ${rate}.`;
-          break;
-      }
-
-      speakText(narrationText);
+      // Build narration text in the selected language only
+      const narrationText = getSchemeNarrationText(scheme, matchResult, language);
+      speakText(narrationText, language);
       setIsThisPlaying(true);
     }
   };
@@ -150,7 +130,7 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({ matchResult }) => {
           </div>
 
           <h3>{scheme.name}</h3>
-          <div className="hindi-title">{scheme.hindiName}</div>
+          <div className="hindi-title">{getSchemeLocalizedName(scheme.id, language) || scheme.hindiName}</div>
         </div>
 
         {/* Match Probability Gauge */}
@@ -162,7 +142,7 @@ export const SchemeCard: React.FC<SchemeCardProps> = ({ matchResult }) => {
 
       {/* Brief Summary */}
       <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', margin: '10px 0' }}>
-        {language === 'hi' ? scheme.hindiSummary : scheme.summary}
+        {getSchemeLocalizedSummary(scheme, language)}
       </p>
 
       {/* 4 Financial Highlights Grid */}

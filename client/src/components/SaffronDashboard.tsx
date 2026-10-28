@@ -137,7 +137,8 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
         body: JSON.stringify({
           query: q,
           profile,
-          mode
+          mode,
+          history: messages.slice(-6).map((m) => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text }))
         })
       });
 

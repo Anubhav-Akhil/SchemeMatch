@@ -8,12 +8,28 @@ export class SchemeMatchingEngine {
   }
 
   public matchSchemes(profile: UserProfile): SchemeMatchResult[] {
+    if (!this.isProfileSubstantive(profile)) {
+      return [];
+    }
+
     const results: SchemeMatchResult[] = this.schemes.map((scheme) => {
       return this.evaluateScheme(profile, scheme);
     });
 
     // Sort by match score descending
     return results.sort((a, b) => b.matchScore - a.matchScore);
+  }
+
+  private isProfileSubstantive(profile?: UserProfile): boolean {
+    if (!profile) return false;
+    const hasCategory = Boolean(profile.category && profile.category.trim());
+    const hasAge = Boolean(profile.age && Number(profile.age) > 0);
+    const hasGender = Boolean(profile.gender && profile.gender.trim());
+    const hasSector = Boolean(profile.sector && profile.sector.trim());
+    const hasTrade = Boolean(profile.tradeType && profile.tradeType.trim());
+    const hasLoan = Boolean(profile.requiredLoanAmount && Number(profile.requiredLoanAmount) > 0);
+    const hasCost = Boolean(profile.totalProjectCost && Number(profile.totalProjectCost) > 0);
+    return hasCategory || hasAge || hasGender || hasSector || hasTrade || hasLoan || hasCost;
   }
 
   public getSchemeById(id: string): Scheme | undefined {
