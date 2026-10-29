@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useProfile } from '../context/ProfileContext';
-import { ChatMessage, ChatFeatureMode } from '../types';
+import { useAuth } from '../context/AuthContext';
+import { ChatMessage, ChatFeatureMode, UserProfile } from '../types';
 import { 
   Send, 
   Mic, 
@@ -20,6 +21,8 @@ import {
   WhatIfCardView, 
   EligibilityCardView 
 } from './SaathiChatCards';
+import { ApplyProfileCard } from './ApplyProfileCard';
+import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
 import { API_BASE_URL } from '../config';
 
 interface SuggestionOption {
@@ -78,7 +81,8 @@ const SUGGESTIONS: SuggestionOption[] = [
 
 export const SaathiAICopilot: React.FC = () => {
   const { speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
-  const { profile, setProfile, runMatching, setSelectedSchemeModal } = useProfile();
+  const { profile, setProfile, runMatching, setSelectedSchemeModal, setActiveTab } = useProfile();
+  const { setCurrentView } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
@@ -86,6 +90,10 @@ export const SaathiAICopilot: React.FC = () => {
   const [inputQuery, setInputQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRecordingVoice, setIsRecordingVoice] = useState<boolean>(false);
+
+  // Loading popup state when user chooses to apply details & view schemes
+  const [isApplyingModal, setIsApplyingModal] = useState<boolean>(false);
+  const [applyingStep, setApplyingStep] = useState<number>(1);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -100,6 +108,47 @@ export const SaathiAICopilot: React.FC = () => {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isOpen]);
+
+  // Seamless transition: Populates form, runs 35+ scheme calculations, and redirects to Scheme Recommender
+  const handleApplyDetailsAndRedirect = async (extractedUpdates: Partial<UserProfile>) => {
+    setIsApplyingModal(true);
+    setApplyingStep(1);
+
+    await new Promise((r) => setTimeout(r, 450));
+    setApplyingStep(2);
+
+    const completeLoan = Number(extractedUpdates.requiredLoanAmount || profile.requiredLoanAmount || 200000);
+    const completeCost = Number(extractedUpdates.totalProjectCost || profile.totalProjectCost || Math.round(completeLoan * 1.1));
+    const completeMargin = Number(profile.promoterContributionAvailable || Math.round(completeLoan * 0.1));
+
+    const updatedProfile: UserProfile = {
+      ...profile,
+      ...extractedUpdates,
+      category: (extractedUpdates.category || profile.category || 'OBC') as any,
+      sector: (extractedUpdates.sector || profile.sector || 'Services') as any,
+      tradeType: extractedUpdates.tradeType || profile.tradeType || 'Micro Enterprise',
+      requiredLoanAmount: completeLoan,
+      totalProjectCost: completeCost,
+      promoterContributionAvailable: completeMargin,
+      locationType: (extractedUpdates.locationType || profile.locationType || 'Rural') as any,
+      state: extractedUpdates.state || profile.state || 'Uttar Pradesh',
+      annualFamilyIncome: Number(extractedUpdates.annualFamilyIncome || profile.annualFamilyIncome || 250000),
+      age: Number(profile.age || 28),
+      gender: (extractedUpdates.gender || profile.gender || 'Female') as any
+    };
+
+    setProfile(updatedProfile);
+    await runMatching(updatedProfile);
+
+    await new Promise((r) => setTimeout(r, 550));
+    setApplyingStep(3);
+
+    await new Promise((r) => setTimeout(r, 400));
+    setIsApplyingModal(false);
+    setIsOpen(false);
+    setCurrentView('app');
+    setActiveTab('matcher');
+  };
 
   const handleSendMessage = async (queryToSend?: string, mode?: ChatFeatureMode) => {
     const q = (queryToSend || inputQuery).trim();
@@ -137,17 +186,9 @@ export const SaathiAICopilot: React.FC = () => {
       if (res.ok) {
         const reply: ChatMessage = await res.json();
         setMessages((prev) => [...prev, reply]);
-
-        if (reply.extractedProfileUpdates) {
-          setProfile((prev) => ({
-            ...prev,
-            ...reply.extractedProfileUpdates
-          }));
-          runMatching({
-            ...profile,
-            ...reply.extractedProfileUpdates
-          });
-        }
+        // NOTE: We do NOT auto-update profile or run matching here!
+        // The normal schemes section remains completely unchanged until the user
+        // explicitly clicks "Apply Details & View in Scheme Recommender".
       }
     } catch (err) {
       console.error('Chat query error:', err);
@@ -382,6 +423,15 @@ export const SaathiAICopilot: React.FC = () => {
                     {msg.whatIfCard && <WhatIfCardView card={msg.whatIfCard} onPromptClick={handleSendMessage} lang={chatLang} />}
                     {msg.eligibilityCard && <EligibilityCardView card={msg.eligibilityCard} onPromptClick={handleSendMessage} lang={chatLang} />}
 
+                    {/* Apply Profile Details to Scheme Recommender Card */}
+                    {msg.extractedProfileUpdates && (
+                      <ApplyProfileCard
+                        extractedUpdates={msg.extractedProfileUpdates}
+                        lang={chatLang}
+                        onApply={handleApplyDetailsAndRedirect}
+                      />
+                    )}
+
                     <div style={{ fontSize: '0.66rem', color: '#94A3B8', textAlign: 'right', marginTop: '4px' }}>
                       {msg.timestamp}
                     </div>
@@ -469,6 +519,13 @@ export const SaathiAICopilot: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Loading Modal when applying details and redirecting to Scheme Recommender */}
+      <ApplyProfileLoadingModal
+        isOpen={isApplyingModal}
+        step={applyingStep}
+        lang={chatLang}
+      />
     </>
   );
 };

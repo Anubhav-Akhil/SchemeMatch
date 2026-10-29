@@ -9702,3 +9702,306 @@ body.lang-transition-active {
 
 
 
+
+
+/* ── Saathi AI Apply Profile Card (Extracted Details Action Box) ── */
+.saathi-apply-profile-card {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.5) 0%, rgba(255, 237, 213, 0.35) 100%);
+  border: 1.5px solid rgba(249, 115, 22, 0.35);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.08);
+}
+
+[data-theme='dark'] .saathi-apply-profile-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border-color: rgba(249, 115, 22, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.saathi-apply-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.saathi-apply-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: rgba(249, 115, 22, 0.14);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #EA580C;
+  letter-spacing: 0.01em;
+}
+
+[data-theme='dark'] .saathi-apply-badge {
+  background: rgba(249, 115, 22, 0.22);
+  color: #FB923C;
+}
+
+.saathi-apply-gov-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #16A34A;
+}
+
+.saathi-apply-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary, #0F172A);
+  letter-spacing: -0.01em;
+}
+
+[data-theme='dark'] .saathi-apply-card-title {
+  color: #F8FAFC;
+}
+
+.saathi-extracted-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.saathi-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #334155;
+}
+
+[data-theme='dark'] .saathi-pill {
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #E2E8F0;
+}
+
+.saathi-pill.highlight {
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(255, 237, 213, 0.6);
+  color: #C2410C;
+  font-weight: 600;
+}
+
+[data-theme='dark'] .saathi-pill.highlight {
+  background: rgba(249, 115, 22, 0.18);
+  color: #FDBA74;
+}
+
+.saathi-apply-card-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted, #64748B);
+  line-height: 1.45;
+  margin: 0;
+}
+
+[data-theme='dark'] .saathi-apply-card-desc {
+  color: #94A3B8;
+}
+
+.saathi-apply-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.28);
+}
+
+.saathi-apply-action-btn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.4);
+  filter: brightness(1.05);
+}
+
+.saathi-apply-action-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Saathi AI Loading Transition Popup Modal ── */
+.saathi-loading-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: saathiFadeIn 0.25s ease-out;
+}
+
+@keyframes saathiFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.saathi-loading-popup-card {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 34px 28px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  border: 1.5px solid rgba(249, 115, 22, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  animation: saathiPopUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme='dark'] .saathi-loading-popup-card {
+  background: #1E293B;
+  border-color: rgba(249, 115, 22, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes saathiPopUp {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.saathi-popup-spinner-ring {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  padding: 4px;
+  background: conic-gradient(from 0deg, #FF6F00, #FFFFFF, #16A34A, #FF6F00);
+  animation: saathiSpinRing 1.4s linear infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 24px rgba(249, 115, 22, 0.3);
+}
+
+[data-theme='dark'] .saathi-popup-spinner-ring {
+  background: conic-gradient(from 0deg, #FF6F00, #38BDF8, #22C55E, #FF6F00);
+}
+
+@keyframes saathiSpinRing {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.saathi-popup-spinner-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-theme='dark'] .saathi-popup-spinner-inner {
+  background: #1E293B;
+}
+
+.saathi-popup-sparkle-icon {
+  color: #EA580C;
+  animation: saathiPulseIcon 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes saathiPulseIcon {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 6px #EA580C); }
+}
+
+.saathi-popup-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary, #0F172A);
+  margin: 0;
+  line-height: 1.35;
+}
+
+[data-theme='dark'] .saathi-popup-title {
+  color: #F8FAFC;
+}
+
+.saathi-popup-step-box {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.saathi-popup-subtitle {
+  font-size: 0.86rem;
+  color: var(--text-muted, #64748B);
+  line-height: 1.45;
+  margin: 0;
+}
+
+[data-theme='dark'] .saathi-popup-subtitle {
+  color: #94A3B8;
+}
+
+.saathi-popup-progress-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(226, 232, 240, 0.85);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+[data-theme='dark'] .saathi-popup-progress-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.saathi-popup-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #FF6F00 0%, #16A34A 100%);
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.saathi-popup-footer-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #15803D;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+
+[data-theme='dark'] .saathi-popup-footer-note {
+  background: rgba(34, 197, 94, 0.16);
+  color: #4ADE80;
+}

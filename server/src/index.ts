@@ -241,6 +241,15 @@ app.post('/api/chat', async (req: Request, res: Response) => {
         ...(aiResponse.extractedProfileUpdates || {})
       };
 
+      const hasSubstantiveInfo = Boolean(
+        (profile && (profile.category || profile.sector || profile.tradeType || (profile.requiredLoanAmount && Number(profile.requiredLoanAmount) > 0))) ||
+        (mergedUpdates && Object.keys(mergedUpdates).length > 0)
+      );
+
+      const matchedSchemesToSend = (hasSubstantiveInfo && deterministicReply.matchedSchemes && deterministicReply.matchedSchemes.length > 0)
+        ? deterministicReply.matchedSchemes
+        : undefined;
+
       res.json({
         id: `saathi-${Date.now()}`,
         sender: 'assistant',
@@ -249,7 +258,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
         punjabiText: deterministicReply.punjabiText,
         timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
         featureMode: deterministicReply.featureMode,
-        matchedSchemes: (deterministicReply.featureMode === 'recommendation' || query.toLowerCase().includes('scheme') || query.toLowerCase().includes('योजना')) ? deterministicReply.matchedSchemes : undefined,
+        matchedSchemes: matchedSchemesToSend,
         emiCard: deterministicReply.emiCard,
         documentCard: deterministicReply.documentCard,
         partnerCard: deterministicReply.partnerCard,

@@ -82,19 +82,30 @@ export class GroqAIService {
     extractedProfileUpdates?: Partial<UserProfile>;
     suggestedPrompts?: string[];
   }> {
-    const schemeContext = (schemesList || []).slice(0, 12).map(s => (
+    const hasCategory = Boolean(currentProfile?.category && String(currentProfile.category).trim());
+    const hasSectorOrTrade = Boolean(
+      (currentProfile?.sector && String(currentProfile.sector).trim()) ||
+      (currentProfile?.tradeType && String(currentProfile.tradeType).trim())
+    );
+    const hasLoan = Boolean(currentProfile?.requiredLoanAmount && Number(currentProfile.requiredLoanAmount) > 0);
+    const isProfileFilled = Boolean(currentProfile && (hasCategory || hasSectorOrTrade || hasLoan));
+
+    const schemeContext = (schemesList || []).slice(0, 15).map(s => (
       `- ${s.name} (${s.categoryTag}): Max Loan Rs.${s.maxLoanAmount.toLocaleString('en-IN')}, Subsidy: ${s.subsidyRate?.specialRural || s.subsidyRate?.specialUrban || 25}%, Target: ${s.targetGroups.join(', ')}`
     )).join('\n');
 
-    const profileContext = currentProfile ? JSON.stringify({
-      name: currentProfile.fullName,
-      category: currentProfile.category,
-      gender: currentProfile.gender,
-      state: currentProfile.state,
-      sector: currentProfile.sector,
-      tradeType: currentProfile.tradeType,
-      requiredLoan: currentProfile.requiredLoanAmount
-    }) : 'Not provided yet';
+    const profileContext = isProfileFilled ? JSON.stringify({
+      fullName: currentProfile?.fullName || 'Beneficiary',
+      category: currentProfile?.category,
+      gender: currentProfile?.gender,
+      locationType: currentProfile?.locationType,
+      state: currentProfile?.state,
+      district: currentProfile?.district,
+      sector: currentProfile?.sector,
+      tradeType: currentProfile?.tradeType,
+      requiredLoan: currentProfile?.requiredLoanAmount,
+      totalProjectCost: currentProfile?.totalProjectCost
+    }) : 'NO PROFILE DATA (User has not filled the profile form yet)';
 
     const systemPrompt = `You are Saathi AI, an intelligent, empathetic, and expert conversational advisor for Indian government schemes, subsidies, loans, and entrepreneurship under the Ministry of Social Justice and Empowerment (MoSJE).
 
@@ -106,16 +117,30 @@ CONVERSATIONAL BEHAVIOR (CRITICAL):
 - If the user greets with a simple "hi" or "hello", reply with a brief, friendly, natural greeting (e.g., "Hello! How can I help you today with government schemes, subsidies, or business loans?") without a lengthy robotic spiel.
 - Keep responses concise, well-formatted, and easy to read on mobile screens (use short bullet points for scheme numbers, subsidies, or document requirements).
 
+PROFILE AWARENESS & SCHEME RECOMMENDATION BEHAVIOR:
+${isProfileFilled ? `[USER HAS ALREADY FILLED THE PROFILE FORM]
+Current Profile: ${profileContext}
+- You must leverage this filled profile data! Acknowledge their specific trade, loan amount, and category naturally (e.g., "Based on your profile as an ${currentProfile?.category || ''} entrepreneur in ${currentProfile?.locationType || ''} areas...").
+- Recommend the best matching government schemes from the Available Schemes Context tailored directly to their filled profile data.` : `[USER HAS NOT FILLED THE PROFILE FORM YET]
+Current Profile: NONE.
+- CRITICAL RULE: If the user asks for scheme recommendations, asks "which scheme is best for me?", or clicks "Find a scheme":
+  YOU MUST NOT IMMEDIATELY SUGGEST RANDOM SCHEMES!
+  Suggesting schemes without knowing their trade, loan amount, and category creates suspicion that recommendations are random.
+  Instead, politely and conversationally ask them for the 3 key details:
+  1. Business or Trade: What kind of work or enterprise do they plan to start or expand? (e.g. tailoring, dairy farming, grocery/kirana store, manufacturing, food cart)
+  2. Required Loan Amount: Approximately how much loan or funding do they require? (e.g. Rs. 50,000, Rs. 2 Lakhs, Rs. 10 Lakhs)
+  3. Social Category & Location: Their social category (SC / ST / OBC / Women / General) and location (Rural village or Urban city) so we can calculate up to 35% capital subsidy.
+- EXCEPTION: If the user IN THEIR CURRENT QUERY OR PREVIOUS MESSAGES has already provided their trade, loan amount, or category (e.g. "I want to start a tailoring unit, need 3 lakh loan, I am OBC in a village"):
+  1. EXTRACT these details into the "extractedProfileUpdates" JSON block.
+  2. Directly recommend tailored schemes matching those exact details (e.g. PMEGP 35% subsidy, PM Vishwakarma, Mudra, NBCFDC) and explain why they fit.`}
+
 Available Schemes Context:
 ${schemeContext}
-
-Current User Profile:
-${profileContext}
 
 Instructions:
 1. Respond conversationally, concisely, and authoritatively in English, with brief Hindi/Hinglish terms where appropriate for empathy.
 2. Directly answer the user's question, mentioning relevant scheme names, estimated subsidies, and loan caps.
-3. If the user mentions any personal or business details (like their age, gender, caste category SC/ST/OBC, state/city, loan amount, trade/business type), extract them into a JSON block so their profile updates.
+3. If the user mentions any personal or business details (like their age, gender, caste category SC/ST/OBC, location rural/urban, loan amount, trade/business type), extract them into "extractedProfileUpdates" so their profile updates.
 4. Always respond in valid JSON with this exact schema:
 {
   "text": "Your natural, direct, conversational response in English (jump straight to answering, NO repetitive 'Namaste! I am Saathi AI' intros)",
@@ -127,7 +152,8 @@ Instructions:
     "sector": "Textiles" | "AgroAllied" | "Services" | "Manufacturing" | "ArtisanHandicraft" | "StreetVending" | "Sanitation" | "Retail" (only if detected),
     "tradeType": "string" (only if detected),
     "requiredLoanAmount": number (only if detected),
-    "totalProjectCost": number (only if detected)
+    "totalProjectCost": number (only if detected),
+    "state": "string" (only if detected)
   },
   "suggestedPrompts": ["Next question prompt 1", "Next question prompt 2", "Next question prompt 3"]
 }`;
@@ -166,9 +192,21 @@ Instructions:
       };
     } catch (err) {
       console.warn('Groq Saathi Chat fallback:', err);
+      if (!isProfileFilled) {
+        return {
+          text: `To recommend the best government schemes and maximum subsidies (up to 35%) for you, could you please tell me:\n1. **Business or Trade**: What work or business do you run or plan to start?\n2. **Loan Amount**: Approximately how much funding or loan do you need?\n3. **Category & Location**: Your social category (SC / ST / OBC / Women / General) and location (Rural or Urban).`,
+          hindiText: `आपके लिए सर्वश्रेष्ठ सरकारी योजनाएं और 35% तक सब्सिडी खोजने के लिए, कृपया बताएं:\n1. **व्यवसाय या कार्य**: आप कौन सा कार्य या व्यवसाय शुरू करना चाहते हैं?\n2. **ऋण राशि**: आपको लगभग कितनी ऋण राशि की आवश्यकता है?\n3. **श्रेणी और क्षेत्र**: आपकी सामाजिक श्रेणी (SC / ST / OBC / महिला / सामान्य) और क्षेत्र (ग्रामीण या शहरी)।`,
+          suggestedPrompts: [
+            'I want to open a tailoring shop, need ₹2 Lakhs, OBC Rural',
+            'Need ₹5 Lakhs for dairy farming, SC category',
+            'Retail grocery shop loan ₹1 Lakh, Women entrepreneur'
+          ]
+        };
+      }
+
       return {
-        text: `Based on your question about "${userQuery}", I recommend exploring PMEGP (up to 35% capital subsidy for SC/ST/Women) and Stand-Up India (Rs. 10L to 1 Cr loans). Would you like to check your full eligibility score?`,
-        hindiText: `आपके प्रश्न के अनुसार, PMEGP (35% तक सब्सिडी) और स्टैंड-अप इंडिया आपके लिए सबसे उपयुक्त योजनाएं हैं।`,
+        text: `Based on your profile details, top high-impact schemes include PMEGP (up to 35% capital subsidy for priority categories) and Stand-Up India (Rs. 10L to 1 Cr loans). Would you like to check your full eligibility score?`,
+        hindiText: `आपकी प्रोफ़ाइल के अनुसार, PMEGP (35% तक सब्सिडी) और स्टैंड-अप इंडिया आपके लिए सबसे उपयुक्त योजनाएं हैं।`,
         suggestedPrompts: [
           'Show me all eligible schemes',
           'Calculate my monthly EMI',

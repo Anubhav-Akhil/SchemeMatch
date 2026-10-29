@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
-import { ChatMessage, ChatFeatureMode } from '../types';
+import { ChatMessage, ChatFeatureMode, UserProfile } from '../types';
 import {
   LogOut, Sparkles, FileText, CheckCircle2, Scale, Compass,
   ArrowLeft, Building2, User as UserIcon, LayoutDashboard,
@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { API_BASE_URL } from '../config';
+import { ApplyProfileCard } from './ApplyProfileCard';
+import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
 
 // Feature components
 import { EligibilityWizard } from './EligibilityWizard';
@@ -93,7 +95,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   collapsed, onToggle
 }) => {
   const { speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
-  const { profile, setProfile, runMatching, setSelectedSchemeModal } = useProfile();
+  const { profile, setProfile, runMatching, setSelectedSchemeModal, setActiveTab } = useProfile();
 
   const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -101,6 +103,49 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const endRef = useRef<HTMLDivElement>(null);
+
+  // Loading popup state when user chooses to apply details & view schemes
+  const [isApplyingModal, setIsApplyingModal] = useState<boolean>(false);
+  const [applyingStep, setApplyingStep] = useState<number>(1);
+
+  // Seamless transition: Populates form, runs 35+ scheme calculations, and redirects to Scheme Recommender
+  const handleApplyDetailsAndRedirect = async (extractedUpdates: Partial<UserProfile>) => {
+    setIsApplyingModal(true);
+    setApplyingStep(1);
+
+    await new Promise((r) => setTimeout(r, 450));
+    setApplyingStep(2);
+
+    const completeLoan = Number(extractedUpdates.requiredLoanAmount || profile.requiredLoanAmount || 200000);
+    const completeCost = Number(extractedUpdates.totalProjectCost || profile.totalProjectCost || Math.round(completeLoan * 1.1));
+    const completeMargin = Number(profile.promoterContributionAvailable || Math.round(completeLoan * 0.1));
+
+    const updatedProfile: UserProfile = {
+      ...profile,
+      ...extractedUpdates,
+      category: (extractedUpdates.category || profile.category || 'OBC') as any,
+      sector: (extractedUpdates.sector || profile.sector || 'Services') as any,
+      tradeType: extractedUpdates.tradeType || profile.tradeType || 'Micro Enterprise',
+      requiredLoanAmount: completeLoan,
+      totalProjectCost: completeCost,
+      promoterContributionAvailable: completeMargin,
+      locationType: (extractedUpdates.locationType || profile.locationType || 'Rural') as any,
+      state: extractedUpdates.state || profile.state || 'Uttar Pradesh',
+      annualFamilyIncome: Number(extractedUpdates.annualFamilyIncome || profile.annualFamilyIncome || 250000),
+      age: Number(profile.age || 28),
+      gender: (extractedUpdates.gender || profile.gender || 'Female') as any
+    };
+
+    setProfile(updatedProfile as any);
+    await runMatching(updatedProfile as any);
+
+    await new Promise((r) => setTimeout(r, 550));
+    setApplyingStep(3);
+
+    await new Promise((r) => setTimeout(r, 400));
+    setIsApplyingModal(false);
+    setActiveTab('matcher');
+  };
 
   useEffect(() => {
     if (globalLang === 'hi') setChatLang('hi');
@@ -146,14 +191,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
         const reply: ChatMessage = await res.json();
         setMessages(prev => [...prev, reply]);
 
-        if (reply.extractedProfileUpdates) {
-          const updated = {
-            ...profile,
-            ...reply.extractedProfileUpdates
-          };
-          setProfile(updated as any);
-          runMatching(updated as any);
-        }
+        // NOTE: Isolated until user explicitly applies details via ApplyProfileCard
       }
     } catch (err) {
       console.error('Chat query error:', err);
@@ -403,6 +441,15 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
               {msg.whatIfCard && <WhatIfCardView card={msg.whatIfCard} onPromptClick={handleSendMessage} lang={chatLang} />}
               {msg.eligibilityCard && <EligibilityCardView card={msg.eligibilityCard} onPromptClick={handleSendMessage} lang={chatLang} />}
 
+              {/* Apply Profile Details to Scheme Recommender Card */}
+              {msg.extractedProfileUpdates && (
+                <ApplyProfileCard
+                  extractedUpdates={msg.extractedProfileUpdates}
+                  lang={chatLang}
+                  onApply={handleApplyDetailsAndRedirect}
+                />
+              )}
+
               <div style={{ fontSize: '0.66rem', color: 'var(--text-muted, #94A3B8)', textAlign: 'right', marginTop: '4px' }}>
                 {msg.timestamp}
               </div>
@@ -487,6 +534,13 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           </button>
         </div>
       </div>
+
+      {/* Loading Modal when applying details and redirecting to Scheme Recommender */}
+      <ApplyProfileLoadingModal
+        isOpen={isApplyingModal}
+        step={applyingStep}
+        lang={chatLang}
+      />
     </div>
   );
 };

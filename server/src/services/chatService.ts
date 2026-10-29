@@ -37,12 +37,12 @@ export class SaathiChatService {
     const updates: Partial<UserProfile> = {};
     const suggestedPrompts: string[] = [];
 
-    // Entity extraction
-    if (q.includes('sc') || q.includes('scheduled caste') || q.includes('dalit') || q.includes('अनुसूचित जाति')) {
+    // Entity extraction with exact word boundaries
+    if (/\bsc\b/i.test(q) || q.includes('scheduled caste') || q.includes('dalit') || q.includes('अनुसूचित जाति')) {
       updates.category = 'SC';
-    } else if (q.includes('st') || q.includes('scheduled tribe') || q.includes('adivasi') || q.includes('अनुसूचित जनजाति')) {
+    } else if (/\bst\b/i.test(q) || q.includes('scheduled tribe') || q.includes('adivasi') || q.includes('अनुसूचित जनजाति')) {
       updates.category = 'ST';
-    } else if (q.includes('obc') || q.includes('backward class') || q.includes('पिछड़ा वर्ग')) {
+    } else if (/\bobc\b/i.test(q) || q.includes('backward class') || q.includes('पिछड़ा वर्ग')) {
       updates.category = 'OBC';
     } else if (q.includes('safai') || q.includes('sanitation') || q.includes('scavenger') || q.includes('सफाई कर्मचारी')) {
       updates.category = 'SafaiKaramchari';
@@ -52,9 +52,9 @@ export class SaathiChatService {
       updates.isMinority = true;
     }
 
-    if (q.includes('mahila') || q.includes('woman') || q.includes('women') || q.includes('female') || q.includes('महिला') || q.includes('ਔਰਤ')) {
+    if (q.includes('mahila') || /\bwoman\b/i.test(q) || /\bwomen\b/i.test(q) || /\bfemale\b/i.test(q) || q.includes('महिला') || q.includes('ਔਰਤ')) {
       updates.gender = 'Female';
-    } else if (q.includes('purush') || q.includes('man') || q.includes('male') || q.includes('पुरुष') || q.includes('ਮਰਦ')) {
+    } else if (q.includes('purush') || /\bman\b/i.test(q) || /\bmale\b/i.test(q) || q.includes('पुरुष') || q.includes('ਮਰਦ')) {
       updates.gender = 'Male';
     }
 
@@ -100,6 +100,18 @@ export class SaathiChatService {
       }
     }
 
+    const isProfileFilled = Boolean(
+      currentProfile && (
+        (currentProfile.category && String(currentProfile.category).trim()) ||
+        (currentProfile.sector && String(currentProfile.sector).trim()) ||
+        (currentProfile.tradeType && String(currentProfile.tradeType).trim()) ||
+        (currentProfile.requiredLoanAmount && Number(currentProfile.requiredLoanAmount) > 0)
+      )
+    );
+    const hasDetailsInQuery = Boolean(
+      updates.category || updates.tradeType || updates.sector || updates.requiredLoanAmount
+    );
+
     const mergedCategory = updates.category || currentProfile?.category || 'SC';
     const mergedLocation = updates.locationType || currentProfile?.locationType || 'Rural';
     const loanAmt = updates.requiredLoanAmount || currentProfile?.requiredLoanAmount || 500000;
@@ -107,7 +119,7 @@ export class SaathiChatService {
     // Determine Feature Mode
     let detectedMode: ChatFeatureMode = preferredMode || 'general';
     if (detectedMode === 'general') {
-      if (q.includes('emi') || q.includes('interest') || q.includes('loan') || q.includes('किस्त') || q.includes('ब्याज') || q.includes('ਕਿਸ਼ਤ') || q.includes('ਵਿਆਜ') || q.includes('moratorium')) {
+      if (q.includes('emi') || q.includes('किस्त') || q.includes('installment') || q.includes('ਕਿਸ਼ਤ') || q.includes('moratorium') || ((q.includes('interest') || q.includes('ब्याज')) && !q.includes('scheme') && !q.includes('योजना'))) {
         detectedMode = 'emi';
       } else if (q.includes('document') || q.includes('paper') || q.includes('kagaz') || q.includes('aadhaar') || q.includes('pan') || q.includes('दस्तावेज') || q.includes('ਕਾਗਜ਼ਾਤ') || q.includes('certificate')) {
         detectedMode = 'documents';
@@ -117,7 +129,7 @@ export class SaathiChatService {
         detectedMode = 'whatif';
       } else if (q.includes('eligib') || q.includes('qualif') || q.includes('patrata') || q.includes('score') || q.includes('पात्रता') || q.includes('ਯੋਗਤਾ')) {
         detectedMode = 'eligibility';
-      } else if (q.includes('scheme') || q.includes('yojana') || q.includes('recommend') || q.includes('योजना') || q.includes('ਸਕੀਮ') || q.includes('best')) {
+      } else if (q.includes('scheme') || q.includes('yojana') || q.includes('recommend') || q.includes('योजना') || q.includes('ਸਕੀਮ') || q.includes('best') || q.includes('suggest') || q.includes('find') || hasDetailsInQuery) {
         detectedMode = 'recommendation';
       }
     }
@@ -296,6 +308,30 @@ export class SaathiChatService {
       }
 
       case 'recommendation': {
+        if (!isProfileFilled && !hasDetailsInQuery) {
+          responseText = `To recommend the best government schemes and maximum subsidies (up to 35%) for you, could you please tell me:
+1. **Business or Trade**: What kind of business or enterprise do you plan to start or expand? (e.g., tailoring shop, dairy farming, grocery/retail, food stall, manufacturing)
+2. **Loan Amount**: Approximately how much funding or bank loan do you need?
+3. **Social Category & Location**: Your category (SC / ST / OBC / Women / General) and location (Rural village or Urban city) so we can calculate your exact subsidy bracket.`;
+
+          responseHindi = `आपको सबसे उपयुक्त सरकारी योजनाएं और अधिकतम सब्सिडी (35% तक) सुझाने के लिए, कृपया मुझे 3 बुनियादी बातें बताएं:
+1. **व्यवसाय या कार्य**: आप किस प्रकार का व्यवसाय शुरू या विस्तार करना चाहते हैं? (जैसे सिलाई की दुकान, डेयरी, किराना/खुदरा, खाद्य स्टॉल, विनिर्माण)
+2. **ऋण राशि**: आपको लगभग कितनी वित्तीय सहायता या बैंक ऋण की आवश्यकता है?
+3. **श्रेणी और क्षेत्र**: आपकी सामाजिक श्रेणी (SC / ST / OBC / महिला / सामान्य) और क्षेत्र (ग्रामीण गांव या शहर)।`;
+
+          responsePunjabi = `ਤੁਹਾਨੂੰ ਸਭ ਤੋਂ ਵਧੀਆ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਅਤੇ ਵੱਧ ਤੋਂ ਵੱਧ ਸਬਸਿਡੀ (35% ਤੱਕ) ਦੱਸਣ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਮੈਨੂੰ ਇਹ ਦੱਸੋ:
+1. **ਕੰਮ ਜਾਂ ਕਾਰੋਬਾਰ**: ਤੁਸੀਂ ਕਿਹੜਾ ਕੰਮ ਜਾਂ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? (ਜਿਵੇਂ ਸਿਲਾਈ, ਡੇਅਰੀ, ਕਰਿਆਨਾ, ਫੂਡ ਸਟਾਲ)
+2. **ਕਰਜ਼ੇ ਦੀ ਰਕਮ**: ਤੁਹਾਨੂੰ ਕਿੰਨੇ ਕਰਜ਼ੇ ਦੀ ਲੋੜ ਹੈ?
+3. **ਸ਼੍ਰੇਣੀ ਅਤੇ ਸਥਾਨ**: ਤੁਹਾਡੀ ਸ਼੍ਰੇਣੀ (SC / ST / OBC / ਮਹਿਲਾ / ਜਨਰਲ) ਅਤੇ ਖੇਤਰ (ਪੇਂਡੂ ਜਾਂ ਸ਼ਹਿਰੀ)।`;
+
+          suggestedPrompts.push(
+            'I want to open a tailoring shop, need ₹2 Lakhs, OBC Rural',
+            'Need ₹5 Lakhs for dairy farming, SC category',
+            'Retail grocery shop loan ₹1 Lakh, Women entrepreneur'
+          );
+          break;
+        }
+
         responseText = `Here are the top high-impact government schemes matching your profile (${mergedCategory} entrepreneur in a ${mergedLocation} area, requirement ₹${loanAmt.toLocaleString('en-IN')}):
 1. **PMEGP**: Up to 35% Capital Grant & loan up to ₹50 Lakhs.
 2. **PM Vishwakarma**: ₹15,000 tool grant + 5% subsidized loan for traditional artisans.
