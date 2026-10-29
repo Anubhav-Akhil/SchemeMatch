@@ -10035,76 +10035,208 @@ body.lang-transition-active {
   color: #94A3B8;
 }
 
-/* ── Saathi AI Chat History Drawer Overlay ── */
+/* ── Saathi AI Chat History - Figma Revamp (Design System Aligned) ── */
+
+/* ── Top Bar History Pill Button ── */
+.chatbot-figma-history-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(203, 213, 225, 0.85);
+  color: #475569;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='dark'] .chatbot-figma-history-pill {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #CBD5E1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.chatbot-figma-history-pill:hover {
+  background: #FFFFFF;
+  border-color: #8B5CF6;
+  color: #7C3AED;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(139, 92, 246, 0.18);
+}
+
+[data-theme='dark'] .chatbot-figma-history-pill:hover {
+  background: #1E293B;
+  border-color: #A855F7;
+  color: #DDD6FE;
+  box-shadow: 0 3px 12px rgba(168, 85, 247, 0.25);
+}
+
+.chatbot-figma-history-pill.active {
+  background: linear-gradient(135deg, rgba(255, 111, 0, 0.12) 0%, rgba(139, 92, 246, 0.14) 100%);
+  border-color: #FF6F00;
+  color: #EA580C;
+  box-shadow: 0 0 0 2px rgba(255, 111, 0, 0.15), 0 2px 8px rgba(234, 88, 12, 0.2);
+}
+
+[data-theme='dark'] .chatbot-figma-history-pill.active {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.2) 0%, rgba(147, 51, 234, 0.22) 100%);
+  border-color: #FB923C;
+  color: #FDBA74;
+  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.25), 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.chatbot-figma-history-pill:hover .chatbot-figma-history-icon {
+  transform: rotate(-15deg);
+}
+
+.chatbot-figma-history-icon {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.chatbot-figma-history-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  color: #FFFFFF;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 1px 3px rgba(234, 88, 12, 0.35);
+  animation: saathiBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes saathiBadgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+/* ── History Drawer Overlay & Sheet ── */
 .saathi-history-drawer-overlay {
   position: absolute;
   inset: 0;
-  z-index: 50;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  z-index: 60;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  animation: saathiFadeIn 0.2s ease-out;
+  animation: saathiFigmaFadeIn 0.22s ease-out;
   border-radius: inherit;
   overflow: hidden;
+}
+
+@keyframes saathiFigmaFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .saathi-history-drawer {
   width: 100%;
   height: 100%;
-  background: #FFFFFF;
+  border-radius: inherit;
   display: flex;
   flex-direction: column;
-  border-radius: inherit;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-  animation: saathiSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background: radial-gradient(circle at 50% 92%, rgba(244, 114, 182, 0.12) 0%, rgba(216, 180, 254, 0.1) 40%, rgba(255, 255, 255, 0.98) 75%);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  animation: saathiFigmaDrawerSlide 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  position: relative;
 }
 
 [data-theme='dark'] .saathi-history-drawer {
-  background: #1E293B;
+  background: radial-gradient(circle at 50% 92%, rgba(168, 85, 247, 0.16) 0%, rgba(30, 41, 59, 0.96) 45%, #0F172A 85%);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
   color: #F8FAFC;
 }
 
-@keyframes saathiSlideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+@keyframes saathiFigmaDrawerSlide {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
+/* ── History Header ── */
 .saathi-history-header {
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border-subtle, rgba(226, 232, 240, 0.8));
+  padding: 18px 24px 14px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
   flex-shrink: 0;
 }
 
 [data-theme='dark'] .saathi-history-header {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-.saathi-history-close-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-muted, #64748B);
-  cursor: pointer;
-  padding: 6px;
+.saathi-history-header-title-box {
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  transition: all 0.15s ease;
+  gap: 10px;
 }
 
-.saathi-history-close-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: var(--text-primary);
+.saathi-history-star-icon {
+  color: #FF6F00;
+  animation: starFloat 3s ease-in-out infinite alternate;
+  flex-shrink: 0;
 }
 
-[data-theme='dark'] .saathi-history-close-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+.saathi-history-header-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1E293B;
+  letter-spacing: -0.02em;
+  font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-theme='dark'] .saathi-history-header-title {
+  color: #F8FAFC;
+}
+
+.saathi-history-count-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(139, 92, 246, 0.12);
+  color: #7C3AED;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+[data-theme='dark'] .saathi-history-count-pill {
+  background: rgba(168, 85, 247, 0.2);
+  color: #DDD6FE;
+  border-color: rgba(168, 85, 247, 0.35);
+}
+
+/* ── New Chat Hero Action Bar ── */
+.saathi-history-action-bar {
+  padding: 12px 24px 8px 24px;
+  flex-shrink: 0;
 }
 
 .saathi-history-new-btn {
@@ -10112,156 +10244,386 @@ body.lang-transition-active {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 9px 14px;
-  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  gap: 8px;
+  padding: 11px 16px;
+  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 50%, #7C3AED 100%);
   color: #FFFFFF;
   border: none;
-  border-radius: 10px;
-  font-size: 0.84rem;
-  font-weight: 600;
+  border-radius: 14px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.28);
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.01em;
 }
 
 .saathi-history-new-btn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
   filter: brightness(1.06);
-  transform: translateY(-1px);
 }
 
+.saathi-history-new-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Session Cards List ── */
 .saathi-history-list {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 14px;
+  padding: 10px 24px 14px 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   scrollbar-width: thin;
 }
 
-.saathi-history-item {
+.saathi-history-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.saathi-history-list::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 999px;
+}
+
+/* ── Figma History Card ── */
+.saathi-history-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(226, 232, 240, 0.85);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  position: relative;
+  animation: saathiCardSlideIn 0.24s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+[data-theme='dark'] .saathi-history-card {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes saathiCardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.saathi-history-card:hover {
+  transform: translateY(-2px);
+  background: #FFFFFF;
+  border-color: #8B5CF6;
+  box-shadow: 0 8px 22px rgba(139, 92, 246, 0.16);
+}
+
+[data-theme='dark'] .saathi-history-card:hover {
+  background: #1E293B;
+  border-color: #A855F7;
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
+}
+
+.saathi-history-card.active {
+  background: linear-gradient(135deg, rgba(255, 237, 213, 0.45) 0%, rgba(243, 232, 255, 0.4) 100%);
+  border-color: #FF6F00;
+  box-shadow: 0 0 0 1.5px #FF6F00, 0 6px 18px rgba(255, 111, 0, 0.15);
+}
+
+[data-theme='dark'] .saathi-history-card.active {
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.15) 0%, rgba(147, 51, 234, 0.18) 100%);
+  border-color: #FB923C;
+  box-shadow: 0 0 0 1.5px #FB923C, 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+.saathi-history-card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  padding: 10px 12px;
-  background: rgba(248, 250, 252, 0.9);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  text-align: left;
+  gap: 8px;
 }
 
-[data-theme='dark'] .saathi-history-item {
-  background: rgba(15, 23, 42, 0.6);
-  border-color: rgba(255, 255, 255, 0.08);
+.saathi-history-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
 }
 
-.saathi-history-item:hover {
-  background: rgba(254, 243, 199, 0.45);
-  border-color: rgba(249, 115, 22, 0.4);
-  transform: translateX(2px);
+.saathi-history-chat-icon-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgba(139, 92, 246, 0.1);
+  color: #7C3AED;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
 }
 
-[data-theme='dark'] .saathi-history-item:hover {
-  background: rgba(30, 41, 59, 0.9);
-  border-color: rgba(249, 115, 22, 0.5);
+.saathi-history-card:hover .saathi-history-chat-icon-badge {
+  background: rgba(139, 92, 246, 0.2);
+  transform: scale(1.08);
 }
 
-.saathi-history-item.active {
-  border-color: #EA580C;
-  background: rgba(254, 243, 199, 0.6);
-  box-shadow: 0 0 0 1px #EA580C;
+.saathi-history-card.active .saathi-history-chat-icon-badge {
+  background: rgba(255, 111, 0, 0.15);
+  color: #FF6F00;
 }
 
-[data-theme='dark'] .saathi-history-item.active {
-  background: rgba(234, 88, 12, 0.15);
-  border-color: #FB923C;
-}
-
-.saathi-history-item-title {
-  font-size: 0.84rem;
+.saathi-history-card-title {
+  font-size: 0.88rem;
   font-weight: 600;
-  color: var(--text-primary, #0F172A);
+  color: #1E293B;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 }
 
-[data-theme='dark'] .saathi-history-item-title {
-  color: #F1F5F9;
+[data-theme='dark'] .saathi-history-card-title {
+  color: #F8FAFC;
 }
 
-.saathi-history-item-meta {
+.saathi-history-active-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #16A34A;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+[data-theme='dark'] .saathi-history-active-tag {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ADE80;
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.saathi-history-active-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #16A34A;
+  animation: saathiBadgePulse 1.5s infinite;
+}
+
+[data-theme='dark'] .saathi-history-active-dot {
+  background: #4ADE80;
+}
+
+/* ── Snippet Text ── */
+.saathi-history-card-snippet {
+  font-size: 0.76rem;
+  color: #64748B;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding-left: 34px;
+}
+
+[data-theme='dark'] .saathi-history-card-snippet {
+  color: #94A3B8;
+}
+
+/* ── Meta row ── */
+.saathi-history-card-meta {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  color: var(--text-muted, #64748B);
-  margin-top: 3px;
+  justify-content: space-between;
+  gap: 8px;
+  padding-left: 34px;
+  margin-top: 2px;
 }
 
-[data-theme='dark'] .saathi-history-item-meta {
+.saathi-history-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.71rem;
   color: #94A3B8;
+}
+
+.saathi-history-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(241, 245, 249, 0.9);
+  color: #64748B;
+}
+
+[data-theme='dark'] .saathi-history-meta-pill {
+  background: rgba(15, 23, 42, 0.6);
+  color: #CBD5E1;
 }
 
 .saathi-history-delete-btn {
   background: transparent;
   border: none;
-  color: var(--text-muted, #94A3B8);
+  color: #94A3B8;
   cursor: pointer;
-  padding: 5px;
+  padding: 4px 6px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
-  flex-shrink: 0;
+  transition: all 0.18s ease;
+  opacity: 0.6;
+}
+
+.saathi-history-card:hover .saathi-history-delete-btn {
+  opacity: 1;
 }
 
 .saathi-history-delete-btn:hover {
   color: #EF4444;
   background: rgba(239, 68, 68, 0.12);
+  transform: scale(1.1);
 }
 
+/* ── Empty State matching Figma Hero ── */
 .saathi-history-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 40px 20px;
+  padding: 48px 24px;
+  margin: auto 0;
 }
 
+.saathi-history-empty-star {
+  color: #FF6F00;
+  margin-bottom: 14px;
+  animation: starFloat 3s ease-in-out infinite alternate;
+}
+
+.saathi-history-empty-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1E293B;
+  letter-spacing: -0.02em;
+  margin: 0;
+  font-family: 'Outfit', 'Inter', -apple-system, sans-serif;
+}
+
+[data-theme='dark'] .saathi-history-empty-title {
+  color: #F8FAFC;
+}
+
+.saathi-history-empty-desc {
+  font-size: 0.82rem;
+  color: #64748B;
+  max-width: 340px;
+  line-height: 1.5;
+  margin: 8px 0 18px 0;
+}
+
+[data-theme='dark'] .saathi-history-empty-desc {
+  color: #94A3B8;
+}
+
+.saathi-history-empty-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: #7C3AED;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+[data-theme='dark'] .saathi-history-empty-action {
+  background: rgba(168, 85, 247, 0.2);
+  border-color: rgba(168, 85, 247, 0.35);
+  color: #DDD6FE;
+}
+
+.saathi-history-empty-action:hover {
+  background: #7C3AED;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+/* ── Footer ── */
 .saathi-history-footer {
-  padding: 10px 14px;
-  border-top: 1px solid var(--border-subtle, rgba(226, 232, 240, 0.8));
+  padding: 12px 24px;
+  border-top: 1px solid rgba(226, 232, 240, 0.7);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.4);
 }
 
 [data-theme='dark'] .saathi-history-footer {
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.saathi-history-footer-count {
+  font-size: 0.74rem;
+  color: #94A3B8;
+  font-weight: 500;
 }
 
 .saathi-history-clear-btn {
   background: transparent;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.25);
   color: #DC2626;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 8px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   cursor: pointer;
   transition: all 0.18s ease;
 }
 
+[data-theme='dark'] .saathi-history-clear-btn {
+  color: #F87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
 .saathi-history-clear-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.12);
+  border-color: #DC2626;
+  transform: translateY(-1px);
 }

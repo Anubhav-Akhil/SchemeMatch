@@ -15,7 +15,7 @@ import logoImg from '../assets/logo.png';
 import { API_BASE_URL } from '../config';
 import { ApplyProfileCard } from './ApplyProfileCard';
 import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
-import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession } from './ChatHistoryDrawer';
+import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession, loadStoredChatSessions } from './ChatHistoryDrawer';
 
 // Feature components
 import { EligibilityWizard } from './EligibilityWizard';
@@ -109,6 +109,15 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   // Chat History Drawer state
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [historyCount, setHistoryCount] = useState<number>(() => loadStoredChatSessions().length);
+
+  useEffect(() => {
+    const handler = () => {
+      setHistoryCount(loadStoredChatSessions().length);
+    };
+    window.addEventListener('saathi_history_updated', handler);
+    return () => window.removeEventListener('saathi_history_updated', handler);
+  }, []);
 
   // Auto-save active chat to localStorage history when messages change
   useEffect(() => {
@@ -435,13 +444,18 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           {/* Chat History */}
             <button
               type="button"
-              className={`saathi-lang-btn ${isHistoryOpen ? 'active' : ''}`}
+              className={`chatbot-figma-history-pill ${isHistoryOpen ? 'active' : ''}`}
               onClick={() => setIsHistoryOpen(h => !h)}
               title="View Saved Chat History"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px' }}
+
             >
-              <History size={13} />
+              <History size={13} className="chatbot-figma-history-icon" />
               <span>{chatLang === 'hi' ? 'इतिहास' : chatLang === 'pa' ? 'ਇਤਿਹਾਸ' : 'History'}</span>
+              {historyCount > 0 && (
+                <span className="chatbot-figma-history-count-badge">
+                  {historyCount}
+                </span>
+              )}
             </button>
 
           {messages.length > 0 && (

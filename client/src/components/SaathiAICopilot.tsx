@@ -24,7 +24,7 @@ import {
 } from './SaathiChatCards';
 import { ApplyProfileCard } from './ApplyProfileCard';
 import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
-import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession } from './ChatHistoryDrawer';
+import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession, loadStoredChatSessions } from './ChatHistoryDrawer';
 import { API_BASE_URL } from '../config';
 
 interface SuggestionOption {
@@ -96,6 +96,15 @@ export const SaathiAICopilot: React.FC = () => {
   // Chat History Drawer state
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [historyCount, setHistoryCount] = useState<number>(() => loadStoredChatSessions().length);
+
+  useEffect(() => {
+    const handler = () => {
+      setHistoryCount(loadStoredChatSessions().length);
+    };
+    window.addEventListener('saathi_history_updated', handler);
+    return () => window.removeEventListener('saathi_history_updated', handler);
+  }, []);
 
   // Loading popup state when user chooses to apply details & view schemes
   const [isApplyingModal, setIsApplyingModal] = useState<boolean>(false);
@@ -422,13 +431,18 @@ export const SaathiAICopilot: React.FC = () => {
                 {/* Chat History Drawer Toggle Button */}
                 <button
                   type="button"
-                  className={`saathi-lang-btn ${isHistoryOpen ? 'active' : ''}`}
+                  className={`chatbot-figma-history-pill ${isHistoryOpen ? 'active' : ''}`}
                   onClick={() => setIsHistoryOpen(h => !h)}
                   title="View Saved Chat History"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px' }}
+
                 >
-                  <History size={13} />
+                  <History size={13} className="chatbot-figma-history-icon" />
                   <span>{chatLang === 'hi' ? 'इतिहास' : chatLang === 'pa' ? 'ਇਤਿਹਾਸ' : 'History'}</span>
+                  {historyCount > 0 && (
+                    <span className="chatbot-figma-history-count-badge">
+                      {historyCount}
+                    </span>
+                  )}
                 </button>
 
                 {/* New Chat Button */}
