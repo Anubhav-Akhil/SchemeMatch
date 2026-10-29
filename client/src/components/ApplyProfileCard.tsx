@@ -123,3 +123,4 @@ export const ApplyProfileCard: React.FC<ApplyProfileCardProps> = ({
     </div>
   );
 };
+

@@ -77,3 +77,4 @@ export const ApplyProfileLoadingModal: React.FC<ApplyProfileLoadingModalProps> =
     </div>
   );
 };
+

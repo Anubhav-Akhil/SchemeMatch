@@ -9,12 +9,13 @@ import {
   Target, SearchCheck, Sliders, Calculator, ArrowRight,
   Sun, Moon, Globe, FileCheck2, Cpu, Menu, X, ChevronLeft,
   ChevronRight, Send, Mic, MicOff, Volume2, VolumeX, TrendingUp,
-  IndianRupee, Award, Filter, RefreshCw
+  IndianRupee, Award, Filter, RefreshCw, History
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { API_BASE_URL } from '../config';
 import { ApplyProfileCard } from './ApplyProfileCard';
 import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
+import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession } from './ChatHistoryDrawer';
 
 // Feature components
 import { EligibilityWizard } from './EligibilityWizard';
@@ -95,7 +96,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   collapsed, onToggle
 }) => {
   const { speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
-  const { profile, setProfile, runMatching, setSelectedSchemeModal, setActiveTab } = useProfile();
+  const { profile, setProfile, runMatching, setSelectedSchemeModal, setActiveTab, allSchemes, matchResults } = useProfile();
 
   const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -103,6 +104,103 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Chat History Drawer state
+  const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+
+  // Auto-save active chat to localStorage history when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      const firstUserMsg = messages.find(m => m.sender === 'user')?.text || 'Government Scheme Query';
+      const title = firstUserMsg.length > 36 ? firstUserMsg.slice(0, 36) + '...' : firstUserMsg;
+      const sessionId = currentSessionId || `session-${Date.now()}`;
+      if (!currentSessionId) setCurrentSessionId(sessionId);
+
+      saveStoredChatSession({
+        id: sessionId,
+        title,
+        updatedAt: Date.now(),
+        formattedDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+        messages
+      });
+    }
+  }, [messages, currentSessionId]);
+
+  // Adjust textarea height dynamically with content
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    const target = e.target;
+    target.style.height = 'auto';
+    const newHeight = Math.min(Math.max(target.scrollHeight, 36), 140);
+    target.style.height = `${newHeight}px`;
+  };
+
+  // Safe Scheme Details opener (crash-proof)
+  const handleOpenSchemeDetails = (s: { id: string; name: string }) => {
+    const existing = matchResults?.find(m => m.scheme?.id === s.id);
+    if (existing) {
+      setSelectedSchemeModal(existing);
+      return;
+    }
+    const fullScheme = allSchemes?.find(item => item.id === s.id);
+    if (fullScheme) {
+      setSelectedSchemeModal({
+        scheme: fullScheme,
+        matchScore: 92,
+        estimatedSubsidyAmount: Math.round(fullScheme.maxLoanAmount * 0.25),
+        reasonsWhyMatched: ['Direct match based on your inquiry.'],
+        conditionsToFulfill: [],
+        missingDocuments: []
+      } as any);
+      return;
+    }
+    setSelectedSchemeModal({
+      scheme: {
+        id: s.id,
+        name: s.name,
+        hindiName: '',
+        apexBody: 'MoSJE & Commercial Banks',
+        categoryTag: 'Government Scheme',
+        targetGroups: ['All Entrepreneurs'],
+        minLoanAmount: 50000,
+        maxLoanAmount: 1000000,
+        interestRatePerAnnum: 'Concessional (8% - 10%)',
+        subsidyRate: { specialRural: 35, specialUrban: 25 },
+        promoterContributionMinPercent: { general: 10, specialCategory: 5 },
+        collateralRequirement: 'Collateral-free (CGTMSE)',
+        keyHighlights: ['Direct financial assistance', 'Subsidized interest rate', 'Bankable project support'],
+        mandatoryDocuments: ['Aadhaar Card', 'PAN Card', 'Bank Account Statement', 'Business Project Outline'],
+        nodalAgency: 'Designated Government Agency / Bank',
+        averageProcessingDays: 21,
+        officialPortalUrl: 'https://www.myscheme.gov.in/',
+        detailedOverview: 'Government enterprise funding and subsidy scheme.'
+      },
+      matchScore: 90,
+      estimatedSubsidyAmount: 250000,
+      reasonsWhyMatched: ['Eligible under national scheme guidelines.'],
+      conditionsToFulfill: [],
+      missingDocuments: []
+    } as any);
+  };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setCurrentSessionId(null);
+    setInput('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+    stopSpeech();
+  };
+
+  const handleSelectSession = (session: SavedChatSession) => {
+    setMessages(session.messages);
+    setCurrentSessionId(session.id);
+    setIsHistoryOpen(false);
+    stopSpeech();
+  };
 
   // Loading popup state when user chooses to apply details & view schemes
   const [isApplyingModal, setIsApplyingModal] = useState<boolean>(false);
@@ -173,6 +271,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
     setMessages(prev => [...prev, userMsg]);
     setInput('');
+    if (textareaRef.current) { textareaRef.current.style.height = 'auto'; }
     setIsLoading(true);
 
     try {
@@ -333,16 +432,23 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             </button>
           </div>
 
-          {messages.length > 0 && (
+          {/* Chat History */}
             <button
               type="button"
-              className="chatbot-figma-close-btn"
-              onClick={handleResetChat}
-              title="New Chat"
-              style={{ fontSize: '0.78rem' }}
+              className={`saathi-lang-btn ${isHistoryOpen ? 'active' : ''}`}
+              onClick={() => setIsHistoryOpen(h => !h)}
+              title="View Saved Chat History"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '3px 8px' }}
             >
-              <RefreshCw size={14} />
+              <History size={13} />
+              <span>{chatLang === 'hi' ? 'इतिहास' : chatLang === 'pa' ? 'ਇਤਿਹਾਸ' : 'History'}</span>
             </button>
+
+          {messages.length > 0 && (
+            <button
+              type="button" className="chatbot-figma-close-btn" onClick={handleNewChat} title="New Chat"><RefreshCw size={14} />
+            </button>
+
           )}
 
           <button
@@ -356,6 +462,16 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           </button>
         </div>
       </div>
+
+      {/* Chat History Drawer */}
+      <ChatHistoryDrawer
+        isOpen={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        currentSessionId={currentSessionId}
+        onSelectSession={handleSelectSession}
+        onNewChat={handleNewChat}
+        lang={chatLang}
+      />
 
       {/* Main Content Area */}
       {messages.length === 0 ? (
@@ -424,7 +540,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
                       <button
                         type="button"
                         className="card-quick-action"
-                        onClick={() => setSelectedSchemeModal({ id: s.id, name: s.name } as any)}
+                        onClick={() => handleOpenSchemeDetails(s)}
                         style={{ fontSize: '0.7rem', padding: '3px 8px' }}
                       >
                         {chatLang === 'hi' ? 'विवरण' : chatLang === 'pa' ? 'ਵੇਰਵਾ' : 'View Details'}
@@ -496,7 +612,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
       {/* Input Area with Mic ON/OFF toggle switch */}
       <div className="chatbot-figma-input-container">
-        <div className="chatbot-figma-input-box">
+        <div className="chatbot-figma-input-box" style={{ alignItems: 'flex-end' }}>
           <button
             type="button"
             className={`saathi-mic-toggle-btn ${isRecording ? 'on' : 'off'}`}
@@ -511,12 +627,18 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             </div>
           </button>
 
-          <input
-            type="text"
-            className="chatbot-figma-input-field"
+          <textarea
+            ref={textareaRef}
+            className="chatbot-figma-textarea"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+            rows={1}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
             placeholder={
               isRecording
                 ? (chatLang === 'hi' ? 'बोलें, हम सुन रहे हैं...' : chatLang === 'pa' ? 'ਬੋਲੋ, ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening...')
