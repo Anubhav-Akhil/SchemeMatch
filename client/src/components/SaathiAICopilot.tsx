@@ -148,7 +148,7 @@ export const SaathiAICopilot: React.FC = () => {
     setInputQuery(e.target.value);
     const target = e.target;
     target.style.height = 'auto';
-    const newHeight = Math.min(Math.max(target.scrollHeight, 36), 140);
+    const newHeight = Math.min(Math.max(target.scrollHeight, 26), 140);
     target.style.height = `${newHeight}px`;
   };
 
@@ -609,14 +609,14 @@ export const SaathiAICopilot: React.FC = () => {
 
             {/* Input Bar: Multi-line Auto-Expanding Textarea with mic on-off toggle */}
             <div className="chatbot-figma-input-container">
-              <div className="chatbot-figma-input-box" style={{ alignItems: 'flex-end' }}>
+              <div className="chatbot-figma-input-box" style={{ alignItems: 'center' }}>
                 <button
                   type="button"
                   className={`saathi-mic-toggle-btn ${isRecordingVoice ? 'on' : 'off'}`}
                   onClick={toggleVoiceInput}
                   title={isRecordingVoice ? 'Click to turn Mic OFF' : 'Click to turn Mic ON'}
                   aria-pressed={isRecordingVoice}
-                  style={{ marginBottom: '4px' }}
+                  
                 >
                   {isRecordingVoice ? <Mic size={15} /> : <MicOff size={15} />}
                   <span>{isRecordingVoice ? 'Mic: ON' : 'Mic: OFF'}</span>
@@ -640,7 +640,7 @@ export const SaathiAICopilot: React.FC = () => {
                   placeholder={
                     isRecordingVoice
                       ? (chatLang === 'hi' ? 'बोलें, हम सुन रहे हैं...' : chatLang === 'pa' ? 'ਬੋਲੋ, ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening...')
-                      : (chatLang === 'hi' ? 'अपनी योजनाओं या आवश्यकताओं के बारे में कुछ भी पूछें...' : chatLang === 'pa' ? 'ਆਪਣੀਆਂ ਸਕੀਮਾਂ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ...' : 'Ask me anything about your projects, schemes, or loans...')
+                      : (chatLang === 'hi' ? 'अपनी योजनाओं या आवश्यकताओं के बारे में कुछ भी पूछें...' : chatLang === 'pa' ? 'ਆਪਣੀਆਂ ਸਕੀਮਾਂ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ...' : 'Ask about schemes, loans, documents...')
                   }
                 />
 
@@ -649,7 +649,7 @@ export const SaathiAICopilot: React.FC = () => {
                   className="chatbot-figma-send-btn"
                   onClick={() => handleSendMessage()}
                   aria-label="Send message"
-                  style={{ marginBottom: '4px' }}
+                  
                 >
                   <Send size={20} />
                 </button>

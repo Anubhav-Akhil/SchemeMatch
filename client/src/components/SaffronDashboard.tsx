@@ -142,7 +142,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
     setInput(e.target.value);
     const target = e.target;
     target.style.height = 'auto';
-    const newHeight = Math.min(Math.max(target.scrollHeight, 36), 140);
+    const newHeight = Math.min(Math.max(target.scrollHeight, 26), 140);
     target.style.height = `${newHeight}px`;
   };
 
@@ -497,7 +497,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           <h2 className="chatbot-figma-headline">
             {chatLang === 'hi' ? 'हमारे AI से कुछ भी पूछें' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੁਝ ਵੀ ਪੁੱਛੋ' : 'Ask our AI anything'}
           </h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '8px', maxWidth: '320px', lineHeight: 1.45 }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '8px', maxWidth: '420px', lineHeight: 1.45 }}>
             {chatLang === 'hi' 
               ? 'अपनी पात्रता, सरकारी ऋण, सब्सिडी और दस्तावेज़ों के बारे में तुरंत पूछें।'
               : chatLang === 'pa'
@@ -626,7 +626,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
       {/* Input Area with Mic ON/OFF toggle switch */}
       <div className="chatbot-figma-input-container">
-        <div className="chatbot-figma-input-box" style={{ alignItems: 'flex-end' }}>
+        <div className="chatbot-figma-input-box" style={{ alignItems: 'center' }}>
           <button
             type="button"
             className={`saathi-mic-toggle-btn ${isRecording ? 'on' : 'off'}`}

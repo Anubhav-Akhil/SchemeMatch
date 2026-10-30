@@ -268,7 +268,7 @@ input:focus, select:focus, textarea:focus {
 
 [data-theme='dark'] .badge-saffron {
   background: rgba(255, 111, 0, 0.2);
-  color: #FDBA74;
+  color: #DDD6FE;
 }
 
 .badge-emerald {
@@ -1012,7 +1012,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 [data-theme='dark'] .optimization-tip-box {
-  color: #FDBA74;
+  color: #DDD6FE;
 }
 
 /* Scheme Card Action Bar */
@@ -1183,7 +1183,7 @@ input:focus, select:focus, textarea:focus {
   bottom: 28px;
   right: 28px;
   z-index: 100;
-  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
   color: #FFFFFF;
   padding: 14px 24px;
   border-radius: var(--radius-full);
@@ -6076,7 +6076,7 @@ body.lang-transition-active {
 
 [data-theme='dark'] .tab-badge-saffron {
   background: rgba(234, 88, 12, 0.25);
-  color: #FDBA74;
+  color: #DDD6FE;
 }
 
 /* Active View Container */
@@ -8678,13 +8678,13 @@ body.lang-transition-active {
 
 .saathi-feature-chip:hover {
   border-color: var(--primary-saffron, #FF6F00);
-  color: var(--primary-saffron, #FF6F00);
+  color: #7C3AED;
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(255, 111, 0, 0.12);
 }
 
 .saathi-feature-chip.active {
-  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
   color: #FFFFFF;
   border-color: #EA580C;
   box-shadow: 0 3px 10px rgba(234, 88, 12, 0.28);
@@ -8718,13 +8718,13 @@ body.lang-transition-active {
 
 .saathi-lang-btn.active {
   background: #FFFFFF;
-  color: var(--primary-saffron, #FF6F00);
+  color: #7C3AED;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 [data-theme='dark'] .saathi-lang-btn.active {
   background: #334155;
-  color: #F97316;
+  color: #DDD6FE;
 }
 
 /* Rich Chat Cards Base */
@@ -8810,7 +8810,7 @@ body.lang-transition-active {
 .emi-amount-wrap .emi-val {
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--primary-saffron, #FF6F00);
+  color: #7C3AED;
 }
 
 .emi-period {
@@ -8985,7 +8985,7 @@ body.lang-transition-active {
 .partner-type-tag {
   font-size: 0.66rem;
   font-weight: 600;
-  color: var(--primary-saffron, #FF6F00);
+  color: #7C3AED;
 }
 
 .partner-dist {
@@ -9240,7 +9240,7 @@ body.lang-transition-active {
   border-radius: 6px;
   border: 1px solid var(--border-subtle, #CBD5E1);
   background: var(--bg-surface, #FFFFFF);
-  color: var(--primary-saffron, #FF6F00);
+  color: #7C3AED;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -9741,7 +9741,7 @@ body.lang-transition-active {
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #EA580C;
+  color: #7C3AED;
   letter-spacing: 0.01em;
 }
 
@@ -9803,7 +9803,7 @@ body.lang-transition-active {
 
 [data-theme='dark'] .saathi-pill.highlight {
   background: rgba(249, 115, 22, 0.18);
-  color: #FDBA74;
+  color: #DDD6FE;
 }
 
 .saathi-apply-card-desc {
@@ -9824,7 +9824,7 @@ body.lang-transition-active {
   gap: 8px;
   width: 100%;
   padding: 10px 14px;
-  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
   color: #FFFFFF;
   border: none;
   border-radius: 8px;
@@ -9930,7 +9930,7 @@ body.lang-transition-active {
 }
 
 .saathi-popup-sparkle-icon {
-  color: #EA580C;
+  color: #7C3AED;
   animation: saathiPulseIcon 1.5s ease-in-out infinite alternate;
 }
 
@@ -10010,21 +10010,24 @@ body.lang-transition-active {
 /* ── Saathi AI Dynamic Expanding Textarea ── */
 .chatbot-figma-textarea {
   flex: 1;
+  min-width: 0;
   border: none;
   outline: none;
   background: transparent;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--text-primary, #0F172A);
   font-family: inherit;
   resize: none;
-  overflow-y: auto;
-  min-height: 28px;
+  overflow-y: hidden;
+  height: 26px;
+  min-height: 26px;
   max-height: 140px;
-  line-height: 1.45;
-  padding: 4px 6px;
+  line-height: 26px;
+  padding: 0 6px;
   box-sizing: border-box;
   margin: 0;
   scrollbar-width: thin;
+  white-space: pre-wrap;
 }
 
 [data-theme='dark'] .chatbot-figma-textarea {
@@ -10033,6 +10036,10 @@ body.lang-transition-active {
 
 .chatbot-figma-textarea::placeholder {
   color: #94A3B8;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  line-height: 26px !important;
 }
 
 /* ── Saathi AI Chat History - Figma Revamp (Design System Aligned) ── */
@@ -10081,17 +10088,17 @@ body.lang-transition-active {
 }
 
 .chatbot-figma-history-pill.active {
-  background: linear-gradient(135deg, rgba(255, 111, 0, 0.12) 0%, rgba(139, 92, 246, 0.14) 100%);
-  border-color: #FF6F00;
-  color: #EA580C;
-  box-shadow: 0 0 0 2px rgba(255, 111, 0, 0.15), 0 2px 8px rgba(234, 88, 12, 0.2);
+  background: rgba(139, 92, 246, 0.12);
+  border-color: #8B5CF6;
+  color: #7C3AED;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.18), 0 2px 8px rgba(124, 58, 237, 0.2);
 }
 
 [data-theme='dark'] .chatbot-figma-history-pill.active {
-  background: linear-gradient(135deg, rgba(234, 88, 12, 0.2) 0%, rgba(147, 51, 234, 0.22) 100%);
-  border-color: #FB923C;
-  color: #FDBA74;
-  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.25), 0 2px 10px rgba(0, 0, 0, 0.4);
+  background: rgba(139, 92, 246, 0.22);
+  border-color: #A855F7;
+  color: #DDD6FE;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.25), 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 .chatbot-figma-history-pill:hover .chatbot-figma-history-icon {
@@ -10111,12 +10118,12 @@ body.lang-transition-active {
   height: 17px;
   padding: 0 4px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
   color: #FFFFFF;
   font-size: 0.62rem;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 1px 3px rgba(234, 88, 12, 0.35);
+  box-shadow: 0 1px 4px rgba(109, 40, 217, 0.35);
   animation: saathiBadgePulse 2s ease-in-out infinite;
 }
 
@@ -10196,7 +10203,7 @@ body.lang-transition-active {
 }
 
 .saathi-history-star-icon {
-  color: #FF6F00;
+  color: #7C3AED;
   animation: starFloat 3s ease-in-out infinite alternate;
   flex-shrink: 0;
 }
@@ -10246,7 +10253,7 @@ body.lang-transition-active {
   justify-content: center;
   gap: 8px;
   padding: 11px 16px;
-  background: linear-gradient(135deg, #FF6F00 0%, #EA580C 50%, #7C3AED 100%);
+  background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%);
   color: #FFFFFF;
   border: none;
   border-radius: 14px;
@@ -10254,7 +10261,7 @@ body.lang-transition-active {
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.28);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
   transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: -0.01em;
 }
@@ -10339,15 +10346,15 @@ body.lang-transition-active {
 }
 
 .saathi-history-card.active {
-  background: linear-gradient(135deg, rgba(255, 237, 213, 0.45) 0%, rgba(243, 232, 255, 0.4) 100%);
-  border-color: #FF6F00;
-  box-shadow: 0 0 0 1.5px #FF6F00, 0 6px 18px rgba(255, 111, 0, 0.15);
+  background: linear-gradient(135deg, rgba(238, 242, 255, 0.75) 0%, rgba(243, 232, 255, 0.75) 100%);
+  border-color: #8B5CF6;
+  box-shadow: 0 0 0 1.5px #8B5CF6, 0 6px 18px rgba(139, 92, 246, 0.18);
 }
 
 [data-theme='dark'] .saathi-history-card.active {
-  background: linear-gradient(135deg, rgba(234, 88, 12, 0.15) 0%, rgba(147, 51, 234, 0.18) 100%);
-  border-color: #FB923C;
-  box-shadow: 0 0 0 1.5px #FB923C, 0 6px 20px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18) 0%, rgba(99, 102, 241, 0.15) 100%);
+  border-color: #A855F7;
+  box-shadow: 0 0 0 1.5px #A855F7, 0 6px 20px rgba(0, 0, 0, 0.45);
 }
 
 .saathi-history-card-top {
@@ -10384,8 +10391,8 @@ body.lang-transition-active {
 }
 
 .saathi-history-card.active .saathi-history-chat-icon-badge {
-  background: rgba(255, 111, 0, 0.15);
-  color: #FF6F00;
+  background: rgba(139, 92, 246, 0.2);
+  color: #7C3AED;
 }
 
 .saathi-history-card-title {
@@ -10522,9 +10529,13 @@ body.lang-transition-active {
 }
 
 .saathi-history-empty-star {
-  color: #FF6F00;
+  color: #7C3AED;
   margin-bottom: 14px;
   animation: starFloat 3s ease-in-out infinite alternate;
+}
+
+[data-theme='dark'] .saathi-history-empty-star {
+  color: #A855F7;
 }
 
 .saathi-history-empty-title {
