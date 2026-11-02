@@ -8745,6 +8745,141 @@ body.lang-transition-active {
   color: #DDD6FE;
 }
 
+/* Saathi AI Modern Multilingual Dropdown Selector */
+.saathi-lang-selector {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.saathi-lang-selector-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  background: var(--bg-surface-subtle, rgba(241, 245, 249, 0.95));
+  border: 1px solid var(--border-subtle, rgba(203, 213, 225, 0.8));
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-primary, #0F172A);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.saathi-lang-selector-trigger:hover {
+  background: var(--bg-surface-hover, #F8FAFC);
+  border-color: #6366F1;
+}
+
+[data-theme='dark'] .saathi-lang-selector-trigger {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(71, 85, 105, 0.7);
+  color: #F1F5F9;
+}
+
+[data-theme='dark'] .saathi-lang-selector-trigger:hover {
+  background: #334155;
+  border-color: #818CF8;
+}
+
+.saathi-lang-selector-chevron {
+  transition: transform 0.2s ease;
+  color: var(--text-muted, #64748B);
+}
+
+.saathi-lang-selector-chevron.open {
+  transform: rotate(180deg);
+}
+
+.saathi-lang-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 155px;
+  background: var(--bg-surface, #FFFFFF);
+  border: 1px solid var(--border-subtle, #E2E8F0);
+  border-radius: 10px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  padding: 4px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: saathiFadeDown 0.15s ease-out forwards;
+}
+
+[data-theme='dark'] .saathi-lang-dropdown-menu {
+  background: #1E293B;
+  border-color: #334155;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.saathi-lang-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-primary, #1E293B);
+  font-size: 0.74rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+[data-theme='dark'] .saathi-lang-dropdown-item {
+  color: #F1F5F9;
+}
+
+.saathi-lang-dropdown-item:hover {
+  background: rgba(99, 102, 241, 0.08);
+  color: #4F46E5;
+}
+
+[data-theme='dark'] .saathi-lang-dropdown-item:hover {
+  background: rgba(129, 140, 248, 0.15);
+  color: #A5B4FC;
+}
+
+.saathi-lang-dropdown-item.active {
+  background: rgba(99, 102, 241, 0.12);
+  color: #4338CA;
+  font-weight: 700;
+}
+
+[data-theme='dark'] .saathi-lang-dropdown-item.active {
+  background: rgba(129, 140, 248, 0.22);
+  color: #C7D2FE;
+}
+
+.saathi-lang-item-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-muted, #64748B);
+}
+
+[data-theme='dark'] .saathi-lang-item-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94A3B8;
+}
+
+.saathi-lang-item-check {
+  font-size: 0.72rem;
+  color: #10B981;
+  font-weight: 800;
+  margin-left: 3px;
+}
+
+
 /* Rich Chat Cards Base */
 .saathi-card {
   margin-top: 10px;

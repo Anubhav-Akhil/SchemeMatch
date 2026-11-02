@@ -5,7 +5,8 @@ import {
   ChatPartnerItem, 
   ChatWhatIfCardData, 
   ChatEligibilityCardData,
-  ChatFeatureMode 
+  ChatFeatureMode,
+  SupportedLanguage
 } from '../types';
 import { 
   Target, 
@@ -27,61 +28,131 @@ import {
 
 export interface FeatureChip {
   id: ChatFeatureMode;
-  labelEn: string;
-  labelHi: string;
-  labelPa: string;
+  label: Record<SupportedLanguage, string>;
   icon: React.ReactNode;
-  prompt: string;
+  prompt: Record<SupportedLanguage, string>;
 }
 
 export const SAATHI_FEATURES: FeatureChip[] = [
   {
     id: 'recommendation',
-    labelEn: '🎯 Find a scheme',
-    labelHi: '🎯 योजना खोजें',
-    labelPa: '🎯 ਸਕੀਮ ਲੱਭੋ',
     icon: <Target size={14} />,
-    prompt: 'Find a scheme based on my work and profile'
+    label: {
+      en: '🎯 Find a scheme',
+      hi: '🎯 योजना खोजें',
+      pa: '🎯 ਸਕੀਮ ਲੱਭੋ',
+      te: '🎯 పథకం కనుగొనండి',
+      mr: '🎯 योजना शोधा',
+      bn: '🎯 স্কিম খুঁজুন'
+    },
+    prompt: {
+      en: 'Find a scheme based on my work and profile',
+      hi: 'मेरी प्रोफाइल और कार्य के अनुसार सर्वोत्तम योजनाएं खोजें',
+      pa: 'ਮੇਰੇ ਕੰਮ ਅਤੇ ਪ੍ਰੋਫਾਈਲ ਅਨੁਸਾਰ ਸਰਕਾਰੀ ਸਕੀਮਾਂ ਲੱਭੋ',
+      te: 'నా పని మరియు ప్రొఫైల్ ఆధారంగా ఉత్తమ ప్రభుత్వ పథకాలను కనుగొనండి',
+      mr: 'माझ्या कामाच्या आणि प्रोफाइलच्या आधारावर सर्वोत्तम सरकारी योजना शोधा',
+      bn: 'আমার কাজ এবং প্রোফাইল অনুযায়ী সেরা সরকারি স্কিমগুলি খুঁজুন'
+    }
   },
   {
     id: 'documents',
-    labelEn: '📄 Documents needed',
-    labelHi: '📄 आवश्यक दस्तावेज़',
-    labelPa: '📄 ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
     icon: <FileText size={14} />,
-    prompt: 'What documents are needed to apply for loans?'
+    label: {
+      en: '📄 Documents needed',
+      hi: '📄 आवश्यक दस्तावेज़',
+      pa: '📄 ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
+      te: '📄 అవసరమైన పత్రాలు',
+      mr: '📄 आवश्यक कागदपत्रे',
+      bn: '📄 প্রয়োজনীয় নথি'
+    },
+    prompt: {
+      en: 'What documents are needed to apply for loans?',
+      hi: 'ऋण आवेदन के लिए आवश्यक दस्तावेज़ों की सूची क्या है?',
+      pa: 'ਕਰਜ਼ਾ ਅਰਜ਼ੀ ਲਈ ਕਿਹੜੇ ਜ਼ਰੂਰੀ ਦਸਤਾਵੇਜ਼ ਚਾਹੀਦੇ ਹਨ?',
+      te: 'రుణ దరఖాస్తు కోసం ఏ పత్రాలు అవసరం?',
+      mr: 'कर्ज अर्जासाठी कोणती आवश्यक कागदपत्रे लागतात?',
+      bn: 'ঋণ আবেদনের জন্য কী কী প্রয়োজনীয় নথি দরকার?'
+    }
   },
   {
     id: 'emi',
-    labelEn: '💰 Calculate EMI',
-    labelHi: '💰 EMI गणना करें',
-    labelPa: '💰 EMI ਗਣਨਾ ਕਰੋ',
     icon: <BadgePercent size={14} />,
-    prompt: 'Calculate loan EMI, interest rate, and subsidy'
+    label: {
+      en: '💰 Calculate EMI',
+      hi: '💰 EMI गणना करें',
+      pa: '💰 EMI ਗਣਨਾ ਕਰੋ',
+      te: '💰 EMI లెక్కించండి',
+      mr: '💰 EMI गणना करा',
+      bn: '💰 EMI গণনা করুন'
+    },
+    prompt: {
+      en: 'Calculate loan EMI, interest rate, and subsidy',
+      hi: 'ऋण की EMI, ब्याज दर और सरकारी सब्सिडी की गणना करें',
+      pa: 'ਕਰਜ਼ੇ ਦੀ EMI, ਵਿਆਜ ਦਰ ਅਤੇ ਸਰਕਾਰੀ ਸਬਸਿਡੀ ਦੀ ਗਣਨਾ ਕਰੋ',
+      te: 'రుణం EMI, వడ్డీ రేటు మరియు ప్రభుత్వ సబ్సిడీని లెక్కించండి',
+      mr: 'कर्जाचा EMI, व्याजदर आणि सरकारी अनुदानाची गणना करा',
+      bn: 'ঋণের EMI, সুদের হার এবং সরকারি ভর্তুকি গণনা করুন'
+    }
   },
   {
     id: 'partners',
-    labelEn: '🏦 Where to apply',
-    labelHi: '🏦 कहाँ आवेदन करें',
-    labelPa: '🏦 ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ',
     icon: <Building2 size={14} />,
-    prompt: 'Where to apply and authorized channel partners'
+    label: {
+      en: '🏦 Where to apply',
+      hi: '🏦 कहाँ आवेदन करें',
+      pa: '🏦 ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ',
+      te: '🏦 ఎక్కడ దరఖాస్తు చేయాలి',
+      mr: '🏦 कुठे अर्ज करावा',
+      bn: '🏦 কোথায় আবেদন করবেন'
+    },
+    prompt: {
+      en: 'Where to apply and authorized channel partners',
+      hi: 'कहाँ आवेदन करें और अधिकृत चैनल पार्टनर कौन से हैं?',
+      pa: 'ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ ਅਤੇ ਅਧਿਕਾਰਤ ਚੈਨਲ ਪਾਰਟਨਰ ਕਿਹੜੇ ਹਨ?',
+      te: 'ఎక్కడ దరఖాస్తు చేయాలి మరియు అధీకృత ఛానల్ భాగస్వాములు ఎవరు?',
+      mr: 'कुठे अर्ज करावा आणि अधिकृत चॅनेल भागीदार कोण आहेत?',
+      bn: 'কোথায় আবেদন করতে হবে এবং অনুমোদিত চ্যানেল পার্টনার কারা?'
+    }
   },
   {
     id: 'eligibility',
-    labelEn: '✅ Eligibility Checker',
-    labelHi: '✅ पात्रता जांच',
-    labelPa: '✅ ਯੋਗਤਾ ਜਾਂਚ',
     icon: <CheckCircle2 size={14} />,
-    prompt: 'Check my eligibility score and explain the criteria'
+    label: {
+      en: '✅ Eligibility Checker',
+      hi: '✅ पात्रता जांच',
+      pa: '✅ ਯੋਗਤਾ ਜਾਂਚ',
+      te: '✅ అర్హత తనిఖీ',
+      mr: '✅ पात्रता तपासणी',
+      bn: '✅ যোগ্যতা পরীক্ষা'
+    },
+    prompt: {
+      en: 'Check my eligibility score and explain the criteria',
+      hi: 'मेरी पात्रता स्कोर की जाँच करें और मानदंड बताएं',
+      pa: 'ਮੇਰਾ ਯੋਗਤਾ ਸਕੋਰ ਚੈੱਕ ਕਰੋ ਅਤੇ ਮਾਪਦੰਡ ਦੱਸੋ',
+      te: 'నా అర్హత స్కోర్‌ను తనిఖీ చేయండి మరియు ప్రమాణాలను వివరించండి',
+      mr: 'माझा पात्रता स्कोअर तपासा आणि निकष स्पष्ट करा',
+      bn: 'আমার যোগ্যতার স্কোর পরীক্ষা করুন এবং মানদণ্ড ব্যাখ্যা করুন'
+    }
   },
   {
     id: 'whatif',
-    labelEn: '🧮 What-If Simulator',
-    labelHi: '🧮 व्हॉट-इफ सिमुलेटर',
-    labelPa: '🧮 What-If ਸਿਮੂਲੇਟਰ',
     icon: <SlidersHorizontal size={14} />,
-    prompt: 'Show what-if simulation: how changing location or income affects eligibility'
+    label: {
+      en: '🧮 What-If Simulator',
+      hi: '🧮 व्हॉट-इफ सिमुलेटर',
+      pa: '🧮 What-If ਸਿਮੂਲੇਟਰ',
+      te: '🧮 వాట్-ఇఫ్ సిమ్యులేటర్',
+      mr: '🧮 व्हॉट-इफ सिम्युलेटर',
+      bn: '🧮 হোয়াট-ইফ সিমুলেটর'
+    },
+    prompt: {
+      en: 'Show what-if simulation: how changing location or income affects eligibility',
+      hi: 'व्हॉट-इफ सिमुलेशन दिखाएं: स्थान या आय बदलने से पात्रता कैसे प्रभावित होती है',
+      pa: 'What-If ਸਿਮੂਲੇਸ਼ਨ ਦਿਖਾਓ: ਸਥਾਨ ਜਾਂ ਆਮਦਨ ਬਦਲਣ ਨਾਲ ਯੋਗਤਾ ਕਿਵੇਂ ਬਦਲਦੀ ਹੈ',
+      te: 'వాట్-ఇఫ్ సిమ్యులేషన్ చూపించండి: ప్రాంతం లేదా ఆదాయం మార్చడం అర్హతను ఎలా ప్రభావితం చేస్తుంది',
+      mr: 'व्हॉट-इफ सिम्युलेशन दाखवा: स्थान किंवा उत्पन्न बदलल्याने पात्रतेवर कसा परिणाम होतो',
+      bn: 'হোয়াট-ইফ সিমুলেশন দেখান: অবস্থান বা আয় পরিবর্তন যোগ্যতাকে কীভাবে প্রভাবিত করে'
+    }
   }
 ];
 
@@ -95,14 +166,16 @@ export const FeatureChipsBar: React.FC<{
       <div className="saathi-chips-scroll">
         {SAATHI_FEATURES.map((feat) => {
           const isActive = activeMode === feat.id;
-          const label = lang === 'hi' ? feat.labelHi : lang === 'pa' ? feat.labelPa : feat.labelEn;
+          const curLang = (lang as SupportedLanguage) || 'en';
+          const label = feat.label[curLang] || feat.label.en;
+          const promptText = feat.prompt[curLang] || feat.prompt.en;
           return (
             <button
               key={feat.id}
               type="button"
               className={`saathi-feature-chip ${isActive ? 'active' : ''}`}
-              onClick={() => onSelectMode(feat.id, feat.prompt)}
-              title={feat.prompt}
+              onClick={() => onSelectMode(feat.id, promptText)}
+              title={promptText}
             >
               <span className="chip-label">{label}</span>
             </button>

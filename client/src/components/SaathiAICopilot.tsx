@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useProfile } from '../context/ProfileContext';
 import { useAuth } from '../context/AuthContext';
-import { ChatMessage, ChatFeatureMode, UserProfile } from '../types';
+import { ChatMessage, ChatFeatureMode, UserProfile, SupportedLanguage } from '../types';
 import { 
   Send, 
   Mic, 
@@ -13,7 +13,9 @@ import {
   ArrowRight, 
   RefreshCw,
   Sparkles,
-  History
+  History,
+  Globe,
+  ChevronDown
 } from 'lucide-react';
 import { 
   EmiCardView, 
@@ -26,69 +28,24 @@ import { ApplyProfileCard } from './ApplyProfileCard';
 import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
 import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession, loadStoredChatSessions } from './ChatHistoryDrawer';
 import { generateSaathiFallback } from '../utils/saathiFallback';
+import { 
+  SUGGESTIONS, 
+  SAATHI_LANGUAGES, 
+  SAATHI_UI_LABELS, 
+  getSaathiMessageDisplay 
+} from '../utils/saathiSuggestions';
 import { API_BASE_URL } from '../config';
 
-interface SuggestionOption {
-  titleEn: string;
-  titleHi: string;
-  titlePa: string;
-  subEn: string;
-  subHi: string;
-  subPa: string;
-  mode: ChatFeatureMode;
-  prompt: string;
-}
-
-const SUGGESTIONS: SuggestionOption[] = [
-  {
-    titleEn: 'Find a scheme',
-    titleHi: 'योजना खोजें',
-    titlePa: 'ਸਕੀਮ ਲੱਭੋ',
-    subEn: 'Best schemes for your work & profile',
-    subHi: 'अपनी प्रोफ़ाइल हेतु सर्वश्रेष्ठ योजनाएं',
-    subPa: 'ਆਪਣੇ ਕੰਮ ਲਈ ਵਧੀਆ ਸਕੀਮਾਂ',
-    mode: 'recommendation',
-    prompt: 'Find a scheme based on my work and profile'
-  },
-  {
-    titleEn: 'Documents needed',
-    titleHi: 'आवश्यक दस्तावेज़',
-    titlePa: 'ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
-    subEn: 'Check personalized document checklist',
-    subHi: 'आवेदन हेतु दस्तावेज़ों की सूची',
-    subPa: 'ਕਰਜ਼ੇ ਲਈ ਜ਼ਰੂਰੀ ਕਾਗਜ਼ਾਤ ਸੂਚੀ',
-    mode: 'documents',
-    prompt: 'What documents are needed to apply for loans?'
-  },
-  {
-    titleEn: 'Calculate EMI',
-    titleHi: 'EMI गणना करें',
-    titlePa: 'EMI ਗਣਨਾ ਕਰੋ',
-    subEn: 'Loan amount, subsidy & monthly EMI',
-    subHi: 'ऋण, सरकारी सब्सिडी व मासिक किस्त',
-    subPa: 'ਕਰਜ਼ਾ, ਸਬਸਿਡੀ ਅਤੇ ਮਾਸਿਕ ਕਿਸ਼ਤ',
-    mode: 'emi',
-    prompt: 'Calculate loan EMI, interest rate, and subsidy'
-  },
-  {
-    titleEn: 'Where to apply',
-    titleHi: 'कहाँ आवेदन करें',
-    titlePa: 'ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ',
-    subEn: 'Authorized banks & channel partners',
-    subHi: 'अधिकृत बैंक और चैनल पार्टनर खोजें',
-    subPa: 'ਅਧਿਕਾਰਤ ਬੈਂਕ ਤੇ ਚੈਨਲ ਪਾਰਟਨਰ',
-    mode: 'partners',
-    prompt: 'Where to apply and authorized channel partners'
-  }
-];
-
 export const SaathiAICopilot: React.FC = () => {
-  const { speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
+  const { speakText, stopSpeech, isSpeaking, language: globalLang, setLanguage } = useLanguage();
   const { profile, setProfile, runMatching, setSelectedSchemeModal, setActiveTab, allSchemes, matchResults } = useProfile();
   const { setCurrentView } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
+  const [chatLang, setChatLang] = useState<SupportedLanguage>(globalLang);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState<boolean>(false);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputQuery, setInputQuery] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -98,6 +55,17 @@ export const SaathiAICopilot: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [historyCount, setHistoryCount] = useState<number>(() => loadStoredChatSessions().length);
+
+  // Close language dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
+        setIsLangMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
 
   useEffect(() => {
     const handler = () => {
@@ -114,10 +82,9 @@ export const SaathiAICopilot: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Synchronize chatLang with global language
   useEffect(() => {
-    if (globalLang === 'hi') setChatLang('hi');
-    else if (globalLang === 'pa') setChatLang('pa');
-    else setChatLang('en');
+    setChatLang(globalLang);
   }, [globalLang]);
 
   useEffect(() => {
@@ -144,7 +111,7 @@ export const SaathiAICopilot: React.FC = () => {
     }
   }, [messages, currentSessionId]);
 
-  // Adjust textarea height dynamically with content
+  // Auto-expand textarea height up to 140px
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputQuery(e.target.value);
     const target = e.target;
@@ -153,7 +120,7 @@ export const SaathiAICopilot: React.FC = () => {
     target.style.height = `${newHeight}px`;
   };
 
-  // Safe Scheme Details modal opener (prevents crashing by ensuring full Scheme object exists)
+  // Safe Scheme Details opener (crash-proof)
   const handleOpenSchemeDetails = (s: { id: string; name: string }) => {
     const existing = matchResults?.find(m => m.scheme?.id === s.id);
     if (existing) {
@@ -172,37 +139,51 @@ export const SaathiAICopilot: React.FC = () => {
       } as any);
       return;
     }
-    // Safe fallback scheme
+
+    // Dynamic fallback scheme modal data
     setSelectedSchemeModal({
       scheme: {
         id: s.id,
         name: s.name,
-        hindiName: '',
-        apexBody: 'MoSJE & Commercial Banks',
-        categoryTag: 'Government Scheme',
-        targetGroups: ['All Entrepreneurs'],
-        minLoanAmount: 50000,
+        hindiName: s.name,
+        ministry: 'Ministry of Social Justice & Empowerment (MoSJE)',
+        apexBody: 'National Corporations (NSFDC / NBCFDC / KVIC)',
+        categoryTag: 'Micro-Enterprise & Subsidized Credit',
+        summary: 'Government-assisted subsidized business credit facility with direct margin money capital subsidy support.',
+        hindiSummary: 'सरकारी रियायती व्यावसायिक ऋण एवं पूंजीगत सब्सिडी सहायता योजना।',
+        detailedOverview: 'Provides collateral-free financial support and capital subsidy up to 35% for establishing and expanding sustainable micro-enterprises across manufacturing, service, and trading sectors.',
+        targetGroups: ['SC', 'ST', 'OBC', 'Women', 'Minority', 'Rural Artisans'],
+        minLoanAmount: 20000,
         maxLoanAmount: 1000000,
-        interestRatePerAnnum: 'Concessional (8% - 10%)',
-        subsidyRate: { specialRural: 35, specialUrban: 25 },
+        subsidyRate: { generalUrban: 0.15, generalRural: 0.25, specialUrban: 0.25, specialRural: 0.35, maxSubsidyAmount: 350000 },
         promoterContributionMinPercent: { general: 10, specialCategory: 5 },
-        collateralRequirement: 'Collateral-free (CGTMSE)',
-        keyHighlights: ['Direct financial assistance', 'Subsidized interest rate', 'Bankable project support'],
-        mandatoryDocuments: ['Aadhaar Card', 'PAN Card', 'Bank Account Statement', 'Business Project Outline'],
-        nodalAgency: 'Designated Government Agency / Bank',
-        averageProcessingDays: 21,
-        officialPortalUrl: 'https://www.myscheme.gov.in/',
-        detailedOverview: 'Government enterprise funding and subsidy scheme.'
-      } as any,
-      matchScore: 90,
-      estimatedSubsidyAmount: 250000,
-      reasonsWhyMatched: ['Eligible under national scheme guidelines.'],
-      conditionsToFulfill: [],
-      missingDocuments: []
+        interestRatePerAnnum: '4% - 8.5% p.a.',
+        interestSubventionPercent: 3,
+        moratoriumPeriodMonths: 6,
+        repaymentTenureYears: 5,
+        collateralRequirement: 'No collateral required up to ₹10 Lakhs (Covered under CGTMSE guarantee).',
+        eligibility: {
+          allowedCategories: ['SC', 'ST', 'OBC', 'General', 'Minority', 'SafaiKaramchari'],
+          allowedGenders: ['Male', 'Female', 'Transgender', 'Other'],
+          minAge: 18,
+          maxAge: 55,
+          allowedLocations: ['Rural', 'Urban', 'Semi-Urban'],
+          allowedSectors: ['Manufacturing', 'Services', 'Trading', 'ArtisanHandicraft', 'AgroAllied', 'StreetVending', 'Sanitation', 'Textiles'],
+          incomeCeilingAnnual: 350000
+        },
+        applicationUrl: 'https://jansamarth.in',
+        helplineNumber: '1800-180-6763'
+      },
+      matchScore: 82,
+      ruleTrace: ['Recommended directly based on conversation parameters.'],
+      subsidyAmount: 70000,
+      effectiveMarginMoney: 10000,
+      applicantLoanAmount: 200000,
+      estMonthlyEMI: 4100
     } as any);
   };
 
-  // Seamless transition: Populates form, runs 35+ scheme calculations, and redirects to Scheme Recommender
+  // Handler for Applying details captured in AI chat to Scheme Recommender
   const handleApplyDetailsAndRedirect = async (extractedUpdates: Partial<UserProfile>) => {
     setIsApplyingModal(true);
     setApplyingStep(1);
@@ -230,8 +211,8 @@ export const SaathiAICopilot: React.FC = () => {
       gender: (extractedUpdates.gender || profile.gender || 'Female') as any
     };
 
-    setProfile(updatedProfile);
-    await runMatching(updatedProfile);
+    setProfile(updatedProfile as any);
+    await runMatching(updatedProfile as any);
 
     await new Promise((r) => setTimeout(r, 550));
     setApplyingStep(3);
@@ -308,7 +289,15 @@ export const SaathiAICopilot: React.FC = () => {
 
     try {
       const recognition = new SpeechRecognition();
-      recognition.lang = chatLang === 'hi' ? 'hi-IN' : chatLang === 'pa' ? 'pa-IN' : 'en-IN';
+      const voiceLangMap: Record<SupportedLanguage, string> = {
+        en: 'en-IN',
+        hi: 'hi-IN',
+        pa: 'pa-IN',
+        te: 'te-IN',
+        mr: 'mr-IN',
+        bn: 'bn-IN'
+      };
+      recognition.lang = voiceLangMap[chatLang] || 'en-IN';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
@@ -329,17 +318,11 @@ export const SaathiAICopilot: React.FC = () => {
     }
   };
 
-  const getMessageDisplay = (msg: ChatMessage) => {
-    if (chatLang === 'hi' && msg.hindiText) return msg.hindiText;
-    if (chatLang === 'pa' && msg.punjabiText) return msg.punjabiText;
-    return msg.text;
-  };
-
   const handleAudioToggle = (msg: ChatMessage) => {
     if (isSpeaking) {
       stopSpeech();
     } else {
-      speakText(getMessageDisplay(msg), chatLang);
+      speakText(getSaathiMessageDisplay(msg, chatLang), chatLang);
     }
   };
 
@@ -359,6 +342,15 @@ export const SaathiAICopilot: React.FC = () => {
     setIsHistoryOpen(false);
     stopSpeech();
   };
+
+  const handleLanguageChange = (newLang: SupportedLanguage) => {
+    setChatLang(newLang);
+    setLanguage(newLang);
+    setIsLangMenuOpen(false);
+  };
+
+  const uiLabels = SAATHI_UI_LABELS[chatLang] || SAATHI_UI_LABELS.en;
+  const currentLangObj = SAATHI_LANGUAGES.find(l => l.code === chatLang) || SAATHI_LANGUAGES[0];
 
   return (
     <>
@@ -397,29 +389,36 @@ export const SaathiAICopilot: React.FC = () => {
               </div>
 
               <div className="chatbot-figma-actions">
-                {/* Language Switcher */}
-                <div className="saathi-lang-switcher">
-                  <button 
-                    type="button" 
-                    className={`saathi-lang-btn ${chatLang === 'en' ? 'active' : ''}`}
-                    onClick={() => setChatLang('en')}
+                {/* Multilingual Selector supporting all 6 languages */}
+                <div className="saathi-lang-selector" ref={langDropdownRef}>
+                  <button
+                    type="button"
+                    className="saathi-lang-selector-trigger"
+                    onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                    title="Change Language"
+                    aria-expanded={isLangMenuOpen}
                   >
-                    EN
+                    <Globe size={13} />
+                    <span className="saathi-lang-selector-label">{currentLangObj.label}</span>
+                    <ChevronDown size={11} className={`saathi-lang-selector-chevron ${isLangMenuOpen ? 'open' : ''}`} />
                   </button>
-                  <button 
-                    type="button" 
-                    className={`saathi-lang-btn ${chatLang === 'hi' ? 'active' : ''}`}
-                    onClick={() => setChatLang('hi')}
-                  >
-                    हिन्दी
-                  </button>
-                  <button 
-                    type="button" 
-                    className={`saathi-lang-btn ${chatLang === 'pa' ? 'active' : ''}`}
-                    onClick={() => setChatLang('pa')}
-                  >
-                    ਪੰਜਾਬੀ
-                  </button>
+
+                  {isLangMenuOpen && (
+                    <div className="saathi-lang-dropdown-menu">
+                      {SAATHI_LANGUAGES.map((l) => (
+                        <button
+                          key={l.code}
+                          type="button"
+                          className={`saathi-lang-dropdown-item ${chatLang === l.code ? 'active' : ''}`}
+                          onClick={() => handleLanguageChange(l.code)}
+                        >
+                          <span className="saathi-lang-item-name">{l.label}</span>
+                          <span className="saathi-lang-item-badge">{l.short}</span>
+                          {chatLang === l.code && <span className="saathi-lang-item-check">✓</span>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Chat History Drawer Toggle Button */}
@@ -428,10 +427,9 @@ export const SaathiAICopilot: React.FC = () => {
                   className={`chatbot-figma-history-pill ${isHistoryOpen ? 'active' : ''}`}
                   onClick={() => setIsHistoryOpen(h => !h)}
                   title="View Saved Chat History"
-
                 >
                   <History size={13} className="chatbot-figma-history-icon" />
-                  <span>{chatLang === 'hi' ? 'इतिहास' : chatLang === 'pa' ? 'ਇਤਿਹਾਸ' : 'History'}</span>
+                  <span>{uiLabels.history}</span>
                   {historyCount > 0 && (
                     <span className="chatbot-figma-history-count-badge">
                       {historyCount}
@@ -444,7 +442,7 @@ export const SaathiAICopilot: React.FC = () => {
                   type="button"
                   className="chatbot-figma-close-btn"
                   onClick={handleNewChat}
-                  title="New Chat"
+                  title={uiLabels.newChatTitle}
                   style={{ fontSize: '0.78rem', gap: '4px' }}
                 >
                   <RefreshCw size={14} />
@@ -473,13 +471,13 @@ export const SaathiAICopilot: React.FC = () => {
 
             {/* Main Content Area */}
             {messages.length === 0 ? (
-              /* Initial State: Star icon and "Ask our AI anything" */
+              /* Initial State: Star icon and headline */
               <div className="chatbot-figma-hero">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="chatbot-figma-star">
                   <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"/>
                 </svg>
                 <h1 className="chatbot-figma-headline">
-                  {chatLang === 'hi' ? 'हमारे AI से कुछ भी पूछें' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੁਝ ਵੀ ਪੁੱਛੋ' : 'Ask our AI anything'}
+                  {uiLabels.heroHeadline}
                 </h1>
               </div>
             ) : (
@@ -504,7 +502,7 @@ export const SaathiAICopilot: React.FC = () => {
                     )}
 
                     <div style={{ whiteSpace: 'pre-line' }}>
-                      {getMessageDisplay(msg)}
+                      {getSaathiMessageDisplay(msg, chatLang)}
                     </div>
 
                     {/* Matched schemes with crash-free View Details handler */}
@@ -534,7 +532,7 @@ export const SaathiAICopilot: React.FC = () => {
                               onClick={() => handleOpenSchemeDetails(s)}
                               style={{ fontSize: '0.7rem', padding: '3px 8px' }}
                             >
-                              {chatLang === 'hi' ? 'विवरण' : chatLang === 'pa' ? 'ਵੇਰਵਾ' : 'View Details'}
+                              {uiLabels.viewDetails}
                             </button>
                           </div>
                         ))}
@@ -567,7 +565,7 @@ export const SaathiAICopilot: React.FC = () => {
                   <div className="chatbot-figma-bubble assistant" style={{ fontStyle: 'italic', fontSize: '0.86rem' }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                       <Sparkles size={14} className="spin-slow" />
-                      {chatLang === 'hi' ? 'एआई उत्तर तैयार कर रहा है...' : chatLang === 'pa' ? 'ਏਆਈ ਉੱਤਰ ਤਿਆਰ ਕਰ ਰਿਹਾ ਹੈ...' : 'AI is thinking...'}
+                      {uiLabels.thinking}
                     </span>
                   </div>
                 )}
@@ -579,25 +577,30 @@ export const SaathiAICopilot: React.FC = () => {
             {/* Suggestions Section: exactly matching screenshot */}
             <div className="chatbot-figma-suggestions">
               <div className="chatbot-figma-suggestions-title">
-                {chatLang === 'hi' ? 'हमारे AI से क्या पूछें:' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੀ ਪੁੱਛਣਾ ਹੈ:' : 'Suggestions on what to ask Our AI'}
+                {uiLabels.suggestionsTitle}
               </div>
 
               <div className="chatbot-figma-suggestions-grid">
-                {SUGGESTIONS.map((s, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    className="chatbot-figma-chip-card"
-                    onClick={() => handleSendMessage(s.prompt, s.mode)}
-                  >
-                    <span className="chatbot-figma-chip-main">
-                      {chatLang === 'hi' ? s.titleHi : chatLang === 'pa' ? s.titlePa : s.titleEn}
-                    </span>
-                    <span className="chatbot-figma-chip-sub">
-                      {chatLang === 'hi' ? s.subHi : chatLang === 'pa' ? s.subPa : s.subEn}
-                    </span>
-                  </button>
-                ))}
+                {SUGGESTIONS.map((s, idx) => {
+                  const title = s.title[chatLang] || s.title.en;
+                  const sub = s.sub[chatLang] || s.sub.en;
+                  const prompt = s.prompt[chatLang] || s.prompt.en;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      className="chatbot-figma-chip-card"
+                      onClick={() => handleSendMessage(prompt, s.mode)}
+                    >
+                      <span className="chatbot-figma-chip-main">
+                        {title}
+                      </span>
+                      <span className="chatbot-figma-chip-sub">
+                        {sub}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -608,12 +611,11 @@ export const SaathiAICopilot: React.FC = () => {
                   type="button"
                   className={`saathi-mic-toggle-btn ${isRecordingVoice ? 'on' : 'off'}`}
                   onClick={toggleVoiceInput}
-                  title={isRecordingVoice ? 'Click to turn Mic OFF' : 'Click to turn Mic ON'}
+                  title={isRecordingVoice ? uiLabels.turnMicOffTitle : uiLabels.turnMicOnTitle}
                   aria-pressed={isRecordingVoice}
-                  
                 >
                   {isRecordingVoice ? <Mic size={15} /> : <MicOff size={15} />}
-                  <span>{isRecordingVoice ? 'Mic: ON' : 'Mic: OFF'}</span>
+                  <span>{isRecordingVoice ? uiLabels.micOn : uiLabels.micOff}</span>
                   <div className="saathi-mic-toggle-indicator">
                     <div className="saathi-mic-toggle-thumb" />
                   </div>
@@ -634,7 +636,7 @@ export const SaathiAICopilot: React.FC = () => {
                   placeholder={
                     isRecordingVoice
                       ? (chatLang === 'hi' ? 'बोलें, हम सुन रहे हैं...' : chatLang === 'pa' ? 'ਬੋਲੋ, ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening...')
-                      : (chatLang === 'hi' ? 'अपनी योजनाओं या आवश्यकताओं के बारे में कुछ भी पूछें...' : chatLang === 'pa' ? 'ਆਪਣੀਆਂ ਸਕੀਮਾਂ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ...' : 'Ask about schemes, loans, documents...')
+                      : uiLabels.inputPlaceholder
                   }
                 />
 
@@ -642,8 +644,8 @@ export const SaathiAICopilot: React.FC = () => {
                   type="button"
                   className="chatbot-figma-send-btn"
                   onClick={() => handleSendMessage()}
-                  aria-label="Send message"
-                  
+                  aria-label={uiLabels.sendTitle}
+                  title={uiLabels.sendTitle}
                 >
                   <Send size={20} />
                 </button>

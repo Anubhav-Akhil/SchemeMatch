@@ -274,6 +274,9 @@ export interface ChatMessage {
   text: string;
   hindiText?: string;
   punjabiText?: string;
+  teluguText?: string;
+  marathiText?: string;
+  bengaliText?: string;
   timestamp: string;
   featureMode?: ChatFeatureMode;
   matchedSchemes?: Array<{

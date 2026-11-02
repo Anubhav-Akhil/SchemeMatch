@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
-import { ChatMessage, ChatFeatureMode, UserProfile } from '../types';
+import { ChatMessage, ChatFeatureMode, UserProfile, SupportedLanguage } from '../types';
 import {
   LogOut, Sparkles, FileText, CheckCircle2, Scale, Compass,
   ArrowLeft, Building2, User as UserIcon, LayoutDashboard,
   Target, SearchCheck, Sliders, Calculator, ArrowRight,
   Sun, Moon, Globe, FileCheck2, Cpu, Menu, X, ChevronLeft,
-  ChevronRight, Send, Mic, MicOff, Volume2, VolumeX, TrendingUp,
+  ChevronRight, ChevronDown, Send, Mic, MicOff, Volume2, VolumeX, TrendingUp,
   IndianRupee, Award, Filter, RefreshCw, History
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
@@ -17,6 +17,7 @@ import { ApplyProfileCard } from './ApplyProfileCard';
 import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
 import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession, loadStoredChatSessions } from './ChatHistoryDrawer';
 import { generateSaathiFallback } from '../utils/saathiFallback';
+import { SUGGESTIONS, SAATHI_LANGUAGES, SAATHI_UI_LABELS, getSaathiMessageDisplay } from '../utils/saathiSuggestions';
 
 // Feature components
 import { EligibilityWizard } from './EligibilityWizard';
@@ -38,68 +39,27 @@ import {
   EligibilityCardView
 } from './SaathiChatCards';
 
-interface SuggestionOption {
-  titleEn: string;
-  titleHi: string;
-  titlePa: string;
-  subEn: string;
-  subHi: string;
-  subPa: string;
-  mode: ChatFeatureMode;
-  prompt: string;
-}
-
-const SUGGESTIONS: SuggestionOption[] = [
-  {
-    titleEn: 'Find a scheme',
-    titleHi: 'योजना खोजें',
-    titlePa: 'ਸਕੀਮ ਲੱਭੋ',
-    subEn: 'Best schemes for your work & profile',
-    subHi: 'अपनी प्रोफ़ाइल हेतु सर्वश्रेष्ठ योजनाएं',
-    subPa: 'ਆਪਣੇ ਕੰਮ ਲਈ ਵਧੀਆ ਸਕੀਮਾਂ',
-    mode: 'recommendation',
-    prompt: 'Find a scheme based on my work and profile'
-  },
-  {
-    titleEn: 'Documents needed',
-    titleHi: 'आवश्यक दस्तावेज़',
-    titlePa: 'ਲੋੜੀਂਦੇ ਦਸਤਾਵੇਜ਼',
-    subEn: 'Check personalized document checklist',
-    subHi: 'आवेदन हेतु दस्तावेज़ों की सूची',
-    subPa: 'ਕਰਜ਼ੇ ਲਈ ਜ਼ਰੂਰੀ ਕਾਗਜ਼ਾਤ ਸੂਚੀ',
-    mode: 'documents',
-    prompt: 'What documents are needed to apply for loans?'
-  },
-  {
-    titleEn: 'Calculate EMI',
-    titleHi: 'EMI गणना करें',
-    titlePa: 'EMI ਗਣਨਾ ਕਰੋ',
-    subEn: 'Loan amount, subsidy & monthly EMI',
-    subHi: 'ऋण, सरकारी सब्सिडी व मासिक किस्त',
-    subPa: 'ਕਰਜ਼ਾ, ਸਬਸਿਡੀ ਅਤੇ ਮਾਸਿਕ ਕਿਸ਼ਤ',
-    mode: 'emi',
-    prompt: 'Calculate loan EMI, interest rate, and subsidy'
-  },
-  {
-    titleEn: 'Where to apply',
-    titleHi: 'कहाँ आवेदन करें',
-    titlePa: 'ਕਿੱਥੇ ਅਰਜ਼ੀ ਦੇਣੀ ਹੈ',
-    subEn: 'Authorized banks & channel partners',
-    subHi: 'अधिकृत बैंक और चैनल पार्टनर खोजें',
-    subPa: 'ਅਧਿਕਾਰਤ ਬੈਂਕ ਤੇ ਚੈਨਲ ਪਾਰਟਨਰ',
-    mode: 'partners',
-    prompt: 'Where to apply and authorized channel partners'
-  }
-];
 
 /* ─── Saathi AI Slider Panel (Landing Page Figma UI) ──────────────── */
 const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   collapsed, onToggle
 }) => {
-  const { speakText, stopSpeech, isSpeaking, language: globalLang } = useLanguage();
+  const { speakText, stopSpeech, isSpeaking, language: globalLang, setLanguage } = useLanguage();
   const { profile, setProfile, runMatching, setSelectedSchemeModal, setActiveTab, allSchemes, matchResults } = useProfile();
 
-  const [chatLang, setChatLang] = useState<'en' | 'hi' | 'pa'>('en');
+  const [chatLang, setChatLang] = useState<SupportedLanguage>(globalLang);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState<boolean>(false);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (langDropdownRef.current && !langDropdownRef.current.contains(e.target as Node)) {
+        setIsLangMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -256,9 +216,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   };
 
   useEffect(() => {
-    if (globalLang === 'hi') setChatLang('hi');
-    else if (globalLang === 'pa') setChatLang('pa');
-    else setChatLang('en');
+    setChatLang(globalLang);
   }, [globalLang]);
 
   useEffect(() => {
@@ -325,7 +283,8 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
     try {
       const recognition = new SpeechRecognition();
-      recognition.lang = chatLang === 'hi' ? 'hi-IN' : chatLang === 'pa' ? 'pa-IN' : 'en-IN';
+      const voiceLangMap: Record<SupportedLanguage, string> = { en: 'en-IN', hi: 'hi-IN', pa: 'pa-IN', te: 'te-IN', mr: 'mr-IN', bn: 'bn-IN' };
+      recognition.lang = voiceLangMap[chatLang] || 'en-IN';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
@@ -347,9 +306,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   };
 
   const getDisplayContent = (msg: ChatMessage) => {
-    if (chatLang === 'hi' && msg.hindiText) return msg.hindiText;
-    if (chatLang === 'pa' && msg.punjabiText) return msg.punjabiText;
-    return msg.text;
+    return getSaathiMessageDisplay(msg, chatLang);
   };
 
   const handleAudioToggle = (msg: ChatMessage) => {
@@ -397,6 +354,8 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
     );
   }
 
+  const uiLabels = SAATHI_UI_LABELS[chatLang] || SAATHI_UI_LABELS.en;
+
   /* ── Expanded Slider Panel ───────────────────────── */
   return (
     <div className="si-saathi-panel" role="region" aria-label="Saathi AI Slider">
@@ -408,29 +367,42 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
         </div>
 
         <div className="chatbot-figma-actions">
-          {/* Language Switcher */}
-          <div className="saathi-lang-switcher">
-            <button 
-              type="button" 
-              className={`saathi-lang-btn ${chatLang === 'en' ? 'active' : ''}`}
-              onClick={() => setChatLang('en')}
+          {/* Multilingual Dropdown Selector */}
+          <div className="saathi-lang-selector" ref={langDropdownRef}>
+            <button
+              type="button"
+              className="saathi-lang-selector-trigger"
+              onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+              title="Change Language"
+              aria-expanded={isLangMenuOpen}
             >
-              EN
+              <Globe size={13} />
+              <span className="saathi-lang-selector-label">
+                {SAATHI_LANGUAGES.find(l => l.code === chatLang)?.label || 'English'}
+              </span>
+              <ChevronDown size={11} className={`saathi-lang-selector-chevron ${isLangMenuOpen ? 'open' : ''}`} />
             </button>
-            <button 
-              type="button" 
-              className={`saathi-lang-btn ${chatLang === 'hi' ? 'active' : ''}`}
-              onClick={() => setChatLang('hi')}
-            >
-              हिन्दी
-            </button>
-            <button 
-              type="button" 
-              className={`saathi-lang-btn ${chatLang === 'pa' ? 'active' : ''}`}
-              onClick={() => setChatLang('pa')}
-            >
-              ਪੰਜਾਬੀ
-            </button>
+
+            {isLangMenuOpen && (
+              <div className="saathi-lang-dropdown-menu">
+                {SAATHI_LANGUAGES.map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    className={`saathi-lang-dropdown-item ${chatLang === l.code ? 'active' : ''}`}
+                    onClick={() => {
+                      setChatLang(l.code);
+                      setLanguage(l.code);
+                      setIsLangMenuOpen(false);
+                    }}
+                  >
+                    <span className="saathi-lang-item-name">{l.label}</span>
+                    <span className="saathi-lang-item-badge">{l.short}</span>
+                    {chatLang === l.code && <span className="saathi-lang-item-check">✓</span>}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Chat History */}
@@ -442,7 +414,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
             >
               <History size={13} className="chatbot-figma-history-icon" />
-              <span>{chatLang === 'hi' ? 'इतिहास' : chatLang === 'pa' ? 'ਇਤਿਹਾਸ' : 'History'}</span>
+              <span>{uiLabels.history}</span>
               {historyCount > 0 && (
                 <span className="chatbot-figma-history-count-badge">
                   {historyCount}
@@ -487,7 +459,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"/>
           </svg>
           <h2 className="chatbot-figma-headline">
-            {chatLang === 'hi' ? 'हमारे AI से कुछ भी पूछें' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੁਝ ਵੀ ਪੁੱਛੋ' : 'Ask our AI anything'}
+            {uiLabels.heroHeadline}
           </h2>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '8px', maxWidth: '420px', lineHeight: 1.45 }}>
             {chatLang === 'hi' 
@@ -549,7 +521,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
                         onClick={() => handleOpenSchemeDetails(s)}
                         style={{ fontSize: '0.7rem', padding: '3px 8px' }}
                       >
-                        {chatLang === 'hi' ? 'विवरण' : chatLang === 'pa' ? 'ਵੇਰਵਾ' : 'View Details'}
+                        {uiLabels.viewDetails}
                       </button>
                     </div>
                   ))}
@@ -582,7 +554,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             <div className="chatbot-figma-bubble assistant" style={{ fontStyle: 'italic', fontSize: '0.84rem' }}>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                 <Sparkles size={14} className="spin-slow" />
-                {chatLang === 'hi' ? 'एआई उत्तर तैयार कर रहा है...' : chatLang === 'pa' ? 'ਏਆਈ ਉੱਤਰ ਤਿਆਰ ਕਰ ਰਿਹਾ ਹੈ...' : 'AI is thinking...'}
+                {uiLabels.thinking}
               </span>
             </div>
           )}
@@ -594,25 +566,26 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
       {/* Suggestions Section */}
       <div className="chatbot-figma-suggestions">
         <div className="chatbot-figma-suggestions-title">
-          {chatLang === 'hi' ? 'हमारे AI से क्या पूछें:' : chatLang === 'pa' ? 'ਸਾਡੇ AI ਤੋਂ ਕੀ ਪੁੱਛਣਾ ਹੈ:' : 'Suggestions on what to ask Our AI'}
+          {uiLabels.suggestionsTitle}
         </div>
 
         <div className="chatbot-figma-suggestions-grid">
-          {SUGGESTIONS.map((s, idx) => (
-            <button
-              key={idx}
-              type="button"
-              className="chatbot-figma-chip-card"
-              onClick={() => handleSendMessage(s.prompt, s.mode)}
-            >
-              <span className="chatbot-figma-chip-main">
-                {chatLang === 'hi' ? s.titleHi : chatLang === 'pa' ? s.titlePa : s.titleEn}
-              </span>
-              <span className="chatbot-figma-chip-sub">
-                {chatLang === 'hi' ? s.subHi : chatLang === 'pa' ? s.subPa : s.subEn}
-              </span>
-            </button>
-          ))}
+          {SUGGESTIONS.map((s, idx) => {
+            const title = s.title[chatLang] || s.title.en;
+            const sub = s.sub[chatLang] || s.sub.en;
+            const prompt = s.prompt[chatLang] || s.prompt.en;
+            return (
+              <button
+                key={idx}
+                type="button"
+                className="chatbot-figma-chip-card"
+                onClick={() => handleSendMessage(prompt, s.mode)}
+              >
+                <span className="chatbot-figma-chip-main">{title}</span>
+                <span className="chatbot-figma-chip-sub">{sub}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -623,11 +596,11 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             type="button"
             className={`saathi-mic-toggle-btn ${isRecording ? 'on' : 'off'}`}
             onClick={toggleVoiceInput}
-            title={isRecording ? 'Click to turn Mic OFF' : 'Click to turn Mic ON'}
+            title={isRecording ? uiLabels.turnMicOffTitle : uiLabels.turnMicOnTitle}
             aria-pressed={isRecording}
           >
             {isRecording ? <Mic size={14} /> : <MicOff size={14} />}
-            <span>{isRecording ? 'Mic: ON' : 'Mic: OFF'}</span>
+            <span>{isRecording ? uiLabels.micOn : uiLabels.micOff}</span>
             <div className="saathi-mic-toggle-indicator">
               <div className="saathi-mic-toggle-thumb" />
             </div>
@@ -648,7 +621,7 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
             placeholder={
               isRecording
                 ? (chatLang === 'hi' ? 'बोलें, हम सुन रहे हैं...' : chatLang === 'pa' ? 'ਬੋਲੋ, ਸੁਣ ਰਹੇ ਹਾਂ...' : 'Listening...')
-                : (chatLang === 'hi' ? 'अपनी योजनाओं के बारे में पूछें...' : chatLang === 'pa' ? 'ਆਪਣੀਆਂ ਸਕੀਮਾਂ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ...' : 'Ask about schemes, loans, documents...')
+                : uiLabels.inputPlaceholder
             }
           />
 

@@ -119,17 +119,17 @@ export class SaathiChatService {
     // Determine Feature Mode
     let detectedMode: ChatFeatureMode = preferredMode || 'general';
     if (detectedMode === 'general') {
-      if (q.includes('emi') || q.includes('किस्त') || q.includes('installment') || q.includes('ਕਿਸ਼ਤ') || q.includes('moratorium') || ((q.includes('interest') || q.includes('ब्याज')) && !q.includes('scheme') && !q.includes('योजना'))) {
+      if (q.includes('emi') || q.includes('किस्त') || q.includes('installment') || q.includes('ਕਿਸ਼ਤ') || q.includes('వాయిదా') || q.includes('हप्ता') || q.includes('কিস্তি') || q.includes('moratorium') || ((q.includes('interest') || q.includes('ब्याज')) && !q.includes('scheme') && !q.includes('योजना'))) {
         detectedMode = 'emi';
-      } else if (q.includes('document') || q.includes('paper') || q.includes('kagaz') || q.includes('aadhaar') || q.includes('pan') || q.includes('दस्तावेज') || q.includes('ਕਾਗਜ਼ਾਤ') || q.includes('certificate')) {
+      } else if (q.includes('document') || q.includes('paper') || q.includes('kagaz') || q.includes('aadhaar') || q.includes('pan') || q.includes('दस्तावेज') || q.includes('ਕਾਗਜ਼ਾਤ') || q.includes('పత్రాలు') || q.includes('कागदपत्रे') || q.includes('নথি') || q.includes('certificate')) {
         detectedMode = 'documents';
-      } else if (q.includes('partner') || q.includes('bank') || q.includes('branch') || q.includes('where to apply') || q.includes('sca') || q.includes('psb') || q.includes('कहाँ') || q.includes('ਕਿੱਥੇ')) {
+      } else if (q.includes('partner') || q.includes('bank') || q.includes('branch') || q.includes('where to apply') || q.includes('sca') || q.includes('psb') || q.includes('कहाँ') || q.includes('ਕਿੱਥੇ') || q.includes('ఎక్కడ') || q.includes('कुठे') || q.includes('কোথায়')) {
         detectedMode = 'partners';
       } else if (q.includes('what if') || q.includes('what-if') || q.includes('change') || q.includes('income') || q.includes('अगर') || q.includes('ਜੇਕਰ') || q.includes('simulate')) {
         detectedMode = 'whatif';
       } else if (q.includes('eligib') || q.includes('qualif') || q.includes('patrata') || q.includes('score') || q.includes('पात्रता') || q.includes('ਯੋਗਤਾ')) {
         detectedMode = 'eligibility';
-      } else if (q.includes('scheme') || q.includes('yojana') || q.includes('recommend') || q.includes('योजना') || q.includes('ਸਕੀਮ') || q.includes('best') || q.includes('suggest') || q.includes('find') || hasDetailsInQuery) {
+      } else if (q.includes('scheme') || q.includes('yojana') || q.includes('recommend') || q.includes('योजना') || q.includes('ਸਕੀਮ') || q.includes('పథకం') || q.includes('योजना') || q.includes('স্কিম') || q.includes('best') || q.includes('suggest') || q.includes('find') || hasDetailsInQuery) {
         detectedMode = 'recommendation';
       }
     }
@@ -137,6 +137,9 @@ export class SaathiChatService {
     let responseText = '';
     let responseHindi = '';
     let responsePunjabi = '';
+    let responseTelugu = '';
+    let responseMarathi = '';
+    let responseBengali = '';
     let emiCard: ChatEmiCardData | undefined;
     let documentCard: { schemeName: string; documents: ChatDocumentItem[] } | undefined;
     let partnerCard: { nearestPartners: ChatPartnerItem[] } | undefined;
@@ -175,6 +178,18 @@ Could you please share:
 - **ਉਦਾਹਰਣ**: ₹5 ਲੱਖ ਦੇ ਕਰਜ਼ੇ 'ਤੇ 35% ਸਬਸਿਡੀ (₹1.75 ਲੱਖ) ਮਿਲਣ ਨਾਲ ਕਰਜ਼ਾ ਘਟ ਕੇ ₹3.25 ਲੱਖ ਰਹਿ ਜਾਂਦਾ ਹੈ ਅਤੇ ਕਿਸ਼ਤ ਸਿਰਫ਼ ~₹6,600/ਮਹੀਨਾ ਬਣਦੀ ਹੈ।
 
 ਸਹੀ EMI ਜਾਣਨ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਕਰਜ਼ੇ ਦੀ ਰਕਮ, ਕੰਮ ਅਤੇ ਸ਼੍ਰੇਣੀ ਦੱਸੋ।`;
+          responseTelugu = `ప్రభుత్వ రుణాలలో 25% నుండి 35% వరకు మూలధన సబ్సిడీ మరియు రాయితీ వడ్డీ లభిస్తుంది:
+- **ఉదాహరణ**: PMEGP కింద ₹5 లక్షల రుణానికి 35% సబ్సిడీ (₹1.75 లక్షలు) లభిస్తుంది, దీనివల్ల నికర రుణం ₹3.25 లక్షలకు తగ్గి నెలవారీ EMI కేవలం ~₹6,600 అవుతుంది.
+
+ఖచ్చితమైన EMI లెక్కించడానికి రుణ మొత్తం, వ్యాపారం మరియు సామాజిక వర్గం తెలపండి.`;
+          responseMarathi = `सरकारी कर्जांमध्ये २५% ते ३५% भांडवली अनुदान आणि सवलतीचे व्याजदर मिळतात:
+- **उदाहरण**: PMEGP अंतर्गत ₹५ लाखांच्या कर्जावर ३५% अनुदान (₹१.७५ लाख) मिळाल्याने निव्वळ कर्ज ₹३.२५ लाख राहते व मासिक हप्ता (EMI) फक्त ~₹६,६००/महिना येतो.
+
+अचूक EMI आणि अनुदानासाठी कृपया कर्जाची रक्कम, काम आणि प्रवर्ग सांगा.`;
+          responseBengali = `সরকারি ব্যবসায়িক ঋণে ২৫% থেকে ৩৫% মূলধনী ভর্তুকি পাওয়া যায়, যার ফলে মাসিক কিস্তি (EMI) অনেকটাই কমে যায়:
+- **উদাহরণ**: PMEGP-এর অধীনে ₹৫ লক্ষ ঋণে ৩৫% ভর্তুকি (₹১.৭৫ লক্ষ) বাদ দিলে নিট ঋণ হয় ₹৩.২৫ লক্ষ এবং মাসিক EMI মাত্র ~₹৬,৬০০/মাস।
+
+সঠিক EMI গণনার জন্য আনুমানিক ঋণের পরিমাণ, কাজের ধরন ও শ্রেণি জানান।`;
 
           suggestedPrompts.push(
             'Need ₹2 Lakhs loan for tailoring shop, OBC Rural',
@@ -185,6 +200,9 @@ Could you please share:
           responseText = `Here is your loan and EMI breakdown for a loan of ₹${loanAmt.toLocaleString('en-IN')}. Under PMEGP (${mergedCategory}, ${mergedLocation}), you qualify for a **${subsidyRate * 100}% Capital Subsidy (₹${subsidyAmount.toLocaleString('en-IN')})**. With a concessional rate of ${rate}% over 5 years (60 months) and a 6-month moratorium on principal repayment, your estimated net monthly EMI is **₹${monthlyEmi.toLocaleString('en-IN')}/month**.`;
           responseHindi = `₹${loanAmt.toLocaleString('en-IN')} के ऋण के लिए आपकी ईएमआई का विवरण: PMEGP (${mergedCategory}, ${mergedLocation === 'Rural' ? 'ग्रामीण' : 'शहरी'}) के तहत आपको **${subsidyRate * 100}% सरकारी सब्सिडी (₹${subsidyAmount.toLocaleString('en-IN')})** मिलेगी। 5 वर्ष (60 माह) के लिए ${rate}% वार्षिक ब्याज दर और 6 माह के अधिस्थगन (मोरेटोरियम) के साथ आपकी अनुमानित शुद्ध मासिक ईएमआई मात्र **₹${monthlyEmi.toLocaleString('en-IN')}/माह** होगी।`;
           responsePunjabi = `₹${loanAmt.toLocaleString('en-IN')} ਦੇ ਕਰਜ਼ੇ ਲਈ ਤੁਹਾਡੀ ਈਐਮਆਈ ਦੀ ਜਾਣਕਾਰੀ: PMEGP (${mergedCategory}, ${mergedLocation === 'Rural' ? 'ਪੇਂਡੂ' : 'ਸ਼ਹਿਰੀ'}) ਦੇ ਤਹਿਤ ਤੁਹਾਨੂੰ **${subsidyRate * 100}% ਸਬਸਿਡੀ (₹${subsidyAmount.toLocaleString('en-IN')})** ਮਿਲ ਸਕਦੀ ਹੈ। 5 ਸਾਲ ਲਈ ਮਾਸਿਕ ਕਿਸ਼ਤ ਲਗਭਗ **₹${monthlyEmi.toLocaleString('en-IN')}/ਮਹੀਨਾ** ਹੋਵੇਗੀ।`;
+          responseTelugu = `₹${loanAmt.toLocaleString('en-IN')} రుణానికి మీ EMI వివరాలు: PMEGP కింద మీకు ${subsidyRate * 100}% సబ్సిడీ (₹${subsidyAmount.toLocaleString('en-IN')}) లభిస్తుంది. 5 సంవత్సరాల కాలపరిమితిలో మీ నికర నెలవారీ EMI సుమారుగా ₹${monthlyEmi.toLocaleString('en-IN')}/నెల.`;
+          responseMarathi = `₹${loanAmt.toLocaleString('en-IN')} कर्जासाठी तुमचे EMI तपशील: PMEGP अंतर्गत तुम्हाला ${subsidyRate * 100}% अनुदान (₹${subsidyAmount.toLocaleString('en-IN')}) मिळेल. ५ वर्षांच्या मुदतीत तुमचा अंदाजे मासिक हप्ता ₹${monthlyEmi.toLocaleString('en-IN')}/महिना असेल.`;
+          responseBengali = `₹${loanAmt.toLocaleString('en-IN')} ঋণের জন্য আপনার EMI বিবরণ: PMEGP-এর অধীনে আপনি ${subsidyRate * 100}% ভর্তুকি (₹${subsidyAmount.toLocaleString('en-IN')}) পাবেন। ৫ বছরের মেয়াদে আনুমানিক মাসিক EMI প্রায় ₹${monthlyEmi.toLocaleString('en-IN')}/মাস।`;
 
           suggestedPrompts.push(
             'What if I increase loan tenure to 7 years?',
@@ -237,6 +255,24 @@ Could you please tell me:
 4. **ਜਾਤੀ ਸਰਟੀਫਿਕੇਟ**: SC/ST/OBC ਲਈ ਸਬਸਿਡੀ ਵਾਸਤੇ।
 
 ਆਪਣੀ ਸਹੀ ਦਸਤਾਵੇਜ਼ ਸੂਚੀ ਲਈ, ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਕੰਮ ਅਤੇ ਸ਼੍ਰੇਣੀ ਦੱਸੋ।`;
+          responseTelugu = `ప్రభుత్వ వ్యాపార రుణాల కోసం అవసరమైన ముఖ్య పత్రాలు:
+1. ఆధార్ కార్డు (మొబైల్ లింక్ చేయబడినది) మరియు పాన్ కార్డు.
+2. ఉద్యమ్ ఎంఎస్ఎంఈ రిజిస్ట్రేషన్ (udyamregistration.gov.in లో 10 నిమిషాల్లో ఉచితం).
+3. గత 6 నెలల బ్యాంక్ ఖాతా స్టేట్‌మెంట్.
+4. డిజిటల్ కుల ధృవీకరణ పత్రం (SC/ST/OBC కోసం 35% సబ్సిడీ కోసం).
+ఖచ్చితమైన జాబితా కోసం మీ వ్యాపారం మరియు వర్గాన్ని తెలపండి.`;
+          responseMarathi = `सरकारी व्यावसायिक कर्जासाठी आवश्यक मुख्य कागदपत्रे:
+१. आधार कार्ड (मोबाईल लिंक असलेले) आणि पॅन कार्ड.
+२. उद्यम नोंदणी (udyamregistration.gov.in वर १० मिनिटांत मोफत).
+३. मागील ६ महिन्यांचे बँक स्टेटमेंट.
+४. डिजिटल जात प्रमाणपत्र (SC/ST/OBC सवलतीसाठी).
+तपशीलवार यादीसाठी कृपया तुमचे काम आणि प्रवर्ग सांगा.`;
+          responseBengali = `সরকারি ব্যবসায়িক ঋণের জন্য প্রয়োজনীয় প্রধান নথিপত্র:
+১. আধার কার্ড (মোবাইল লিঙ্ক করা) এবং প্যান কার্ড।
+২. উদ্যম এমএসএমই রেজিস্ট্রেশন (udyamregistration.gov.in এ ১০ মিনিটে বিনামূল্যে)।
+৩. বিগত ৬ মাসের ব্যাঙ্ক অ্যাকাউন্ট স্টেটমেন্ট।
+৪. ডিজিটাল জাতিগত শংসাপত্র (SC/ST/OBC ভর্তুকির জন্য)।
+নির্দিষ্ট তালিকার জন্য আপনার কাজ এবং শ্রেণি জানান।`;
 
           suggestedPrompts.push(
             'Tailoring business, OBC category',
@@ -305,6 +341,21 @@ Could you please share:
 1. **ਤੁਹਾਡਾ ਰਾਜ ਅਤੇ ਜ਼ਿਲ੍ਹਾ**
 2. **ਤੁਹਾਡਾ ਕੰਮ ਜਾਂ ਕਾਰੋਬਾਰ**
 3. **ਤੁਹਾਡੀ ਸ਼੍ਰੇਣੀ** (SC / ST / OBC / ਮਹਿਲਾ / ਜਨਰਲ)?`;
+          responseTelugu = `ప్రభుత్వ పథకాలు మరియు రాయితీల కోసం దరఖాస్తు చేసుకోవడానికి 3 ప్రధాన అధికారిక మార్గాలు ఉన్నాయి:
+1. ప్రభుత్వ వాణిజ్య బ్యాంకులు (PSBs - SBI, PNB): ముద్ర లోన్లు మరియు స్టాండ్-అప్ ఇండియా కోసం.
+2. జిల్లా పరిశ్రమల కేంద్రం (DIC) & KVIC: PMEGP మరియు PM విశ్వకర్మ కోసం. ఆన్‌లైన్‌లో jansamarth.in లో కూడా దరఖాస్తు చేసుకోవచ్చు.
+3. రాష్ట్ర ఛానలైజింగ్ ఏజెన్సీలు (SCAs): కలెక్టరేట్ లేదా వికాస్ భవన్‌లో SC/ST/OBC కోసం తక్కువ వడ్డీతో రుణాలు.
+మీ సమీప శాఖను గుర్తించడానికి రాష్ట్రం, వ్యాపారం మరియు వర్గాన్ని తెలపండి.`;
+          responseMarathi = `सरकारी योजना आणि अनुदानासाठी अर्ज करण्याचे ३ प्रमुख अधिकृत मार्ग:
+१. सरकारी बँका (PSBs - SBI, PNB): मुद्रा कर्ज (₹१० लाखांपर्यंत) आणि स्टँड-अप इंडियासाठी.
+२. जिल्हा उद्योग केंद्र (DIC) व KVIC: PMEGP (३५% पर्यंत अनुदान) आणि पीएम विश्वकर्मासाठी. jansamarth.in वरही ऑनलाइन अर्ज करता येतो.
+३. राज्य चॅनेलायझिंग एजन्सी (SCAs): विकास भवनातील कार्यालय, जे सवलतीच्या व्याजदराने कर्ज उपलब्ध करून देते.
+जवळची बँक शाखा शोधण्यासाठी कृपया राज्य/जिल्हा, काम आणि प्रवर्ग सांगा.`;
+          responseBengali = `সরকারি স্কিম এবং ভর্তুকির জন্য আবেদনের ৩টি প্রধান অনুমোদিত মাধ্যম:
+১. সরকারি বাণিজ্যিক ব্যাংক (PSBs - SBI, PNB): মুদ্রা ঋণ এবং স্ট্যান্ড-আপ ইন্ডিয়ার জন্য।
+২. জেলা শিল্প কেন্দ্র (DIC) ও KVIC: PMEGP (৩৫% পর্যন্ত ভর্তুকি) এবং পিএম বিশ্বকর্মার জন্য। অনলাইনে jansamarth.in পোর্টালেও আবেদন করা যায়।
+৩. স্টেট চ্যানেলাইজিং এজেন্সি (SCAs): বিকাশ ভবনে অবস্থিত অফিস যা স্বল্প সুদে ঋণ প্রদান করে।
+নিকটতম কেন্দ্র খুঁজে পেতে অনুগ্রহ করে রাজ্য, জেলা, কাজের ধরন এবং শ্রেণি জানান।`;
 
           suggestedPrompts.push(
             'Ludhiana, Punjab, tailoring business, OBC category',
@@ -449,6 +500,18 @@ Here are your primary authorized application avenues ready to process your schem
 1. **ਕੰਮ ਜਾਂ ਕਾਰੋਬਾਰ**: ਤੁਸੀਂ ਕਿਹੜਾ ਕੰਮ ਜਾਂ ਕਾਰੋਬਾਰ ਸ਼ੁਰੂ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? (ਜਿਵੇਂ ਸਿਲਾਈ, ਡੇਅਰੀ, ਕਰਿਆਨਾ, ਫੂਡ ਸਟਾਲ)
 2. **ਕਰਜ਼ੇ ਦੀ ਰਕਮ**: ਤੁਹਾਨੂੰ ਕਿੰਨੇ ਕਰਜ਼ੇ ਦੀ ਲੋੜ ਹੈ?
 3. **ਸ਼੍ਰੇਣੀ ਅਤੇ ਸਥਾਨ**: ਤੁਹਾਡੀ ਸ਼੍ਰੇਣੀ (SC / ST / OBC / ਮਹਿਲਾ / ਜਨਰਲ) ਅਤੇ ਖੇਤਰ (ਪੇਂਡੂ ਜਾਂ ਸ਼ਹਿਰੀ)।`;
+          responseTelugu = `మీకు ఉత్తమమైన ప్రభుత్వ పథకాలు మరియు గరిష్ట సబ్సిడీ (35% వరకు) సూచించడానికి, దయచేసి నాకు 3 వివరాలు తెలపండి:
+1. **వ్యాపారం లేదా వృత్తి**: మీరు ఏ రకమైన వ్యాపారాన్ని ప్రారంభించాలనుకుంటున్నారు? (ఉదా. టైలరింగ్, డెయిరీ, కిరాణా దుకాణం, తయారీ)
+2. **రుణ మొత్తం**: మీకు సుమారుగా ఎంత రుణ సహాయం అవసరం?
+3. **సామాజిక వర్గం & ప్రాంతం**: మీ వర్గం (SC / ST / OBC / మహిళ / సాధారణం) మరియు ప్రాంతం (గ్రామీణ లేదా పట్టణ).`;
+          responseMarathi = `तुम्हाला सर्वोत्तम सरकारी योजना आणि कमाल अनुदान (३५% पर्यंत) सुचवण्यासाठी, कृपया मला ३ प्राथमिक गोष्टी सांगा:
+१. **व्यवसाय किंवा काम**: तुम्ही कोणता व्यवसाय सुरू किंवा विस्तार करू इच्छिता? (उदा. टेलरिंग, डेअरी, किराणा, उत्पादन)
+२. **कर्ज रक्कम**: तुम्हाला अंदाजे किती बँक कर्जाची आवश्यकता आहे?
+३. **सामाजिक प्रवर्ग व परिसर**: तुमचा प्रवर्ग (SC / ST / OBC / महिला / खुला) आणि परिसर (ग्रामीण किंवा शहरी).`;
+          responseBengali = `আপনার জন্য সেরা সরকারি স্কিম এবং সর্বাধিক ভর্তুকি (৩৫% পর্যন্ত) সুপারিশ করতে, অনুগ্রহ করে ৩টি তথ্য জানান:
+১. **ব্যবসা বা কাজ**: আপনি কী ধরনের ব্যবসা শুরু করতে চান? (যেমন দর্জি, ডেইরি, মুদি দোকান, উৎপাদন)
+২. **ঋণের পরিমাণ**: আনুমানিক কত ঋণ প্রয়োজন?
+৩. **শ্রেণি ও এলাকা**: আপনার সামাজিক শ্রেণি (SC / ST / OBC / মহিলা / সাধারণ) এবং এলাকা (গ্রামীণ বা শহুরে)।`;
 
           suggestedPrompts.push(
             'I want to open a tailoring shop, need ₹2 Lakhs, OBC Rural',
@@ -535,6 +598,9 @@ Here are your primary authorized application avenues ready to process your schem
       text: responseText,
       hindiText: responseHindi,
       punjabiText: responsePunjabi,
+      teluguText: responseTelugu,
+      marathiText: responseMarathi,
+      bengaliText: responseBengali,
       timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
       featureMode: detectedMode,
       matchedSchemes: matchedSchemes.length > 0 ? matchedSchemes : undefined,

@@ -1,10 +1,10 @@
 import React from 'react';
-import { UserProfile } from '../types';
+import { UserProfile, SupportedLanguage } from '../types';
 import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 interface ApplyProfileCardProps {
   extractedUpdates: Partial<UserProfile>;
-  lang: 'en' | 'hi' | 'pa';
+  lang: SupportedLanguage;
   onApply: (updates: Partial<UserProfile>) => void;
 }
 
@@ -46,6 +46,39 @@ export const ApplyProfileCard: React.FC<ApplyProfileCardProps> = ({
       category: 'ਸ਼੍ਰੇਣੀ',
       location: 'ਖੇਤਰ',
       gender: 'ਲਿੰਗ'
+    },
+    te: {
+      badge: 'సాథీ AI ద్వారా వివరాలు సంగ్రహించబడ్డాయి',
+      title: 'స్కీమ్ సిఫార్సుదారులో వీక్షించడానికి సిద్ధంగా ఉంది',
+      desc: 'ఈ వివరాలను నేరుగా మీ ప్రొఫైల్ ఫారమ్‌కు వర్తింపజేయండి. ఫారమ్‌ను మళ్లీ పూరించకుండా అన్ని 35+ ధృవీకరించబడిన ప్రభుత్వ పథకాలను చూడండి.',
+      btn: 'వివరాలను వర్తింపజేసి పథకాలను చూడండి →',
+      trade: 'వృత్తి',
+      loan: 'రుణం',
+      category: 'వర్గం',
+      location: 'ప్రాంతం',
+      gender: 'లింగం'
+    },
+    mr: {
+      badge: 'साथी AI द्वारे तपशील नोंदवले गेले',
+      title: 'योजना शिफारसकर्त्यामध्ये पाहण्यासाठी तयार',
+      desc: 'हे तपशील थेट तुमच्या प्रोफाइल फॉर्मवर लागू करा. फॉर्म पुन्हा न भरता सर्व ३५+ सरकारी योजना आणि अनुदान पहा.',
+      btn: 'तपशील लागू करा आणि योजना पहा →',
+      trade: 'व्यवसाय',
+      loan: 'कर्ज',
+      category: 'प्रवर्ग',
+      location: 'परिसर',
+      gender: 'लिंग'
+    },
+    bn: {
+      badge: 'সাথী AI দ্বারা তথ্য সংগ্রহ করা হয়েছে',
+      title: 'স্কিম সুপারিশকারীতে দেখার জন্য প্রস্তুত',
+      desc: 'এই বিবরণগুলি সরাসরি আপনার প্রোফাইল ফর্মে প্রয়োগ করুন। পুনরায় ফর্ম পূরণ না করে সমস্ত ৩৫+ সরকারি স্কিম দেখুন।',
+      btn: 'বিবরণ প্রয়োগ করুন এবং স্কিম দেখুন →',
+      trade: 'কাজ',
+      loan: 'ঋণ',
+      category: 'শ্রেণি',
+      location: 'এলাকা',
+      gender: 'লিঙ্গ'
     }
   };
 

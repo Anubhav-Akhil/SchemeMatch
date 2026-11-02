@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChatMessage } from '../types';
+import { ChatMessage, SupportedLanguage } from '../types';
 import { History, Plus, Trash2, MessageSquare, Clock, ArrowRight, X, Sparkles } from 'lucide-react';
 
 export interface SavedChatSession {
@@ -76,7 +76,7 @@ export const clearAllStoredChatSessions = () => {
   }
 };
 
-export const formatSessionDate = (timestamp: number, lang: 'en' | 'hi' | 'pa'): string => {
+export const formatSessionDate = (timestamp: number, lang: SupportedLanguage = 'en'): string => {
   if (!timestamp) return '';
   const now = new Date();
   const date = new Date(timestamp);
@@ -90,11 +90,17 @@ export const formatSessionDate = (timestamp: number, lang: 'en' | 'hi' | 'pa'): 
   if (isToday) {
     if (lang === 'hi') return `आज, ${timeStr}`;
     if (lang === 'pa') return `ਅੱਜ, ${timeStr}`;
+    if (lang === 'te') return `ఈరోజు, ${timeStr}`;
+    if (lang === 'mr') return `आज, ${timeStr}`;
+    if (lang === 'bn') return `আজ, ${timeStr}`;
     return `Today, ${timeStr}`;
   }
   if (isYesterday) {
     if (lang === 'hi') return `कल, ${timeStr}`;
     if (lang === 'pa') return `ਕੱਲ੍ਹ, ${timeStr}`;
+    if (lang === 'te') return `నిన్న, ${timeStr}`;
+    if (lang === 'mr') return `काल, ${timeStr}`;
+    if (lang === 'bn') return `গতকাল, ${timeStr}`;
     return `Yesterday, ${timeStr}`;
   }
   return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) + `, ${timeStr}`;
@@ -106,7 +112,7 @@ interface ChatHistoryDrawerProps {
   currentSessionId: string | null;
   onSelectSession: (session: SavedChatSession) => void;
   onNewChat: () => void;
-  lang: 'en' | 'hi' | 'pa';
+  lang: SupportedLanguage;
 }
 
 export const ChatHistoryDrawer: React.FC<ChatHistoryDrawerProps> = ({
@@ -166,6 +172,45 @@ export const ChatHistoryDrawer: React.FC<ChatHistoryDrawerProps> = ({
       activeBadge: 'ਸਰਗਰਮ',
       chatsCount: 'ਚੈਟ ਸੁਰੱਖਿਅਤ',
       deleteConfirm: 'ਕੀ ਤੁਸੀਂ ਇਸ ਚੈਟ ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?'
+    },
+    te: {
+      title: 'చాట్ చరిత్ర',
+      subtitle: 'గత విచారణలు & పథక సిఫార్సులు',
+      newChat: 'కొత్త సంభాషణ',
+      emptyTitle: 'ఇంకా సేవ్ చేసిన చాట్‌లు లేవు',
+      emptyDesc: 'పథక సిఫార్సులు మరియు సమాధానాలను ఎప్పుడైనా మళ్లీ చూడటానికి సాథీ AIతో మీ సంభాషణలు ఇక్కడ స్వయంచాలకంగా సేవ్ చేయబడతాయి.',
+      startChat: 'సంభాషణను ప్రారంభించండి',
+      clearAll: 'మొత్తం చరిత్రను క్లియర్ చేయండి',
+      messagesCount: 'సందేశాలు',
+      activeBadge: 'యాక్టివ్',
+      chatsCount: 'సేవ్ చేసిన చాట్‌లు',
+      deleteConfirm: 'ఈ సంభాషణను తొలగించాలా?'
+    },
+    mr: {
+      title: 'चॅट इतिहास',
+      subtitle: 'मागील विचारणा आणि योजना शिफारसी',
+      newChat: 'नवीन संभाषण',
+      emptyTitle: 'अद्याप सेव्ह केलेले चॅट्स नाहीत',
+      emptyDesc: 'योजना शिफारसी आणि उत्तरे पुन्हा पाहण्यासाठी साथी AI सोबतची तुमची संभाषणे येथे स्वयंचलितपणे सेव्ह केली जातात.',
+      startChat: 'संभाषण सुरू करा',
+      clearAll: 'सर्व इतिहास साफ करा',
+      messagesCount: 'संदेश',
+      activeBadge: 'सक्रिय',
+      chatsCount: 'सेव्ह केलेले चॅट्स',
+      deleteConfirm: 'हे संभाषण हटवायचे का?'
+    },
+    bn: {
+      title: 'চ্যাট ইতিহাস',
+      subtitle: 'পূর্ববর্তী অনুসন্ধান ও স্কিম সুপারিশ',
+      newChat: 'নতুন কথোপকথন',
+      emptyTitle: 'এখনও কোনো সেভ করা চ্যাট নেই',
+      emptyDesc: 'স্কিম সুপারিশ এবং উত্তরগুলি যে কোনো সময় পর্যালোচনা করার জন্য সাথী AI এর সাথে আপনার কথোপকথন এখানে স্বয়ংক্রিয়ভাবে সেভ হয়।',
+      startChat: 'কথোপকথন শুরু করুন',
+      clearAll: 'সমস্ত ইতিহাস মুছে ফেলুন',
+      messagesCount: 'বার্তা',
+      activeBadge: 'সক্রিয়',
+      chatsCount: 'সেভ করা চ্যাট',
+      deleteConfirm: 'এই কথোপকথনটি মুছবেন?'
     }
   };
 
