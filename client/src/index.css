@@ -7462,6 +7462,7 @@ body.lang-transition-active {
   height: 100vh;
   overflow: hidden;
   background: var(--si-bg);
+  background-image: var(--si-bg-mesh);
   font-family: var(--font-body);
 }
 
@@ -7473,8 +7474,10 @@ body.lang-transition-active {
   padding: 0 24px;
   height: 60px;
   background: var(--si-topbar-bg);
-  border-bottom: 3px solid var(--si-topbar-border);
-  box-shadow: 0 2px 8px rgba(255,111,0,0.1);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border-bottom: 1px solid var(--si-topbar-border);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.9), 0 4px 20px rgba(0,0,0,0.06);
   z-index: 200;
   flex-shrink: 0;
   gap: 16px;
@@ -7502,8 +7505,11 @@ body.lang-transition-active {
   font-family: var(--font-heading);
   font-size: 1.2rem;
   font-weight: 800;
-  color: var(--si-indigo);
-  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #1e1b4b 0%, #4F46E5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.025em;
 }
 
 .si-brand-pill {
@@ -7681,7 +7687,10 @@ body.lang-transition-active {
   width: 240px;
   flex-shrink: 0;
   background: var(--si-sidebar-bg);
-  border-right: 1.5px solid var(--si-sidebar-border);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border-right: 1px solid var(--si-sidebar-border);
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.5), 2px 0 20px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -7745,9 +7754,13 @@ body.lang-transition-active {
 }
 
 .si-nav-item.active {
-  background: var(--si-nav-active-bg);
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: var(--si-nav-active);
   font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+  border: 1px solid rgba(255,255,255,0.7);
 }
 
 .si-nav-item.active::before {
@@ -7804,9 +7817,12 @@ body.lang-transition-active {
 
 .si-profile-snapshot {
   padding: 10px 12px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--si-nav-active-bg), var(--si-indigo-soft));
-  border: 1px solid var(--si-kpi-border);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
 .si-profile-snapshot-name {
@@ -7844,7 +7860,7 @@ body.lang-transition-active {
   flex: 1;
   overflow-y: auto;
   padding: 24px 28px;
-  background: var(--si-bg);
+  background: transparent;
 }
 
 .si-content-viewport::-webkit-scrollbar { width: 6px; }
@@ -7857,12 +7873,14 @@ body.lang-transition-active {
 /* ── Hero Banner ────────────────────────────────────────────────────────────── */
 .si-hero-banner {
   position: relative;
-  border-radius: 18px;
+  border-radius: 22px;
   background: var(--si-hero-gradient);
-  border: 1.5px solid var(--si-card-border);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  border: 1px solid var(--si-card-border);
   padding: 32px 36px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   box-shadow: var(--si-card-shadow);
 }
 
@@ -7957,8 +7975,8 @@ body.lang-transition-active {
 }
 
 .si-hero-cta-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255,111,0,0.45);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(255,111,0,0.5);
 }
 
 .si-hero-cta-secondary {
@@ -7996,13 +8014,16 @@ body.lang-transition-active {
   padding: 8px 16px;
   border-radius: 99px;
   background: var(--si-kpi-bg);
-  border: 1.5px solid var(--si-kpi-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--si-kpi-border);
   font-size: 0.84rem;
   font-weight: 700;
   color: var(--si-nav-active);
   white-space: nowrap;
-  transition: all 0.15s;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: default;
+  box-shadow: 0 2px 8px rgba(255,111,0,0.08);
 }
 
 .si-kpi-pill:hover {
@@ -8086,18 +8107,20 @@ body.lang-transition-active {
   flex-shrink: 0;
   width: 270px;
   background: var(--si-card-bg);
-  border: 1.5px solid var(--si-card-border);
-  border-radius: 14px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--si-card-border);
+  border-radius: 16px;
   box-shadow: var(--si-card-shadow);
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
 }
 
 .si-scheme-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(255,111,0,0.15);
-  border-color: rgba(255,111,0,0.4);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 12px 32px rgba(255,111,0,0.18), 0 2px 8px rgba(0,0,0,0.06);
+  border-color: rgba(255,111,0,0.35);
 }
 
 .si-scheme-card-tricolor {
@@ -8229,21 +8252,38 @@ body.lang-transition-active {
 
 .si-module-tile {
   background: var(--si-card-bg);
-  border: 1.5px solid var(--si-card-border);
-  border-radius: 14px;
-  padding: 16px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--si-card-border);
+  border-radius: 16px;
+  padding: 18px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: var(--si-card-shadow);
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
+.si-module-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.si-module-tile:hover::before { opacity: 1; }
+
 .si-module-tile:hover {
-  transform: translateY(-3px);
-  border-color: var(--si-nav-active);
-  box-shadow: 0 8px 20px rgba(255,111,0,0.12);
+  transform: translateY(-5px) scale(1.01);
+  border-color: rgba(255,111,0,0.3);
+  box-shadow: 0 12px 30px rgba(255,111,0,0.14), 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .si-module-tile-icon {
