@@ -25,6 +25,7 @@ import {
 import { ApplyProfileCard } from './ApplyProfileCard';
 import { ApplyProfileLoadingModal } from './ApplyProfileLoadingModal';
 import { ChatHistoryDrawer, SavedChatSession, saveStoredChatSession, loadStoredChatSessions } from './ChatHistoryDrawer';
+import { generateSaathiFallback } from '../utils/saathiFallback';
 import { API_BASE_URL } from '../config';
 
 interface SuggestionOption {
@@ -281,20 +282,13 @@ export const SaathiAICopilot: React.FC = () => {
       if (res.ok) {
         const reply: ChatMessage = await res.json();
         setMessages((prev) => [...prev, reply]);
+      } else {
+        throw new Error(`Chat API responded with ${res.status}`);
       }
     } catch (err) {
-      console.error('Chat query error:', err);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `err-${Date.now()}`,
-          sender: 'assistant',
-          text: 'I am here to help. Could you please rephrase or try again?',
-          hindiText: 'मैं आपकी सहायता के लिए तैयार हूँ। कृपया पुनः प्रयास करें।',
-          punjabiText: 'ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਹਾਜ਼ਰ ਹਾਂ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।',
-          timestamp: 'Just now'
-        }
-      ]);
+      console.warn('Backend unavailable or errored, using Saathi domain fallback:', err);
+      const fallbackReply = generateSaathiFallback(q, profile, mode);
+      setMessages((prev) => [...prev, fallbackReply]);
     } finally {
       setIsLoading(false);
     }
@@ -397,10 +391,10 @@ export const SaathiAICopilot: React.FC = () => {
           >
             {/* Top Bar */}
             <div className="chatbot-figma-top-bar">
-              <span className="chatbot-figma-title" style={{ fontWeight: 600, color: 'var(--text-primary, #0F172A)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <img src="/logo.png" alt="Saathi AI" style={{ width: '20px', height: '20px', borderRadius: '4px', objectFit: 'contain' }} />
-                Saathi AI
-              </span>
+              <div className="chatbot-figma-title" style={{ fontWeight: 700, color: 'var(--text-primary, #0F172A)', display: 'inline-flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <img src="/logo.png" alt="Saathi AI" style={{ width: '20px', height: '20px', borderRadius: '4px', objectFit: 'contain', flexShrink: 0 }} />
+                <span style={{ whiteSpace: 'nowrap', wordBreak: 'keep-all' }}>Saathi AI</span>
+              </div>
 
               <div className="chatbot-figma-actions">
                 {/* Language Switcher */}
