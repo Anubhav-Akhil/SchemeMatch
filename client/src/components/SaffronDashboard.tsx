@@ -325,30 +325,35 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
   /* ── Collapsed Slider Tab ────────────────────────── */
   if (collapsed) {
     return (
-      <div
-        className="si-saathi-panel collapsed"
+      <div 
+        className="si-saathi-panel collapsed" 
         onClick={onToggle}
-        title="Open Saathi AI Slider"
+        title="Open Saathi AI Copilot"
         role="button"
+        tabIndex={0}
         aria-label="Expand Saathi AI Slider"
       >
-        <button
-          className="si-saathi-toggle-btn"
-          onClick={(e) => { e.stopPropagation(); onToggle(); }}
-          style={{ margin: '16px auto', display: 'flex' }}
-          title="Open Saathi AI Slider"
-        >
-          <ChevronLeft size={18} />
-        </button>
+        <div className="si-saathi-collapsed-header">
+          <button
+            type="button"
+            className="si-saathi-toggle-btn"
+            onClick={(e) => { e.stopPropagation(); onToggle(); }}
+            title="Open Saathi AI Copilot"
+            aria-label="Open Saathi AI Copilot"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <span className="si-saathi-pulse-dot" title="AI Ready" />
+        </div>
 
         <div className="si-saathi-slider-tag">
           <img 
             src={logoImg} 
             alt="Saathi AI" 
-            style={{ width: '18px', height: '18px', borderRadius: '4px', objectFit: 'contain' }} 
+            style={{ width: '20px', height: '20px', borderRadius: '5px', objectFit: 'contain' }} 
           />
-          <span>Saathi AI</span>
-          <ChevronLeft size={13} style={{ color: 'var(--si-nav-active)' }} />
+          <span className="si-saathi-slider-tag-text">Saathi AI Copilot</span>
+          <Sparkles size={13} className="si-saathi-sparkle-icon" />
         </div>
       </div>
     );
@@ -814,6 +819,19 @@ export const SaffronDashboard: React.FC = () => {
 
         {/* Right: controls + user */}
         <div className="si-top-right">
+          {/* Quick Saathi AI Toggle Pill */}
+          {saathiCollapsed && (
+            <button 
+              type="button"
+              className="si-top-saathi-pill" 
+              onClick={() => setSaathiCollapsed(false)}
+              title="Open Saathi AI Copilot"
+            >
+              <Sparkles size={14} className="si-top-saathi-icon" />
+              <span>Ask Saathi AI</span>
+            </button>
+          )}
+
           {/* Language */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
             <Globe size={14} style={{ color: 'var(--text-muted)' }} />
