@@ -322,38 +322,38 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
     stopSpeech();
   };
 
-  /* ── Collapsed Slider Tab ────────────────────────── */
+  /* ── Collapsed Slider Tab (Redesigned: Saathi AI text only, macOS liquid glass dock) ── */
   if (collapsed) {
     return (
       <div 
         className="si-saathi-panel collapsed" 
         onClick={onToggle}
-        title="Open Saathi AI Copilot"
+        title="Open Saathi AI"
         role="button"
         tabIndex={0}
-        aria-label="Expand Saathi AI Slider"
+        aria-label="Expand Saathi AI"
       >
-        <div className="si-saathi-collapsed-header">
+        <div className="si-saathi-dock-container">
           <button
             type="button"
-            className="si-saathi-toggle-btn"
+            className="si-saathi-dock-toggle-btn"
             onClick={(e) => { e.stopPropagation(); onToggle(); }}
-            title="Open Saathi AI Copilot"
-            aria-label="Open Saathi AI Copilot"
+            title="Open Saathi AI"
+            aria-label="Open Saathi AI"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={16} />
           </button>
-          <span className="si-saathi-pulse-dot" title="AI Ready" />
-        </div>
 
-        <div className="si-saathi-slider-tag">
-          <img 
-            src={logoImg} 
-            alt="Saathi AI" 
-            style={{ width: '20px', height: '20px', borderRadius: '5px', objectFit: 'contain' }} 
-          />
-          <span className="si-saathi-slider-tag-text">Saathi AI Copilot</span>
-          <Sparkles size={13} className="si-saathi-sparkle-icon" />
+          <div className="si-saathi-dock-beacon" title="Saathi AI Ready">
+            <span className="si-saathi-dock-beacon-dot" />
+            <span className="si-saathi-dock-beacon-ring" />
+          </div>
+
+          <div className="si-saathi-dock-tag">
+            <span className="si-saathi-dock-text">Saathi AI</span>
+          </div>
+
+          <div className="si-saathi-dock-handle-pill" />
         </div>
       </div>
     );
@@ -361,17 +361,18 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
   const uiLabels = SAATHI_UI_LABELS[chatLang] || SAATHI_UI_LABELS.en;
 
-  /* ── Expanded Slider Panel ───────────────────────── */
+  /* ── Expanded Slider Panel (Redesigned: Ultra-Modern macOS Glass AI Window) ── */
   return (
-    <div className="si-saathi-panel" role="region" aria-label="Saathi AI Slider">
-      {/* Top Bar matching Figma design */}
-      <div className="chatbot-figma-top-bar">
-        <div className="chatbot-figma-title" style={{ fontWeight: 700, color: 'var(--text-primary, #0F172A)', display: 'inline-flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
-          <img src={logoImg} alt="Saathi AI" style={{ width: '22px', height: '22px', borderRadius: '5px', objectFit: 'contain', flexShrink: 0 }} />
-          <span style={{ whiteSpace: 'nowrap', wordBreak: 'keep-all' }}>Saathi AI</span>
+    <div className="si-saathi-panel" role="region" aria-label="Saathi AI Panel">
+      {/* Top Bar - Next-Gen Frosted Glass Titlebar */}
+      <div className="si-saathi-top-bar">
+        <div className="si-saathi-top-title-group">
+          <span className="si-saathi-top-brand-text">Saathi AI</span>
+          <span className="si-saathi-top-ai-badge">AI 2.0</span>
+          <span className="si-saathi-live-dot" title="Active & Ready" />
         </div>
 
-        <div className="chatbot-figma-actions">
+        <div className="si-saathi-top-actions">
           {/* Multilingual Dropdown Selector */}
           <div className="saathi-lang-selector" ref={langDropdownRef}>
             <button
@@ -411,37 +412,40 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
           </div>
 
           {/* Chat History */}
-            <button
-              type="button"
-              className={`chatbot-figma-history-pill ${isHistoryOpen ? 'active' : ''}`}
-              onClick={() => setIsHistoryOpen(h => !h)}
-              title="View Saved Chat History"
-
-            >
-              <History size={13} className="chatbot-figma-history-icon" />
-              <span>{uiLabels.history}</span>
-              {historyCount > 0 && (
-                <span className="chatbot-figma-history-count-badge">
-                  {historyCount}
-                </span>
-              )}
-            </button>
+          <button
+            type="button"
+            className={`si-saathi-action-pill ${isHistoryOpen ? 'active' : ''}`}
+            onClick={() => setIsHistoryOpen(h => !h)}
+            title="View Saved Chat History"
+          >
+            <History size={13} />
+            <span>{uiLabels.history}</span>
+            {historyCount > 0 && (
+              <span className="si-saathi-action-badge">
+                {historyCount}
+              </span>
+            )}
+          </button>
 
           {messages.length > 0 && (
             <button
-              type="button" className="chatbot-figma-close-btn" onClick={handleNewChat} title="New Chat"><RefreshCw size={14} />
+              type="button"
+              className="si-saathi-action-btn"
+              onClick={handleNewChat}
+              title="New Chat"
+            >
+              <RefreshCw size={13} />
             </button>
-
           )}
 
           <button
             type="button"
-            className="chatbot-figma-close-btn"
+            className="si-saathi-action-btn close"
             onClick={onToggle}
-            title="Collapse Slider"
+            title="Collapse Saathi AI"
             aria-label="Collapse"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={17} />
           </button>
         </div>
       </div>
@@ -458,75 +462,65 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
       {/* Main Content Area */}
       {messages.length === 0 ? (
-        /* Center Hero when empty */
-        <div className="chatbot-figma-hero">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" className="chatbot-figma-star">
-            <path d="M12 0L14.8 9.2L24 12L14.8 14.8L12 24L9.2 14.8L0 12L9.2 9.2L12 0Z"/>
-          </svg>
-          <h2 className="chatbot-figma-headline">
+        /* Center Hero with Apple Intelligence Ambient Mesh */
+        <div className="si-saathi-empty-hero">
+          <div className="si-saathi-aura-orb" />
+          <div className="si-saathi-empty-brand-tag">
+            <Sparkles size={13} />
+            <span>Welfare Intelligence</span>
+          </div>
+          <h2 className="si-saathi-empty-headline">
             {uiLabels.heroHeadline}
           </h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '8px', maxWidth: '420px', lineHeight: 1.45 }}>
+          <p className="si-saathi-empty-desc">
             {chatLang === 'hi' 
-              ? 'अपनी पात्रता, सरकारी ऋण, सब्सिडी और दस्तावेज़ों के बारे में तुरंत पूछें।'
+              ? 'अपनी पात्रता, 35% तक सरकारी सब्सिडी, रियायती ब्याज और ऋण दिशानिर्देशों के बारे में तुरंत पूछें।'
               : chatLang === 'pa'
-              ? 'ਆਪਣੀ ਯੋਗਤਾ, ਸਰਕਾਰੀ ਕਰਜ਼ੇ, ਸਬਸਿਡੀ ਅਤੇ ਦਸਤਾਵੇਜ਼ਾਂ ਬਾਰੇ ਪੁੱਛੋ।'
-              : 'Explore government schemes, check personalized loan subsidies, EMI and documents.'}
+              ? 'ਆਪਣੀ ਯੋਗਤਾ, 35% ਤੱਕ ਸਰਕਾਰੀ ਸਬਸਿਡੀ, ਰਿਆਇਤੀ ਵਿਆਜ ਅਤੇ ਕਰਜ਼ੇ ਬਾਰੇ ਪੁੱਛੋ।'
+              : 'Ask anything about government schemes, calculate exact capital subsidies, check EMI, and verify documents.'}
           </p>
         </div>
       ) : (
         /* Conversation Stream */
-        <div className="chatbot-figma-stream">
+        <div className="si-saathi-stream">
           {messages.map((msg) => (
-            <div key={msg.id} className={`chatbot-figma-bubble ${msg.sender}`}>
+            <div key={msg.id} className={`si-saathi-bubble ${msg.sender}`}>
               {msg.sender === 'assistant' && (
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--primary-saffron)' }}>
-                    Saathi AI
-                  </span>
+                <div className="si-saathi-bubble-header">
+                  <div className="si-saathi-bubble-brand">
+                    <span className="si-saathi-bubble-name">Saathi AI</span>
+                    <span className="si-saathi-bubble-badge">Official AI</span>
+                  </div>
                   <button
                     type="button"
                     onClick={() => handleAudioToggle(msg)}
-                    style={{ background: 'transparent', border: 'none', color: isSpeaking ? '#10B981' : 'var(--text-muted)', cursor: 'pointer', padding: '2px' }}
+                    className={`si-saathi-speaker-btn ${isSpeaking ? 'active' : ''}`}
                     title={isSpeaking ? 'Stop Audio' : 'Listen aloud'}
                   >
-                    {isSpeaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                    {isSpeaking ? <VolumeX size={13} /> : <Volume2 size={13} />}
                   </button>
                 </div>
               )}
 
-              <div style={{ whiteSpace: 'pre-line' }}>
+              <div className="si-saathi-bubble-content">
                 {getDisplayContent(msg)}
               </div>
 
               {/* Matched schemes */}
               {msg.matchedSchemes && msg.matchedSchemes.length > 0 && (
-                <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div className="si-saathi-matched-schemes-row">
                   {msg.matchedSchemes.map((s) => (
-                    <div
-                      key={s.id}
-                      style={{
-                        padding: '8px 12px',
-                        background: 'var(--bg-surface-subtle, rgba(255, 255, 255, 0.9))',
-                        borderRadius: '8px',
-                        border: '1px solid var(--border-subtle, rgba(226, 232, 240, 0.9))',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: '8px'
-                      }}
-                    >
-                      <div>
-                        <strong style={{ fontSize: '0.84rem', display: 'block', color: 'var(--text-primary)' }}>{s.name}</strong>
-                        <span style={{ fontSize: '0.74rem', color: '#EA580C', fontWeight: 600 }}>{s.subsidyHighlight}</span>
+                    <div key={s.id} className="si-saathi-matched-scheme-item">
+                      <div className="si-saathi-matched-scheme-text">
+                        <strong>{s.name}</strong>
+                        <span>{s.subsidyHighlight}</span>
                       </div>
                       <button
                         type="button"
-                        className="card-quick-action"
+                        className="si-saathi-matched-scheme-btn"
                         onClick={() => handleOpenSchemeDetails(s)}
-                        style={{ fontSize: '0.7rem', padding: '3px 8px' }}
                       >
-                        {uiLabels.viewDetails}
+                        {uiLabels.viewDetails} →
                       </button>
                     </div>
                   ))}
@@ -549,17 +543,17 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
                 />
               )}
 
-              <div style={{ fontSize: '0.66rem', color: 'var(--text-muted, #94A3B8)', textAlign: 'right', marginTop: '4px' }}>
+              <div className="si-saathi-bubble-time">
                 {msg.timestamp}
               </div>
             </div>
           ))}
 
           {isLoading && (
-            <div className="chatbot-figma-bubble assistant" style={{ fontStyle: 'italic', fontSize: '0.84rem' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                <Sparkles size={14} className="spin-slow" />
-                {uiLabels.thinking}
+            <div className="si-saathi-bubble assistant loading">
+              <span className="si-saathi-loading-indicator">
+                <Sparkles size={14} className="si-saathi-spin-slow" />
+                <span>{uiLabels.thinking}</span>
               </span>
             </div>
           )}
@@ -569,12 +563,13 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
       )}
 
       {/* Suggestions Section */}
-      <div className="chatbot-figma-suggestions">
-        <div className="chatbot-figma-suggestions-title">
-          {uiLabels.suggestionsTitle}
+      <div className="si-saathi-suggestions">
+        <div className="si-saathi-suggestions-title">
+          <Sparkles size={12} style={{ color: 'var(--primary-saffron)' }} />
+          <span>{uiLabels.suggestionsTitle}</span>
         </div>
 
-        <div className="chatbot-figma-suggestions-grid">
+        <div className="si-saathi-suggestions-grid">
           {SUGGESTIONS.map((s, idx) => {
             const title = s.title[chatLang] || s.title.en;
             const sub = s.sub[chatLang] || s.sub.en;
@@ -583,11 +578,11 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
               <button
                 key={idx}
                 type="button"
-                className="chatbot-figma-chip-card"
+                className="si-saathi-suggestion-card"
                 onClick={() => handleSendMessage(prompt, s.mode)}
               >
-                <span className="chatbot-figma-chip-main">{title}</span>
-                <span className="chatbot-figma-chip-sub">{sub}</span>
+                <span className="si-saathi-chip-main">{title}</span>
+                <span className="si-saathi-chip-sub">{sub}</span>
               </button>
             );
           })}
@@ -595,25 +590,25 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
       </div>
 
       {/* Input Area with Mic ON/OFF toggle switch */}
-      <div className="chatbot-figma-input-container">
-        <div className="chatbot-figma-input-box" style={{ alignItems: 'center' }}>
+      <div className="si-saathi-input-bar">
+        <div className="si-saathi-input-box">
           <button
             type="button"
-            className={`saathi-mic-toggle-btn ${isRecording ? 'on' : 'off'}`}
+            className={`si-saathi-mic-toggle ${isRecording ? 'on' : 'off'}`}
             onClick={toggleVoiceInput}
             title={isRecording ? uiLabels.turnMicOffTitle : uiLabels.turnMicOnTitle}
             aria-pressed={isRecording}
           >
             {isRecording ? <Mic size={14} /> : <MicOff size={14} />}
-            <span>{isRecording ? uiLabels.micOn : uiLabels.micOff}</span>
-            <div className="saathi-mic-toggle-indicator">
-              <div className="saathi-mic-toggle-thumb" />
+            <span className="si-saathi-mic-text">{isRecording ? uiLabels.micOn : uiLabels.micOff}</span>
+            <div className="si-saathi-mic-switch">
+              <div className="si-saathi-mic-switch-thumb" />
             </div>
           </button>
 
           <textarea
             ref={textareaRef}
-            className="chatbot-figma-textarea"
+            className="si-saathi-textarea"
             value={input}
             rows={1}
             onChange={handleInputChange}
@@ -632,11 +627,12 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
           <button
             type="button"
-            className="chatbot-figma-send-btn"
+            className={`si-saathi-send-btn ${input.trim() ? 'has-text' : ''}`}
             onClick={() => handleSendMessage()}
             aria-label="Send message"
+            disabled={!input.trim() && !isRecording}
           >
-            <Send size={18} />
+            <Send size={15} />
           </button>
         </div>
       </div>
@@ -825,10 +821,10 @@ export const SaffronDashboard: React.FC = () => {
               type="button"
               className="si-top-saathi-pill" 
               onClick={() => setSaathiCollapsed(false)}
-              title="Open Saathi AI Copilot"
+              title="Open Saathi AI"
             >
               <Sparkles size={14} className="si-top-saathi-icon" />
-              <span>Ask Saathi AI</span>
+              <span>Saathi AI</span>
             </button>
           )}
 

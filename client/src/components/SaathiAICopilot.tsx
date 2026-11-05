@@ -366,7 +366,7 @@ export const SaathiAICopilot: React.FC = () => {
           alt="Saathi AI" 
           style={{ width: '22px', height: '22px', objectFit: 'contain' }} 
         />
-        <span>Ask Saathi AI</span>
+        <span>Saathi AI</span>
         <ArrowRight size={16} />
       </button>
 
