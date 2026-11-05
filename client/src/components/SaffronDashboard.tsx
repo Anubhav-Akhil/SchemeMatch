@@ -776,7 +776,7 @@ export const SaffronDashboard: React.FC = () => {
       group: nl.aiTools,
       items: [
         { id: 'profile', label: nl.profile, icon: Cpu, badge: null },
-        { id: 'matcher', label: nl.matcher, icon: Target, badge: `${matchResults.length}` },
+        { id: 'matcher', label: nl.matcher, icon: Target, badge: hasCalculated && matchResults.length > 0 ? `${matchResults.length}` : null },
         { id: 'gap', label: nl.gap, icon: SearchCheck, badge: null },
         { id: 'whatif', label: nl.whatif, icon: Sliders, badge: null },
         { id: 'calculator', label: nl.calculator, icon: Calculator, badge: null },
@@ -940,16 +940,30 @@ export const SaffronDashboard: React.FC = () => {
               {/* Hero Banner */}
               <div className="si-hero-banner">
                 <h1 className="si-hero-title">
-                  <span>{matchResults.length} {nl.schemesUnlocked}</span>
+                  <span>
+                    {hasCalculated && matchResults.length > 0
+                      ? `${matchResults.length} ${nl.schemesUnlocked}`
+                      : (language === 'hi' ? 'सरकारी योजनाएं और सब्सिडी खोजें' : 'Discover Government Schemes & Subsidies')}
+                  </span>
                 </h1>
                 <p className="si-hero-subtitle">
-                  {nl.welcomeBack}, <strong>{firstNameGreeting}</strong>! {language === 'hi' ? 'आपकी प्रोफ़ाइल' : 'Your profile is matched with'}{' '}
-                  <strong>{matchResults.length} {nl.schemesMatched}</strong> {language === 'hi' ? 'से मिलान किया गया है जो' : 'offering'} {nl.upTo}{' '}
-                  <strong>₹{(totalPotentialSubsidy / 100000).toFixed(1)} Lakhs</strong> {nl.subsidies}
+                  {hasCalculated && matchResults.length > 0 ? (
+                    <>
+                      {nl.welcomeBack}, <strong>{firstNameGreeting}</strong>! {language === 'hi' ? 'आपकी प्रोफ़ाइल' : 'Your profile is matched with'}{' '}
+                      <strong>{matchResults.length} {nl.schemesMatched}</strong> {language === 'hi' ? 'से मिलान किया गया है जो' : 'offering'} {nl.upTo}{' '}
+                      <strong>₹{(totalPotentialSubsidy / 100000).toFixed(1)} Lakhs</strong> {nl.subsidies}
+                    </>
+                  ) : (
+                    <>
+                      {nl.welcomeBack}, <strong>{firstNameGreeting}</strong>! {language === 'hi'
+                        ? 'अपनी प्रोफ़ाइल विवरण भरें या साथी AI की सहायता से अपनी पात्रता और 35% तक की पूंजी सब्सिडी की गणना करें।'
+                        : 'Complete your profile details or use AI Profile Extraction to discover prioritized government schemes and unlock up to 35% in capital subsidies.'}
+                    </>
+                  )}
                 </p>
                 <div className="si-hero-cta-row">
-                  <button className="si-hero-cta-primary" onClick={() => setActiveTab('matcher')}>
-                    <Target size={16} /> {nl.viewMatched} <ArrowRight size={14} />
+                  <button className="si-hero-cta-primary" onClick={() => setActiveTab(hasCalculated && matchResults.length > 0 ? 'matcher' : 'profile')}>
+                    <Target size={16} /> {hasCalculated && matchResults.length > 0 ? nl.viewMatched : (language === 'hi' ? 'प्रोफ़ाइल भरें और गणना करें' : 'Complete Profile & Calculate')} <ArrowRight size={14} />
                   </button>
                   <button className="si-hero-cta-secondary" onClick={() => setActiveTab('gap')}>
                     <SearchCheck size={16} /> {nl.diagnoseGaps}
@@ -961,11 +975,15 @@ export const SaffronDashboard: React.FC = () => {
               <div className="si-kpi-bar">
                 <div className="si-kpi-pill">
                   <span className="si-kpi-pill-icon"><IndianRupee size={14} /></span>
-                  ₹{(totalPotentialSubsidy / 100000).toFixed(1)}L {nl.subsAvail}
+                  {hasCalculated && matchResults.length > 0
+                    ? `₹${(totalPotentialSubsidy / 100000).toFixed(1)}L ${nl.subsAvail}`
+                    : 'Up to 35% Subsidy'}
                 </div>
                 <div className="si-kpi-pill indigo">
                   <span className="si-kpi-pill-icon"><Award size={14} /></span>
-                  {matchResults[0]?.scheme.name?.split(' ').slice(0, 2).join(' ') || 'PMEGP'}
+                  {hasCalculated && matchResults[0]?.scheme.name
+                    ? matchResults[0].scheme.name.split(' ').slice(0, 2).join(' ')
+                    : '35+ Verified Schemes'}
                 </div>
                 <div className="si-kpi-pill green">
                   <span className="si-kpi-pill-icon"><CheckCircle2 size={14} /></span>
@@ -973,7 +991,9 @@ export const SaffronDashboard: React.FC = () => {
                 </div>
                 <div className="si-kpi-pill indigo">
                   <span className="si-kpi-pill-icon"><TrendingUp size={14} /></span>
-                  {matchResults.length} {nl.schemesFound}
+                  {hasCalculated && matchResults.length > 0
+                    ? `${matchResults.length} ${nl.schemesFound}`
+                    : 'AI Matching Ready'}
                 </div>
               </div>
 
@@ -1062,7 +1082,7 @@ export const SaffronDashboard: React.FC = () => {
               <div className="si-module-grid">
                 {[
                   { id: 'profile',     icon: Cpu,          color: 'indigo', label: nl.profile,    desc: language === 'hi' ? 'NLP द्वारा प्रोफ़ाइल निर्माण' : 'Natural-language profile builder with NLP extraction.' },
-                  { id: 'matcher',     icon: Target,        color: '',       label: nl.matcher, desc: language === 'hi' ? `${matchResults.length} योजनाएं मिलान स्कोर के साथ` : `${matchResults.length} matched schemes with explainable scores.` },
+                  { id: 'matcher',     icon: Target,        color: '',       label: nl.matcher, desc: hasCalculated && matchResults.length > 0 ? (language === 'hi' ? `${matchResults.length} योजनाएं मिलान स्कोर के साथ` : `${matchResults.length} matched schemes with explainable scores.`) : (language === 'hi' ? '35+ सरकारी योजनाओं का मिलान' : 'Match 35+ national government schemes.') },
                   { id: 'gap',         icon: SearchCheck,   color: 'indigo', label: nl.gap, desc: language === 'hi' ? 'अनुपूर्ति मार्गदर्शन' : 'Pinpoints missing criteria with remediation guides.' },
                   { id: 'whatif',      icon: Sliders,       color: '',       label: nl.whatif,        desc: language === 'hi' ? 'ऋण, क्षेत्र, स्थान बदलकर देखें' : 'Tweak loan, location, and sector for live eligibility.' },
                   { id: 'calculator',  icon: Calculator,    color: 'green',  label: nl.calculator,     desc: language === 'hi' ? 'EMI, सब्सिडी और DSCR गणना' : 'Scheme-aware EMI, subsidy deduction, DSCR.' },

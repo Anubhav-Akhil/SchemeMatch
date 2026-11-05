@@ -62,7 +62,8 @@ export const MainAppDashboard: React.FC = () => {
     profile,
     personas,
     selectedPersonaId,
-    selectPersona
+    selectPersona,
+    hasCalculated
   } = useProfile();
   const { t, theme, toggleTheme, language, setLanguage } = useLanguage();
 
@@ -93,7 +94,7 @@ export const MainAppDashboard: React.FC = () => {
       group: 'Tools & Features',
       items: [
         { id: 'profile', label: 'AI Profile Extraction', icon: Cpu, badge: null },
-        { id: 'matcher', label: 'Smart Scheme Recommender', icon: Target, badge: `${matchResults.length}` },
+        { id: 'matcher', label: 'Smart Scheme Recommender', icon: Target, badge: hasCalculated && matchResults.length > 0 ? `${matchResults.length}` : null },
         { id: 'gap', label: 'Eligibility Gap Analyzer', icon: SearchCheck, badge: null },
         { id: 'whatif', label: 'What-If Simulator', icon: Sliders, badge: null },
         { id: 'calculator', label: 'Financial Calculator', icon: Calculator, badge: null },
