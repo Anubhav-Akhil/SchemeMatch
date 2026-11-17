@@ -262,8 +262,9 @@ CRITICAL EXTRACTION RULES (STRICT NON-HALLUCINATION POLICY):
    - "carpenter", "potter", "blacksmith", "handloom", "weaver", "artisan" -> sector: "ArtisanHandicraft"
    - "street food", "vendor", "thela", "cart" -> sector: "StreetVending"
 4. Loan Amount: Extract digits like "150000", "1.5 lakh", "1.5L", "150k", "150000 INR" into integer 150000.
-5. If totalProjectCost is not specified, set it to Math.round(requiredLoanAmount * 1.15) if requiredLoanAmount exists, otherwise null.
-6. Return confidenceScore (0 to 100) and a clean English summary.
+5. Extract totalProjectCost only when the user explicitly states it; otherwise set it to null. Do not infer it from the loan amount.
+6. Set isDifferentlyAbled to true only when explicitly stated; otherwise set it to null.
+7. Return confidenceScore (0 to 100) and a clean English summary.
 
 Output format (Strict JSON):
 {
@@ -278,7 +279,7 @@ Output format (Strict JSON):
   "requiredLoanAmount": number or null,
   "totalProjectCost": number or null,
   "annualFamilyIncome": number or null,
-  "isDifferentlyAbled": boolean,
+  "isDifferentlyAbled": boolean or null,
   "confidenceScore": number,
   "summary": string
 }`;
@@ -312,7 +313,6 @@ Output format (Strict JSON):
   private heuristicExtraction(text: string) {
     const lower = text.toLowerCase();
     const result: any = {
-      isDifferentlyAbled: false,
       confidenceScore: 88,
       summary: 'Extracted stated details from user description.'
     };
@@ -372,11 +372,9 @@ Output format (Strict JSON):
     if (lakhMatch) {
       const val = parseFloat(lakhMatch[1]);
       result.requiredLoanAmount = Math.round(val * 100000);
-      result.totalProjectCost = Math.round(result.requiredLoanAmount * 1.15);
     } else if (rawNumberMatch) {
       const val = parseInt(rawNumberMatch[1], 10);
       result.requiredLoanAmount = val;
-      result.totalProjectCost = Math.round(val * 1.15);
     }
 
     // 6. Category - ONLY set if explicitly present in text!

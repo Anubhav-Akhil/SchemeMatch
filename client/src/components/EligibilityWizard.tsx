@@ -6,18 +6,20 @@ import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2
 import { API_BASE_URL } from '../config';
 
 interface MissingFieldItem {
-  key: string;
   label: string;
   step: 'personal' | 'business';
-  reason: string;
 }
 
-interface ExtractionGuidance {
-  trade?: string;
-  sector?: string;
-  confidence: number;
-  missingFields: MissingFieldItem[];
-}
+const getMissingRequiredFields = (profile: UserProfile): MissingFieldItem[] => {
+  const missing: MissingFieldItem[] = [];
+  if (!profile.category) missing.push({ label: 'Social Category', step: 'personal' });
+  if (!profile.locationType) missing.push({ label: 'Location Domicile', step: 'personal' });
+  if (!profile.age || Number(profile.age) <= 0) missing.push({ label: 'Age', step: 'personal' });
+  if (!profile.gender) missing.push({ label: 'Gender', step: 'personal' });
+  if (!profile.tradeType && !profile.sector) missing.push({ label: 'Business Trade or Sector', step: 'business' });
+  if (!profile.requiredLoanAmount || Number(profile.requiredLoanAmount) <= 0) missing.push({ label: 'Required Loan Amount', step: 'business' });
+  return missing;
+};
 
 export const EligibilityWizard: React.FC = () => {
   const {
@@ -37,18 +39,12 @@ export const EligibilityWizard: React.FC = () => {
   const [aiInputText, setAiInputText] = useState<string>('');
   const [isExtracting, setIsExtracting] = useState<boolean>(false);
   const [extractionNotice, setExtractionNotice] = useState<string | null>(null);
-  const [guidance, setGuidance] = useState<ExtractionGuidance | null>(null);
   const [showAiBox, setShowAiBox] = useState<boolean>(true);
   const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
     if (validationError) {
-      const isComplete = Boolean(
-        profile.category &&
-        profile.locationType &&
-        (profile.tradeType || profile.sector) &&
-        profile.requiredLoanAmount && Number(profile.requiredLoanAmount) > 0
-      );
+      const isComplete = getMissingRequiredFields(profile).length === 0;
       if (isComplete) {
         setValidationError(null);
       }
@@ -61,7 +57,6 @@ export const EligibilityWizard: React.FC = () => {
 
     setIsExtracting(true);
     setExtractionNotice(null);
-    setGuidance(null);
     setValidationError(null);
 
     try {
@@ -73,109 +68,23 @@ export const EligibilityWizard: React.FC = () => {
 
       if (res.ok) {
         const extracted = await res.json();
-        
-        const extractedTrade = extracted.tradeType !== undefined && extracted.tradeType !== null && String(extracted.tradeType).trim() !== ''
-          ? String(extracted.tradeType).trim()
-          : '';
-        const extractedSector = extracted.sector !== undefined && extracted.sector !== null && String(extracted.sector).trim() !== ''
-          ? String(extracted.sector).trim()
-          : '';
+        const updated: UserProfile = { ...profile };
+        const extractIfPresent = <K extends keyof UserProfile>(key: K) => {
+          const value = extracted[key];
+          if (value !== undefined && value !== null && String(value).trim() !== '') {
+            updated[key] = value as UserProfile[K];
+          }
+        };
+        (['fullName', 'age', 'gender', 'category', 'locationType', 'state', 'sector', 'tradeType',
+          'requiredLoanAmount', 'totalProjectCost', 'promoterContributionAvailable', 'annualFamilyIncome',
+          'isDifferentlyAbled'] as Array<keyof UserProfile>).forEach(extractIfPresent);
 
-        setProfile((prev) => {
-          // STRICT EXTRACTION POLICY:
-          // Only populate attributes explicitly found in text.
-          // Unmentioned fields (category, locationType, state, income) are NOT filled automatically!
-          const tradeToSet = extractedTrade || prev.tradeType;
-          const sectorToSet = (extractedSector || prev.sector || (extractedTrade ? 'Textiles' : 'Services')) as SectorType;
-
-          const updated: UserProfile = {
-            ...prev,
-            fullName: extracted.fullName !== undefined && extracted.fullName !== null && String(extracted.fullName).trim() !== ''
-              ? extracted.fullName
-              : prev.fullName,
-            age: extracted.age !== undefined && extracted.age !== null ? extracted.age : prev.age,
-            gender: extracted.gender !== undefined && extracted.gender !== null ? extracted.gender : prev.gender,
-            category: extracted.category !== undefined && extracted.category !== null ? extracted.category : prev.category,
-            locationType: extracted.locationType !== undefined && extracted.locationType !== null ? extracted.locationType : prev.locationType,
-            state: extracted.state !== undefined && extracted.state !== null ? extracted.state : prev.state,
-            sector: sectorToSet,
-            tradeType: tradeToSet,
-            businessName: tradeToSet
-              ? `${extracted.fullName || prev.fullName || 'My'} ${tradeToSet} Enterprise`
-              : prev.businessName,
-            requiredLoanAmount: extracted.requiredLoanAmount !== undefined && extracted.requiredLoanAmount !== null
-              ? extracted.requiredLoanAmount
-              : prev.requiredLoanAmount,
-            totalProjectCost: extracted.totalProjectCost !== undefined && extracted.totalProjectCost !== null
-              ? extracted.totalProjectCost
-              : (extracted.requiredLoanAmount ? Math.round(extracted.requiredLoanAmount * 1.15) : prev.totalProjectCost),
-            promoterContributionAvailable: extracted.promoterContributionAvailable !== undefined && extracted.promoterContributionAvailable !== null
-              ? extracted.promoterContributionAvailable
-              : (extracted.requiredLoanAmount ? Math.round(extracted.requiredLoanAmount * 0.05) : prev.promoterContributionAvailable),
-            annualFamilyIncome: extracted.annualFamilyIncome !== undefined && extracted.annualFamilyIncome !== null
-              ? extracted.annualFamilyIncome
-              : prev.annualFamilyIncome,
-            isDifferentlyAbled: extracted.isDifferentlyAbled !== undefined && extracted.isDifferentlyAbled !== null
-              ? extracted.isDifferentlyAbled
-              : prev.isDifferentlyAbled
-          };
-
-          // NOTE: DO NOT call runMatching(updated) here!
-          // Scheme recommendations must only be calculated after the user completes the profile and clicks Calculate.
-          return updated;
-        });
-
-        // Compute missing required fields to guide user to complete before recommendation
-        const missing: MissingFieldItem[] = [];
-        const finalCategory = extracted.category || profile.category;
-        const finalLocation = extracted.locationType || profile.locationType;
-        const finalAge = extracted.age || profile.age;
-        const finalGender = extracted.gender || profile.gender;
-        const finalLoan = extracted.requiredLoanAmount || profile.requiredLoanAmount;
-
-        if (!finalCategory) {
-          missing.push({
-            key: 'category',
-            label: 'Social Category',
-            step: 'personal',
-            reason: 'Unlocks up to 35% MoSJE / PMEGP special subsidies (SC / ST / OBC / Safai Karamchari / Minority)'
-          });
-        }
-        if (!finalLocation) {
-          missing.push({
-            key: 'location',
-            label: 'Location Domicile',
-            step: 'personal',
-            reason: 'Select Rural for 35% subsidy or Urban for 25% subsidy under PMEGP'
-          });
-        }
-        if (!finalAge || !finalGender) {
-          missing.push({
-            key: 'age_gender',
-            label: 'Age & Gender',
-            step: 'personal',
-            reason: 'Verified criteria for youth (18+) and women entrepreneur benefit quotas'
-          });
-        }
-        if (!finalLoan || Number(finalLoan) <= 0) {
-          missing.push({
-            key: 'loan',
-            label: 'Required Loan Amount',
-            step: 'business',
-            reason: 'Needed to calculate loan limits and capital grant percentage (Mudra, PMEGP, etc.)'
-          });
-        }
-
-        const confidence = extracted.confidenceScore || 92;
-        const tradeName = extractedTrade || (extractedSector ? `${extractedSector} Enterprise` : 'Trade');
-        const sectorName = extractedSector || 'Textiles';
-
-        setGuidance({
-          trade: tradeName,
-          sector: sectorName,
-          confidence,
-          missingFields: missing
-        });
+        // Apply only values returned by extraction. Matching is a separate user action.
+        setProfile(updated);
+        const missing = getMissingRequiredFields(updated);
+        setExtractionNotice(missing.length > 0
+          ? `Extracted details. Please fill the remaining required fields: ${missing.map((field) => field.label).join(', ')}.`
+          : 'Required details are complete. Click Calculate Eligible Schemes & Subsidies when you are ready.');
 
         if (samplePrompt) setAiInputText(samplePrompt);
       }
@@ -190,19 +99,9 @@ export const EligibilityWizard: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const missingFields: string[] = [];
-    if (!profile.tradeType && !profile.sector) {
-      missingFields.push('Business Trade or Sector (in Step 2: Business)');
-    }
-    if (!profile.category) {
-      missingFields.push('Social Category (in Step 1: Identity) — needed for MoSJE / PMEGP special subsidies (up to 35%)');
-    }
-    if (!profile.locationType) {
-      missingFields.push('Location Domicile: Rural or Urban (in Step 1: Identity) — needed for rural vs urban subsidy rates');
-    }
-    if (!profile.requiredLoanAmount || Number(profile.requiredLoanAmount) <= 0) {
-      missingFields.push('Required Loan Amount (in Step 2: Business) — needed to match loan limits & subsidies');
-    }
+    const missingFields = getMissingRequiredFields(profile).map(
+      (field) => `${field.label} (in Step ${field.step === 'personal' ? '1: Identity' : '2: Business'})`
+    );
 
     if (missingFields.length > 0) {
       setValidationError(
@@ -347,11 +246,11 @@ export const EligibilityWizard: React.FC = () => {
           </button>
         </div>
 
-        {extractionNotice && !guidance && (
+        {extractionNotice && (
           <div style={{
             marginTop: '8px',
             fontSize: '0.74rem',
-            color: '#059669',
+            color: getMissingRequiredFields(profile).length > 0 ? '#D97706' : '#059669',
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
@@ -362,123 +261,6 @@ export const EligibilityWizard: React.FC = () => {
           </div>
         )}
 
-        {/* AI Extraction Guidance Card - Tells user what was filled in business and prompts to complete remaining fields */}
-        {guidance && (
-          <div style={{
-            marginTop: '12px',
-            padding: '12px 14px',
-            borderRadius: '10px',
-            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                <CheckCircle2 size={16} style={{ color: '#10B981', flexShrink: 0 }} />
-                <span style={{ fontWeight: 700, fontSize: '0.84rem', color: 'var(--text-primary)' }}>
-                  Business Column Filled: <strong style={{ color: '#059669' }}>{guidance.trade}</strong> ({guidance.sector})
-                </span>
-              </div>
-              <span style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                background: 'rgba(16, 185, 129, 0.15)',
-                color: '#059669',
-                padding: '2px 8px',
-                borderRadius: '99px'
-              }}>
-                ✨ {guidance.confidence}% Entity Confidence
-              </span>
-            </div>
-
-            {guidance.missingFields.length > 0 && (
-              <div style={{
-                background: 'var(--bg-surface)',
-                padding: '10px 12px',
-                borderRadius: '8px',
-                border: '1px solid var(--border-subtle)',
-                fontSize: '0.8rem'
-              }}>
-                <div style={{
-                  fontWeight: 700,
-                  color: 'var(--primary-saffron, #EA580C)',
-                  marginBottom: '6px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}>
-                  <AlertCircle size={14} style={{ color: 'var(--primary-saffron, #EA580C)' }} />
-                  <span>Please complete the remaining profile fields below before calculating schemes:</span>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginTop: '6px' }}>
-                  {guidance.missingFields.map((field) => (
-                    <div
-                      key={field.key}
-                      onClick={() => setActiveStep(field.step)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '5px 8px',
-                        borderRadius: '6px',
-                        background: 'var(--bg-surface-elevated)',
-                        border: '1px dashed var(--border-subtle)',
-                        cursor: 'pointer',
-                        fontSize: '0.76rem'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--primary-saffron, #EA580C)', flexShrink: 0 }} />
-                        <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{field.label}:</span>
-                        <span style={{ color: 'var(--text-secondary)' }}>{field.reason}</span>
-                      </div>
-                      <span style={{ fontSize: '0.7rem', color: 'var(--primary-saffron, #EA580C)', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                        Go to {field.step === 'personal' ? 'Step 1' : 'Step 2'} →
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '2px' }}>
-              <button
-                type="button"
-                onClick={() => setActiveStep('personal')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '0.76rem',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  background: activeStep === 'personal' ? 'var(--primary-saffron)' : 'var(--bg-surface-elevated)',
-                  color: activeStep === 'personal' ? '#FFFFFF' : 'var(--text-primary)',
-                  border: '1px solid var(--border-subtle)',
-                  cursor: 'pointer'
-                }}
-              >
-                1. Complete Identity Details (Category, Age, Location)
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveStep('business')}
-                style={{
-                  padding: '6px 12px',
-                  fontSize: '0.76rem',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  background: activeStep === 'business' ? 'var(--primary-saffron)' : 'var(--bg-surface-elevated)',
-                  color: activeStep === 'business' ? '#FFFFFF' : 'var(--text-primary)',
-                  border: '1px solid var(--border-subtle)',
-                  cursor: 'pointer'
-                }}
-              >
-                2. View Business Column ({guidance.trade})
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Mini Stepper Tabs */}
@@ -898,7 +680,7 @@ export const EligibilityWizard: React.FC = () => {
         )}
 
         {/* Instant Calculation Results & Subsidy Preview */}
-        {hasCalculated && matchResults.length > 0 && (
+        {hasCalculated && matchResults.length > 0 && getMissingRequiredFields(profile).length === 0 && (
           <div style={{
             marginTop: '16px',
             padding: '14px 16px',
