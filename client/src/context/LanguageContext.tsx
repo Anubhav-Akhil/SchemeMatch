@@ -4,6 +4,9 @@ import { TRANSLATIONS, Translations } from '../utils/translations';
 import { SpeechAssistant } from '../utils/speech';
 import { preloadAllLandingImages } from '../utils/landingImages';
 
+export type Language = SupportedLanguage;
+export type { SupportedLanguage };
+
 interface LanguageContextType {
   language: SupportedLanguage;
   setLanguage: (lang: SupportedLanguage) => void;

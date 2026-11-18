@@ -391,7 +391,6 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
                     className={`saathi-lang-dropdown-item ${chatLang === l.code ? 'active' : ''}`}
                     onClick={() => {
                       setChatLang(l.code);
-                      setLanguage(l.code);
                       setIsLangMenuOpen(false);
                     }}
                   >

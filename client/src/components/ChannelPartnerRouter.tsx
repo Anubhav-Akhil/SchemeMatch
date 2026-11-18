@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useProfile } from '../context/ProfileContext';
+import { useLanguage, Language } from '../context/LanguageContext';
 import { EvaluatedPartner, PartnerRoutingResult } from '../types';
 import { API_BASE_URL } from '../config';
 import {
@@ -55,8 +56,391 @@ const LOAN_CATEGORIES = [
   'Micro-Credit'
 ] as const;
 
+const ROUTER_LABELS: Record<Language, Record<string, string>> = {
+  en: {
+    locatorBadge: 'Geo-Spatial Partner Locator & Router',
+    title: 'Geo-Spatial Partner Locator & Router',
+    subtitle: 'Finds the nearest authorized State Channelising Agency (SCA), Public Sector Bank (PSB), Regional Rural Bank (RRB), or NBFC-MFI capable of processing your selected scheme and loan category.',
+    liveGps: '📍 Live GPS Location',
+    districtCatchment: '📍 District Catchment',
+    pipelineHeader: '7-Stage Routing Decision Pipeline (How SchemeMatch Determines Best Partner)',
+    stepPrefix: 'Step',
+    step1: 'User Location',
+    step2: 'Selected Scheme',
+    step3: 'Loan Category',
+    step4: 'Authorized Partners',
+    step5: 'Eligibility & Availability',
+    step6: 'Distance',
+    step7: 'Best Partner',
+    foundSuffix: 'Found',
+    slaVerified: 'SLA Verified',
+    recommendedBadge: '🟢 Recommended',
+    locDistrict: '📍 Location / District',
+    detectBtn: 'Detect',
+    gpsBtn: 'GPS',
+    targetScheme: '🏛️ Target Scheme',
+    loanCategoryLabel: '💳 Loan Category',
+    loanAmountLabel: '💰 Loan Amount (₹)',
+    recPartnerBadge: '⭐ Recommended Channel Partner',
+    bestRouteFor: 'Best Route for',
+    kmAway: 'km away',
+    fromStatedLoc: 'from your stated location',
+    routeValTitle: '4-Point Route Validation Verified by SchemeMatch Engine:',
+    val1: 'Authorized for selected scheme',
+    val2Prefix: 'Handles',
+    val2Cap: 'Cap:',
+    val3Prefix: 'Suitable for your category',
+    val4: 'Currently eligible for digital routing (SLA active)',
+    nodalOfficer: 'Nodal Officer:',
+    getDirections: 'Get Directions',
+    routeAppBtn: 'Route Application',
+    radarTitle: 'Catchment Radar & Partner Distribution',
+    radarSubtitle: 'Concentric distance rings (2 km, 5 km, 10 km) centered at your location. Click any partner pin to view branch appraisal status.',
+    legendRec: '🟢 Recommended',
+    legendLim: '🟡 Limited',
+    legendNotElig: '🔴 Not eligible',
+    youCenter: '📍 You',
+    allPartnersTitle: 'All Channel Partners in Catchment',
+    evaluatedSubtitle: 'Evaluated based on Selected Scheme, Category, and Distance',
+    searchPlaceholder: 'Filter branches or officers...',
+    tabAll: 'All',
+    awaySuffix: 'away',
+    mapBtn: 'Map',
+    routeBtn: 'Route',
+    modalTitle: 'Dispatch Pre-Verified Application',
+    modalSubtitle: 'Direct handoff to designated branch credit desk',
+    modalEnt: 'Entrepreneur:',
+    modalScheme: 'Selected Scheme:',
+    modalLoan: 'Loan Required:',
+    modalBranch: 'Target Branch:',
+    modalOfficer: 'Nodal Officer:',
+    modalDist: 'Distance:',
+    modalDossierVerified: 'Dossier verified with 85% Bank Ready compliance score.',
+    modalCancel: 'Cancel',
+    modalConfirm: 'Confirm & Dispatch',
+    modalAlertSuccess: 'Application Dossier successfully transmitted to'
+  },
+  hi: {
+    locatorBadge: 'भू-स्थानिक चैनल पार्टनर लोकेटर और राउटर',
+    title: 'भू-स्थानिक चैनल पार्टनर लोकेटर और राउटर',
+    subtitle: 'आपकी चयनित योजना और ऋण श्रेणी को संसाधित करने में सक्षम निकटतम अधिकृत राज्य चैनेलाइजिंग एजेंसी (SCA), सार्वजनिक बैंक (PSB), ग्रामीण बैंक (RRB) या NBFC-MFI का पता लगाएं।',
+    liveGps: '📍 लाइव जीपीएस स्थान',
+    districtCatchment: '📍 जिला कार्यक्षेत्र',
+    pipelineHeader: '7-चरणीय रूटिंग निर्णय पाइपलाइन (स्कीममैच कैसे सर्वश्रेष्ठ बैंक शाखा चुनता है)',
+    stepPrefix: 'चरण',
+    step1: 'उपयोगकर्ता स्थान',
+    step2: 'चयनित योजना',
+    step3: 'ऋण श्रेणी',
+    step4: 'अधिकृत साझेदार',
+    step5: 'पात्रता और उपलब्धता',
+    step6: 'दूरी',
+    step7: 'सर्वश्रेष्ठ साझेदार',
+    foundSuffix: 'मिले',
+    slaVerified: 'SLA सत्यापित',
+    recommendedBadge: '🟢 अनुशंसित',
+    locDistrict: '📍 स्थान / जिला',
+    detectBtn: 'पहचानें',
+    gpsBtn: 'जीपीएस',
+    targetScheme: '🏛️ लक्षित योजना',
+    loanCategoryLabel: '💳 ऋण श्रेणी',
+    loanAmountLabel: '💰 ऋण राशि (₹)',
+    recPartnerBadge: '⭐ अनुशंसित चैनल पार्टनर',
+    bestRouteFor: 'सर्वोत्तम शाखा:',
+    kmAway: 'किमी दूर',
+    fromStatedLoc: 'आपके निर्दिष्ट स्थान से',
+    routeValTitle: 'स्कीममैच इंजन द्वारा सत्यापित 4-सूत्रीय रूट सत्यापन:',
+    val1: 'चयनित योजना के लिए अधिकृत',
+    val2Prefix: 'संभालता है',
+    val2Cap: 'अधिकतम:',
+    val3Prefix: 'आपकी श्रेणी के लिए उपयुक्त',
+    val4: 'वर्तमान में डिजिटल रूटिंग हेतु पात्र (SLA सक्रिय)',
+    nodalOfficer: 'नोडल अधिकारी:',
+    getDirections: 'दिशा-निर्देश प्राप्त करें',
+    routeAppBtn: 'आवेदन रूट करें',
+    radarTitle: 'कैचमेंट रडार और बैंक वितरण',
+    radarSubtitle: 'आपके स्थान पर केंद्रित दूरी के वृत्त (2 किमी, 5 किमी, 10 किमी)। शाखा विवरण देखने के लिए किसी भी पिन पर क्लिक करें।',
+    legendRec: '🟢 अनुशंसित',
+    legendLim: '🟡 सीमित',
+    legendNotElig: '🔴 अपात्र',
+    youCenter: '📍 आप',
+    allPartnersTitle: 'कार्यक्षेत्र में सभी चैनल साझेदार',
+    evaluatedSubtitle: 'चयनित योजना, श्रेणी और दूरी के आधार पर मूल्यांकित',
+    searchPlaceholder: 'शाखा या अधिकारी खोजें...',
+    tabAll: 'सभी',
+    awaySuffix: 'दूर',
+    mapBtn: 'नक्शा',
+    routeBtn: 'रूट',
+    modalTitle: 'पूर्व-सत्यापित आवेदन प्रेषित करें',
+    modalSubtitle: 'नामित शाखा क्रेडिट डेस्क को सीधा डिजिटल हस्तांतरण',
+    modalEnt: 'उद्यमी:',
+    modalScheme: 'चयनित योजना:',
+    modalLoan: 'आवश्यक ऋण:',
+    modalBranch: 'लक्षित शाखा:',
+    modalOfficer: 'नोडल अधिकारी:',
+    modalDist: 'दूरी:',
+    modalDossierVerified: 'आवेदन डॉसियर 85% बैंक-रेडी अनुपालन स्कोर के साथ सत्यापित है।',
+    modalCancel: 'रद्द करें',
+    modalConfirm: 'पुष्टि करें और प्रेषित करें',
+    modalAlertSuccess: 'आवेदन डॉसियर सफलतापूर्वक प्रेषित किया गया:'
+  },
+  pa: {
+    locatorBadge: 'ਜੀਓ-ਸਪੇਸ਼ੀਅਲ ਪਾਰਟਨਰ ਲੋਕੇਟਰ ਅਤੇ ਰਾਊਟਰ',
+    title: 'ਜੀਓ-ਸਪੇਸ਼ੀਅਲ ਪਾਰਟਨਰ ਲੋਕੇਟਰ ਅਤੇ ਰਾਊਟਰ',
+    subtitle: 'ਤੁਹਾਡੀ ਚੁਣੀ ਗਈ ਸਕੀਮ ਅਤੇ ਕਰਜ਼ਾ ਸ਼੍ਰੇਣੀ ਨੂੰ ਪ੍ਰੋਸੈਸ ਕਰਨ ਦੇ ਯੋਗ ਨਜ਼ਦੀਕੀ ਅਧਿਕਾਰਤ ਰਾਜ ਚੈਨਲਾਈਜ਼ਿੰਗ ਏਜੰਸੀ (SCA), ਪਬਲਿਕ ਸੈਕਟਰ ਬੈਂਕ (PSB), ਪੇਂਡੂ ਬੈਂਕ (RRB) ਜਾਂ NBFC-MFI ਲੱਭੋ।',
+    liveGps: '📍 ਲਾਈਵ GPS ਸਥਾਨ',
+    districtCatchment: '📍 ਜ਼ਿਲ੍ਹਾ ਖੇਤਰ',
+    pipelineHeader: '7-ਪੜਾਵੀ ਰਾਊਟਿੰਗ ਫੈਸਲਾ ਪਾਈਪਲਾਈਨ (ਸਕੀਮਮੈਚ ਸਭ ਤੋਂ ਵਧੀਆ ਪਾਰਟਨਰ ਕਿਵੇਂ ਚੁਣਦਾ ਹੈ)',
+    stepPrefix: 'ਕਦਮ',
+    step1: 'ਉਪਭੋਗਤਾ ਸਥਾਨ',
+    step2: 'ਚੁਣੀ ਗਈ ਸਕੀਮ',
+    step3: 'ਕਰਜ਼ਾ ਸ਼੍ਰੇਣੀ',
+    step4: 'ਅਧਿਕਾਰਤ ਪਾਰਟਨਰ',
+    step5: 'ਯੋਗਤਾ ਅਤੇ ਉਪਲਬਧਤਾ',
+    step6: 'ਦੂਰੀ',
+    step7: 'ਸਭ ਤੋਂ ਵਧੀਆ ਪਾਰਟਨਰ',
+    foundSuffix: 'ਮਿਲੇ',
+    slaVerified: 'SLA ਪ੍ਰਮਾਣਿਤ',
+    recommendedBadge: '🟢 ਸਿਫ਼ਾਰਸ਼ੀ',
+    locDistrict: '📍 ਸਥਾਨ / ਜ਼ਿਲ੍ਹਾ',
+    detectBtn: 'ਖੋਜੋ',
+    gpsBtn: 'GPS',
+    targetScheme: '🏛️ ਨਿਸ਼ਾਨਾ ਸਕੀਮ',
+    loanCategoryLabel: '💳 ਕਰਜ਼ਾ ਸ਼੍ਰੇਣੀ',
+    loanAmountLabel: '💰 ਕਰਜ਼ਾ ਰਕਮ (₹)',
+    recPartnerBadge: '⭐ ਸਿਫ਼ਾਰਸ਼ੀ ਚੈਨਲ ਪਾਰਟਨਰ',
+    bestRouteFor: 'ਲਈ ਸਭ ਤੋਂ ਵਧੀਆ ਰੂਟ:',
+    kmAway: 'ਕਿਲੋਮੀਟਰ ਦੂਰ',
+    fromStatedLoc: 'ਤੁਹਾਡੇ ਦੱਸੇ ਸਥਾਨ ਤੋਂ',
+    routeValTitle: 'ਸਕੀਮਮੈਚ ਇੰਜਣ ਦੁਆਰਾ 4-ਪੁਆਇੰਟ ਪ੍ਰਮਾਣਿਕਤਾ:',
+    val1: 'ਚੁਣੀ ਗਈ ਸਕੀਮ ਲਈ ਅਧਿਕਾਰਤ ਹੈ',
+    val2Prefix: 'ਸੰਭਾਲਦਾ ਹੈ',
+    val2Cap: 'ਹੱਦ:',
+    val3Prefix: 'ਤੁਹਾਡੀ ਸ਼੍ਰੇਣੀ ਲਈ ਢੁਕਵਾਂ ਹੈ',
+    val4: 'ਡਿਜੀਟਲ ਰਾਊਟਿੰਗ ਲਈ ਯੋਗ (SLA ਕਿਰਿਆਸ਼ੀਲ)',
+    nodalOfficer: 'ਨੋਡਲ ਅਧਿਕਾਰੀ:',
+    getDirections: 'ਦਿਸ਼ਾਵਾਂ ਪ੍ਰਾਪਤ ਕਰੋ',
+    routeAppBtn: 'ਅਰਜ਼ੀ ਅੱਗੇ ਭੇਜੋ',
+    radarTitle: 'ਕੈਚਮੈਂਟ ਰਾਡਾਰ ਅਤੇ ਬੈਂਕ ਵੰਡ',
+    radarSubtitle: 'ਤੁਹਾਡੇ ਸਥਾਨ ਦੁਆਲੇ ਦੂਰੀ ਦੇ ਚੱਕਰ (2 ਕਿਲੋਮੀਟਰ, 5 ਕਿਲੋਮੀਟਰ, 10 ਕਿਲੋਮੀਟਰ)। ਕਿਸੇ ਵੀ ਪਿੰਨ ਤੇ ਕਲਿੱਕ ਕਰਕੇ ਬ੍ਰਾਂਚ ਸਥਿਤੀ ਦੇਖੋ।',
+    legendRec: '🟢 ਸਿਫ਼ਾਰਸ਼ੀ',
+    legendLim: '🟡 ਸੀਮਤ',
+    legendNotElig: '🔴 ਅਯੋਗ',
+    youCenter: '📍 ਤੁਸੀਂ',
+    allPartnersTitle: 'ਖੇਤਰ ਵਿੱਚ ਸਾਰੇ ਚੈਨਲ ਪਾਰਟਨਰ',
+    evaluatedSubtitle: 'ਚੁਣੀ ਗਈ ਸਕੀਮ, ਸ਼੍ਰੇਣੀ ਅਤੇ ਦੂਰੀ ਦੇ ਆਧਾਰ ਤੇ ਮੁਲਾਂਕਣ ਕੀਤਾ ਗਿਆ',
+    searchPlaceholder: 'ਬ੍ਰਾਂਚ ਜਾਂ ਅਫਸਰ ਫਿਲਟਰ ਕਰੋ...',
+    tabAll: 'ਸਾਰੇ',
+    awaySuffix: 'ਦੂਰ',
+    mapBtn: 'ਨਕਸ਼ਾ',
+    routeBtn: 'ਰਾਊਟ',
+    modalTitle: 'ਪੂਰਵ-ਪ੍ਰਮਾਣਿਤ ਅਰਜ਼ੀ ਭੇਜੋ',
+    modalSubtitle: 'ਨਿਰਧਾਰਤ ਸ਼ਾਖਾ ਕ੍ਰੈਡਿਟ ਡੈਸਕ ਨੂੰ ਸਿੱਧੀ ਡਿਜੀਟਲ ਸੌਂਪਣੀ',
+    modalEnt: 'ਉੱਦਮੀ:',
+    modalScheme: 'ਚੁਣੀ ਗਈ ਸਕੀਮ:',
+    modalLoan: 'ਲੋੜੀਂਦਾ ਕਰਜ਼ਾ:',
+    modalBranch: 'ਲਕਸ਼ਿਤ ਬ੍ਰਾਂਚ:',
+    modalOfficer: 'ਨੋਡਲ ਅਧਿਕਾਰੀ:',
+    modalDist: 'ਦੂਰੀ:',
+    modalDossierVerified: 'ਦਸਤਾਵੇਜ਼ 85% ਬੈਂਕ-ਰੈਡੀ ਸਕੋਰ ਨਾਲ ਪ੍ਰਮਾਣਿਤ ਹਨ।',
+    modalCancel: 'ਰੱਦ ਕਰੋ',
+    modalConfirm: 'ਪੁਸ਼ਟੀ ਕਰੋ ਅਤੇ ਭੇਜੋ',
+    modalAlertSuccess: 'ਅਰਜ਼ੀ ਡੋਜ਼ੀਅਰ ਸਫਲਤਾਪੂਰਵਕ ਭੇਜਿਆ ਗਿਆ:'
+  },
+  te: {
+    locatorBadge: 'జియో-స్పేషియల్ పార్టనర్ లొకేటర్ & రూటర్',
+    title: 'జియో-స్పేషియల్ పార్టనర్ లొకేటర్ & రూటర్',
+    subtitle: 'మీరు ఎంచుకున్న పథకం మరియు రుణ వర్గాన్ని ప్రాసెస్ చేయగల సమీపంలోని అధీకృత స్టేట్ ఛానలైజింగ్ ఏజెన్సీ (SCA), ప్రభుత్వ బ్యాంకు (PSB), గ్రామీణ బ్యాంకు లేదా NBFC-MFI ని కనుగొంటుంది.',
+    liveGps: '📍 ప్రత్యక్ష GPS స్థానం',
+    districtCatchment: '📍 జిల్లా పరిధి',
+    pipelineHeader: '7-దశల రూటింగ్ నిర్ణయ ప్రక్రియ (స్కీమ్‌మ్యాచ్ ఉత్తమ బ్యాంకును ఎలా నిర్ణయిస్తుంది)',
+    stepPrefix: 'దశ',
+    step1: 'వినియోగదారు స్థానం',
+    step2: 'ఎంచుకున్న పథకం',
+    step3: 'రుణ వర్గం',
+    step4: 'అధికారిక భాగస్వాములు',
+    step5: 'అర్హత & లభ్యత',
+    step6: 'దూరం',
+    step7: 'ఉత్తమ భాగస్వామి',
+    foundSuffix: 'లభించాయి',
+    slaVerified: 'SLA ధృవీకరించబడింది',
+    recommendedBadge: '🟢 సిఫార్సు చేయబడింది',
+    locDistrict: '📍 స్థానం / జిల్లా',
+    detectBtn: 'గుర్తించు',
+    gpsBtn: 'GPS',
+    targetScheme: '🏛️ లక్ష్య పథకం',
+    loanCategoryLabel: '💳 రుణ వర్గం',
+    loanAmountLabel: '💰 రుణ మొత్తం (₹)',
+    recPartnerBadge: '⭐ సిఫార్సు చేసిన ఛానల్ భాగస్వామి',
+    bestRouteFor: 'ఉత్తమ మార్గం:',
+    kmAway: 'కి.మీ దూరంలో',
+    fromStatedLoc: 'మీరు పేర్కొన్న స్థానం నుండి',
+    routeValTitle: 'స్కీమ్‌మ్యాచ్ ఇంజిన్ ద్వారా 4-పాయింట్ల రూట్ ధృవీకరణ:',
+    val1: 'ఎంచుకున్న పథకానికి అధికారం ఉంది',
+    val2Prefix: 'నిర్వహిస్తుంది',
+    val2Cap: 'పరిమితి:',
+    val3Prefix: 'మీ వర్గానికి అనుకూలమైనది',
+    val4: 'డిజిటల్ రూటింగ్‌కు ప్రస్తుతం అర్హత ఉంది (SLA సక్రియంగా ఉంది)',
+    nodalOfficer: 'నోడల్ అధికారి:',
+    getDirections: 'దిశలను పొందండి',
+    routeAppBtn: 'దరఖాస్తును రూట్ చేయండి',
+    radarTitle: 'పరిధి రాడార్ & బ్యాంకుల పంపిణీ',
+    radarSubtitle: 'మీ స్థానం ఆధారంగా ఏకకేంద్రక దూర వలయాలు (2 కి.మీ, 5 కి.మీ, 10 కి.మీ). వివరాలు చూడటానికి పిన్‌పై క్లిక్ చేయండి.',
+    legendRec: '🟢 సిఫార్సు చేయబడింది',
+    legendLim: '🟡 పరిమితం',
+    legendNotElig: '🔴 అనర్హులు',
+    youCenter: '📍 మీరు',
+    allPartnersTitle: 'పరిధిలోని అన్ని ఛానల్ భాగస్వాములు',
+    evaluatedSubtitle: 'ఎంచుకున్న పథకం, వర్గం మరియు దూరం ఆధారంగా మూల్యాంకనం చేయబడింది',
+    searchPlaceholder: 'శాఖలు లేదా అధికారులను వెతకండి...',
+    tabAll: 'అన్నీ',
+    awaySuffix: 'దూరంలో',
+    mapBtn: 'మ్యాప్',
+    routeBtn: 'రూట్',
+    modalTitle: 'ముందస్తు ధృవీకరించబడిన దరఖాస్తును పంపండి',
+    modalSubtitle: 'నిర్దేశిత బ్రాంచ్ క్రెడిట్ డెస్క్‌కు ప్రత్యక్ష డిజిటల్ బదిలీ',
+    modalEnt: 'వ్యవస్థాపకుడు:',
+    modalScheme: 'ఎంచుకున్న పథకం:',
+    modalLoan: 'అవసరమైన రుణం:',
+    modalBranch: 'లక్ష్య శాఖ:',
+    modalOfficer: 'నోడల్ అధికారి:',
+    modalDist: 'దూరం:',
+    modalDossierVerified: '85% బ్యాంక్-రెడీ స్కోర్‌తో పత్రాలు ధృవీకరించబడ్డాయి.',
+    modalCancel: 'రద్దు చేయండి',
+    modalConfirm: 'నిర్ధారించి పంపండి',
+    modalAlertSuccess: 'దరఖాస్తు విజయవంతంగా బదిలీ చేయబడింది:'
+  },
+  mr: {
+    locatorBadge: 'जिओ-स्थानिक चॅनल पार्टनर लोकेटर आणि राउटर',
+    title: 'जिओ-स्थानिक चॅनल पार्टनर लोकेटर आणि राउटर',
+    subtitle: 'आपली निवडलेली योजना व कर्ज प्रकार मंजूर करण्यास सक्षम असलेली जवळची अधिकृत राज्य चॅनेलायझिंग एजन्सी (SCA), राष्ट्रीयीकृत बँक (PSB), ग्रामीण बँक (RRB) किंवा NBFC शोधा.',
+    liveGps: '📍 थेट GPS स्थान',
+    districtCatchment: '📍 जिल्हा कार्यक्षेत्र',
+    pipelineHeader: '7-टप्प्यांची रूटिंग निर्णय प्रक्रिया (SchemeMatch सर्वोत्तम बँक कशी ठरवते)',
+    stepPrefix: 'टप्पा',
+    step1: 'वापरकर्ता स्थान',
+    step2: 'निवडलेली योजना',
+    step3: 'कर्ज प्रकार',
+    step4: 'अधिकृत भागीदार',
+    step5: 'पात्रता आणि उपलब्धता',
+    step6: 'अंतर',
+    step7: 'सर्वोत्तम भागीदार',
+    foundSuffix: 'आढळले',
+    slaVerified: 'SLA सत्यापित',
+    recommendedBadge: '🟢 शिफारस केलेले',
+    locDistrict: '📍 स्थान / जिल्हा',
+    detectBtn: 'शोधा',
+    gpsBtn: 'GPS',
+    targetScheme: '🏛️ उद्दिष्ट योजना',
+    loanCategoryLabel: '💳 कर्ज प्रकार',
+    loanAmountLabel: '💰 कर्ज रक्कम (₹)',
+    recPartnerBadge: '⭐ शिफारस केलेला चॅनल पार्टनर',
+    bestRouteFor: 'साठी सर्वोत्तम शाखा:',
+    kmAway: 'किमी अंतरावर',
+    fromStatedLoc: 'तुमच्या स्थानापासून',
+    routeValTitle: 'SchemeMatch इंजिनद्वारे 4-सूत्रीय रूट पडताळणी:',
+    val1: 'निवडलेल्या योजनेसाठी अधिकृत',
+    val2Prefix: 'हाताळते',
+    val2Cap: 'मर्यादा:',
+    val3Prefix: 'आपल्या प्रवर्गासाठी योग्य',
+    val4: 'सध्या डिजिटल रूटिंगसाठी पात्र (SLA सक्रिय)',
+    nodalOfficer: 'नोडल अधिकारी:',
+    getDirections: 'दिशानिर्देश मिळवा',
+    routeAppBtn: 'अर्ज पाठवा',
+    radarTitle: 'कार्यक्षेत्र रडार आणि बँक वितरण',
+    radarSubtitle: 'तुमच्या स्थानाभोवती अंतराची वर्तुळे (2 किमी, 5 किमी, 10 किमी). शाखेचा तपशील पाहण्यासाठी कोणत्याही पिनवर क्लिक करा.',
+    legendRec: '🟢 शिफारस केलेले',
+    legendLim: '🟡 मर्यादित',
+    legendNotElig: '🔴 अपात्र',
+    youCenter: '📍 तुम्ही',
+    allPartnersTitle: 'कार्यक्षेत्रातील सर्व चॅनल भागीदार',
+    evaluatedSubtitle: 'योजना, प्रवर्ग आणि अंतर यावर आधारित मूल्यांकन',
+    searchPlaceholder: 'शाखा किंवा अधिकारी शोधा...',
+    tabAll: 'सर्व',
+    awaySuffix: 'अंतरावर',
+    mapBtn: 'नकाशा',
+    routeBtn: 'रूट',
+    modalTitle: 'पूर्व-पडताळणी केलेला अर्ज पाठवा',
+    modalSubtitle: 'नियुक्त बँक शाखेच्या क्रेडिट डेस्ककडे थेट डिजिटल हस्तांतरण',
+    modalEnt: 'उद्योजक:',
+    modalScheme: 'निवडलेली योजना:',
+    modalLoan: 'आवश्यक कर्ज:',
+    modalBranch: 'लक्षित शाखा:',
+    modalOfficer: 'नोडल अधिकारी:',
+    modalDist: 'अंतर:',
+    modalDossierVerified: 'अर्ज दस्तऐवज 85% बँक-रेडी अनुपालन गुणांसह पडताळलेला आहे.',
+    modalCancel: 'रद्द करा',
+    modalConfirm: 'पुष्टी करा आणि पाठवा',
+    modalAlertSuccess: 'अर्ज यशस्वीरीत्या पाठवला गेला आहे:'
+  },
+  bn: {
+    locatorBadge: 'ভূ-স্থানিক চ্যানেল পার্টনার লোকেটার ও রাউটার',
+    title: 'ভূ-স্থানিক চ্যানেল পার্টনার লোকেটার ও রাউটার',
+    subtitle: 'আপনার নির্বাচিত স্কিম এবং ঋণের বিভাগ প্রক্রিয়া করতে সক্ষম নিকটবর্তী অনুমোদিত রাজ্য চ্যানেল সংস্থা (SCA), পাবলিক সেক্টর ব্যাংক (PSB), গ্রামীণ ব্যাংক বা NBFC-MFI খুঁজুন।',
+    liveGps: '📍 লাইভ জিপিএস অবস্থান',
+    districtCatchment: '📍 জেলা কর্মক্ষেত্র',
+    pipelineHeader: '৭-ধাপের রাউটিং সিদ্ধান্ত পাইপলাইন (স্কিমম্যাচ কীভাবে সেরা পার্টনার নির্বাচন করে)',
+    stepPrefix: 'ধাপ',
+    step1: 'ব্যবহারকারীর অবস্থান',
+    step2: 'নির্বাচিত স্কিম',
+    step3: 'ঋণের বিভাগ',
+    step4: 'অনুমোদিত অংশীদার',
+    step5: 'যোগ্যতা ও প্রাপ্যতা',
+    step6: 'দূরত্ব',
+    step7: 'সেরা অংশীদার',
+    foundSuffix: 'পাওয়া গেছে',
+    slaVerified: 'SLA যাচাইকৃত',
+    recommendedBadge: '🟢 প্রস্তাবিত',
+    locDistrict: '📍 অবস্থান / জেলা',
+    detectBtn: 'শনাক্ত করুন',
+    gpsBtn: 'GPS',
+    targetScheme: '🏛️ লক্ষ্য স্কিম',
+    loanCategoryLabel: '💳 ঋণের বিভাগ',
+    loanAmountLabel: '💰 ঋণের পরিমাণ (₹)',
+    recPartnerBadge: '⭐ প্রস্তাবিত চ্যানেল পার্টনার',
+    bestRouteFor: 'এর জন্য সেরা শাখা:',
+    kmAway: 'কিমি দূরে',
+    fromStatedLoc: 'আপনার উল্লিখিত অবস্থান থেকে',
+    routeValTitle: 'স্কিমম্যাচ ইঞ্জিন দ্বারা ৪-দফা রুট বৈধতা যাচাই:',
+    val1: 'নির্বাচিত স্কিমের জন্য অনুমোদিত',
+    val2Prefix: 'পরিচালনা করে',
+    val2Cap: 'সর্বোচ্চ সীমা:',
+    val3Prefix: 'আপনার বিভাগের জন্য উপযুক্ত',
+    val4: 'বর্তমানে ডিজিটাল রাউটিংয়ের জন্য যোগ্য (SLA সক্রিয়)',
+    nodalOfficer: 'নোডাল অফিসার:',
+    getDirections: 'দিকনির্দেশ পান',
+    routeAppBtn: 'আবেদন পাঠান',
+    radarTitle: 'ক্যাচমেন্ট রাডার এবং ব্যাংক বণ্টন',
+    radarSubtitle: 'আপনার অবস্থানকে কেন্দ্র করে দূরত্বের বলয় (২ কিমি, ৫ কিমি, ১০ কিমি)। শাখার বিবরণ দেখতে যেকোনো পিনে ক্লিক করুন।',
+    legendRec: '🟢 প্রস্তাবিত',
+    legendLim: '🟡 সীমিত',
+    legendNotElig: '🔴 অযোগ্য',
+    youCenter: '📍 আপনি',
+    allPartnersTitle: 'কর্মক্ষেত্রের সমস্ত চ্যানেল পার্টনার',
+    evaluatedSubtitle: 'নির্বাচিত স্কিম, বিভাগ এবং দূরত্বের ভিত্তিতে মূল্যায়িত',
+    searchPlaceholder: 'শাখা বা কর্মকর্তা খুঁজুন...',
+    tabAll: 'সমস্ত',
+    awaySuffix: 'দূরে',
+    mapBtn: 'মানচিত্র',
+    routeBtn: 'রাউট',
+    modalTitle: 'প্রাক-যাচাইকৃত আবেদন প্রেরণ করুন',
+    modalSubtitle: 'মনোনীত শাখা ক্রেডিট ডেস্কে সরাসরি ডিজিটাল প্রেরণ',
+    modalEnt: 'উদ্যোক্তা:',
+    modalScheme: 'নির্বাচিত স্কিম:',
+    modalLoan: 'প্রয়োজনীয় ঋণ:',
+    modalBranch: 'লক্ষ্য শাখা:',
+    modalOfficer: 'নোডাল অফিসার:',
+    modalDist: 'দূরত্ব:',
+    modalDossierVerified: 'আবেদনের নথি ৮৫% ব্যাংক-রেডি স্কোর সহ যাচাইকৃত।',
+    modalCancel: 'বাতিল',
+    modalConfirm: 'নিশ্চিত করুন ও প্রেরণ করুন',
+    modalAlertSuccess: 'আবেদন সফলভাবে প্রেরণ করা হয়েছে:'
+  }
+};
+
 export const ChannelPartnerRouter: React.FC = () => {
   const { profile, matchResults } = useProfile();
+  const { language } = useLanguage();
+  const t = (key: string) => ROUTER_LABELS[language]?.[key] || ROUTER_LABELS.en[key] || key;
 
   // Selected parameters
   const [selectedDistrict, setSelectedDistrict] = useState<string>(profile.district || 'Varanasi');
@@ -208,14 +592,14 @@ export const ChannelPartnerRouter: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <span className="badge badge-emerald" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <ShieldCheck size={13} />
-                Geo-Spatial Partner Locator & Router
+                {t('locatorBadge')}
               </span>
             </div>
             <h1 style={{ fontSize: '1.8rem', fontWeight: 800, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
-              Geo-Spatial Partner Locator & Router
+              {t('title')}
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0, maxWidth: '780px', lineHeight: 1.5 }}>
-              Finds the nearest authorized State Channelising Agency (SCA), Public Sector Bank (PSB), Regional Rural Bank (RRB), or NBFC-MFI capable of processing your selected scheme and loan category.
+              {t('subtitle')}
             </p>
           </div>
 
@@ -244,7 +628,7 @@ export const ChannelPartnerRouter: React.FC = () => {
             </div>
             <div>
               <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', fontWeight: 700 }}>
-                {isGpsActive ? '📍 Live GPS Location' : '📍 District Catchment'}
+                {isGpsActive ? t('liveGps') : t('districtCatchment')}
               </span>
               <strong style={{ fontSize: '0.92rem', color: 'var(--text-primary)' }}>
                 {selectedDistrict}, {selectedState}
@@ -263,7 +647,7 @@ export const ChannelPartnerRouter: React.FC = () => {
         border: '1px solid var(--border-subtle)'
       }}>
         <div style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: '10px' }}>
-          7-Stage Routing Decision Pipeline (How SchemeMatch Determines Best Partner)
+          {t('pipelineHeader')}
         </div>
         <div style={{
           display: 'flex',
@@ -273,13 +657,13 @@ export const ChannelPartnerRouter: React.FC = () => {
           paddingBottom: '4px'
         }}>
           {[
-            { step: '1', title: 'User Location', desc: `${selectedDistrict}` },
-            { step: '2', title: 'Selected Scheme', desc: selectedSchemeId.replace('-2026', '') },
-            { step: '3', title: 'Loan Category', desc: `${loanCategory}` },
-            { step: '4', title: 'Authorized Partners', desc: `${routingResult?.decisionPipeline.authorizedPartnersCount || 4} Found` },
-            { step: '5', title: 'Eligibility & Availability', desc: 'SLA Verified' },
-            { step: '6', title: 'Distance', desc: `${recommendedPartner?.distanceKm || 2.4} km` },
-            { step: '7', title: 'Best Partner', desc: '🟢 Recommended' }
+            { step: '1', title: t('step1'), desc: `${selectedDistrict}` },
+            { step: '2', title: t('step2'), desc: selectedSchemeId.replace('-2026', '') },
+            { step: '3', title: t('step3'), desc: `${loanCategory}` },
+            { step: '4', title: t('step4'), desc: `${routingResult?.decisionPipeline.authorizedPartnersCount || 4} ${t('foundSuffix')}` },
+            { step: '5', title: t('step5'), desc: t('slaVerified') },
+            { step: '6', title: t('step6'), desc: `${recommendedPartner?.distanceKm || 2.4} km` },
+            { step: '7', title: t('step7'), desc: t('recommendedBadge') }
           ].map((node, idx, arr) => (
             <React.Fragment key={idx}>
               <div style={{
@@ -299,7 +683,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                   color: idx === 6 ? '#059669' : 'var(--primary-saffron)',
                   marginBottom: '2px'
                 }}>
-                  Step {node.step}
+                  {t('stepPrefix')} {node.step}
                 </span>
                 <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
                   {node.title}
@@ -329,7 +713,7 @@ export const ChannelPartnerRouter: React.FC = () => {
         {/* District Selector + GPS */}
         <div>
           <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
-            📍 Location / District
+            {t('locDistrict')}
           </label>
           <div style={{ display: 'flex', gap: '6px' }}>
             <select
@@ -369,7 +753,7 @@ export const ChannelPartnerRouter: React.FC = () => {
               }}
             >
               <Crosshair size={14} className={gpsLoading ? 'animate-spin' : ''} />
-              <span>{isGpsActive ? 'GPS' : 'Detect'}</span>
+              <span>{isGpsActive ? t('gpsBtn') : t('detectBtn')}</span>
             </button>
           </div>
         </div>
@@ -377,7 +761,7 @@ export const ChannelPartnerRouter: React.FC = () => {
         {/* Selected Scheme Selector */}
         <div>
           <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
-            🏛️ Target Scheme
+            {t('targetScheme')}
           </label>
           <select
             value={selectedSchemeId}
@@ -401,7 +785,7 @@ export const ChannelPartnerRouter: React.FC = () => {
         {/* Loan Category */}
         <div>
           <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
-            💳 Loan Category
+            {t('loanCategoryLabel')}
           </label>
           <select
             value={loanCategory}
@@ -425,7 +809,7 @@ export const ChannelPartnerRouter: React.FC = () => {
         {/* Loan Amount */}
         <div>
           <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
-            💰 Loan Amount (₹)
+            {t('loanAmountLabel')}
           </label>
           <input
             type="number"
@@ -461,10 +845,10 @@ export const ChannelPartnerRouter: React.FC = () => {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                 <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#10B981', color: '#fff', padding: '3px 10px', borderRadius: '99px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                  ⭐ Recommended Channel Partner
+                  {t('recPartnerBadge')}
                 </span>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#059669', background: 'rgba(5, 150, 105, 0.12)', padding: '3px 8px', borderRadius: '6px' }}>
-                  Best Route for {selectedSchemeTitle.split(' ')[0]}
+                  {t('bestRouteFor')} {selectedSchemeTitle.split(' ')[0]}
                 </span>
               </div>
               
@@ -493,10 +877,10 @@ export const ChannelPartnerRouter: React.FC = () => {
             }}>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#059669', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <MapPin size={20} />
-                <span>{recommendedPartner.distanceKm} km away</span>
+                <span>{recommendedPartner.distanceKm} {t('kmAway')}</span>
               </div>
               <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
-                from your stated location ({selectedDistrict})
+                {t('fromStatedLoc')} ({selectedDistrict})
               </span>
             </div>
           </div>
@@ -510,7 +894,7 @@ export const ChannelPartnerRouter: React.FC = () => {
             marginBottom: '18px'
           }}>
             <div style={{ fontSize: '0.76rem', fontWeight: 800, textTransform: 'uppercase', color: '#059669', letterSpacing: '0.04em', marginBottom: '10px' }}>
-              4-Point Route Validation Verified by SchemeMatch Engine:
+              {t('routeValTitle')}
             </div>
             
             <div style={{
@@ -522,28 +906,28 @@ export const ChannelPartnerRouter: React.FC = () => {
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Check size={14} strokeWidth={3} />
                 </div>
-                <span>Authorized for selected scheme ({selectedSchemeTitle.split(' ')[0]})</span>
+                <span>{t('val1')} ({selectedSchemeTitle.split(' ')[0]})</span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Check size={14} strokeWidth={3} />
                 </div>
-                <span>Handles {loanCategory}s (Cap: ₹{(recommendedPartner.maxLoanAmount / 100000).toFixed(0)}L)</span>
+                <span>{t('val2Prefix')} {loanCategory}s ({t('val2Cap')} ₹{(recommendedPartner.maxLoanAmount / 100000).toFixed(0)}L)</span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Check size={14} strokeWidth={3} />
                 </div>
-                <span>Suitable for your category ({profile.category || 'SC / Artisan'})</span>
+                <span>{t('val3Prefix')} ({profile.category || 'SC / Artisan'})</span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                 <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(16, 185, 129, 0.15)', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Check size={14} strokeWidth={3} />
                 </div>
-                <span>Currently eligible for digital routing (SLA active)</span>
+                <span>{t('val4')}</span>
               </div>
             </div>
           </div>
@@ -551,7 +935,7 @@ export const ChannelPartnerRouter: React.FC = () => {
           {/* Nodal Officer & Actions */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
             <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-              <div><strong>Nodal Officer:</strong> {recommendedPartner.nodalOfficer}</div>
+              <div><strong>{t('nodalOfficer')}</strong> {recommendedPartner.nodalOfficer}</div>
               <div style={{ display: 'flex', gap: '14px', marginTop: '4px' }}>
                 <a href={`tel:${recommendedPartner.phone}`} style={{ color: '#4F46E5', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <Phone size={13} /> {recommendedPartner.phone}
@@ -585,7 +969,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                 }}
               >
                 <Navigation size={15} style={{ color: '#4F46E5' }} />
-                <span>Get Directions</span>
+                <span>{t('getDirections')}</span>
                 <ExternalLink size={12} style={{ color: 'var(--text-muted)' }} />
               </a>
 
@@ -611,7 +995,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                 }}
               >
                 <Send size={15} />
-                <span>Route Application</span>
+                <span>{t('routeAppBtn')}</span>
               </button>
             </div>
           </div>
@@ -630,16 +1014,16 @@ export const ChannelPartnerRouter: React.FC = () => {
           <div>
             <div style={{ fontSize: '0.96rem', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <Compass size={18} style={{ color: '#4F46E5' }} />
-              <span>Catchment Radar & Partner Distribution ({selectedDistrict})</span>
+              <span>{t('radarTitle')} ({selectedDistrict})</span>
             </div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-              Concentric distance rings (2 km, 5 km, 10 km) centered at your location. Click any partner pin to view branch appraisal status.
+              {t('radarSubtitle')}
             </div>
           </div>
           <div style={{ display: 'flex', gap: '10px', fontSize: '0.74rem', fontWeight: 700 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#059669' }}>🟢 Recommended</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#D97706' }}>🟡 Limited</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#DC2626' }}>🔴 Not eligible</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#059669' }}>{t('legendRec')}</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#D97706' }}>{t('legendLim')}</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#DC2626' }}>{t('legendNotElig')}</span>
           </div>
         </div>
 
@@ -680,13 +1064,12 @@ export const ChannelPartnerRouter: React.FC = () => {
           }}>
             <div style={{ width: 14, height: 14, borderRadius: '50%', background: '#4F46E5' }} />
             <span style={{ position: 'absolute', bottom: -18, fontSize: '0.68rem', fontWeight: 800, color: '#4F46E5', whiteSpace: 'nowrap' }}>
-              📍 You ({selectedDistrict})
+              {t('youCenter')} ({selectedDistrict})
             </span>
           </div>
 
           {/* Partner Radar Pins */}
           {allPartners.map((partner, pIdx) => {
-            // Distribute on radial angles for visual representation
             const angleDeg = (pIdx * 65) + 30;
             const angleRad = (angleDeg * Math.PI) / 180;
             const rPx = Math.min(105, 30 + (partner.distanceKm * 18));
@@ -740,10 +1123,10 @@ export const ChannelPartnerRouter: React.FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
           <div>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
-              All Channel Partners in Catchment ({allPartners.length})
+              {t('allPartnersTitle')} ({allPartners.length})
             </h3>
             <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-              Evaluated based on Selected Scheme ({selectedSchemeTitle.split(' ')[0]}), Category, and Distance
+              {t('evaluatedSubtitle')}
             </span>
           </div>
 
@@ -753,7 +1136,7 @@ export const ChannelPartnerRouter: React.FC = () => {
               <Search size={14} style={{ position: 'absolute', left: 10, top: 10, color: 'var(--text-muted)' }} />
               <input
                 type="text"
-                placeholder="Filter branches or officers..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -769,10 +1152,10 @@ export const ChannelPartnerRouter: React.FC = () => {
             {/* Status Pills */}
             <div style={{ display: 'flex', gap: '6px' }}>
               {[
-                { id: 'all', label: `All (${allPartners.length})` },
-                { id: 'Recommended', label: '🟢 Recommended' },
-                { id: 'Limited', label: '🟡 Limited' },
-                { id: 'Not eligible', label: '🔴 Not eligible' }
+                { id: 'all', label: `${t('tabAll')} (${allPartners.length})` },
+                { id: 'Recommended', label: t('legendRec') },
+                { id: 'Limited', label: t('legendLim') },
+                { id: 'Not eligible', label: t('legendNotElig') }
               ].map(tab => (
                 <button
                   key={tab.id}
@@ -831,7 +1214,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                     </span>
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                    📍 {partner.branchName} • Officer: {partner.nodalOfficer}
+                    📍 {partner.branchName} • {t('nodalOfficer')} {partner.nodalOfficer}
                   </div>
                   <div style={{ fontSize: '0.74rem', color: isRec ? '#059669' : 'var(--text-muted)', marginTop: '4px' }}>
                     {partner.statusReason}
@@ -844,7 +1227,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                     {partner.distanceKm} km
                   </span>
                   <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block' }}>
-                    away
+                    {t('awaySuffix')}
                   </span>
                 </div>
 
@@ -886,7 +1269,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                     }}
                   >
                     <Navigation size={13} />
-                    <span>Map</span>
+                    <span>{t('mapBtn')}</span>
                   </a>
 
                   {isRec && (
@@ -907,7 +1290,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                         cursor: 'pointer'
                       }}
                     >
-                      Route
+                      {t('routeBtn')}
                     </button>
                   )}
                 </div>
@@ -945,10 +1328,10 @@ export const ChannelPartnerRouter: React.FC = () => {
               </div>
               <div>
                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
-                  Dispatch Pre-Verified Application
+                  {t('modalTitle')}
                 </h3>
                 <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                  Direct handoff to designated branch credit desk
+                  {t('modalSubtitle')}
                 </span>
               </div>
             </div>
@@ -963,17 +1346,17 @@ export const ChannelPartnerRouter: React.FC = () => {
               flexDirection: 'column',
               gap: '6px'
             }}>
-              <div><strong>Entrepreneur:</strong> {profile.fullName} ({profile.category || 'SC'})</div>
-              <div><strong>Selected Scheme:</strong> {selectedSchemeTitle}</div>
-              <div><strong>Loan Required:</strong> ₹{loanAmount.toLocaleString('en-IN')} ({loanCategory})</div>
-              <div><strong>Target Branch:</strong> {routedPartner.name}</div>
-              <div><strong>Nodal Officer:</strong> {routedPartner.nodalOfficer}</div>
-              <div><strong>Distance:</strong> {routedPartner.distanceKm} km away ({selectedDistrict})</div>
+              <div><strong>{t('modalEnt')}</strong> {profile.fullName} ({profile.category || 'SC'})</div>
+              <div><strong>{t('modalScheme')}</strong> {selectedSchemeTitle}</div>
+              <div><strong>{t('modalLoan')}</strong> ₹{loanAmount.toLocaleString('en-IN')} ({loanCategory})</div>
+              <div><strong>{t('modalBranch')}</strong> {routedPartner.name}</div>
+              <div><strong>{t('modalOfficer')}</strong> {routedPartner.nodalOfficer}</div>
+              <div><strong>{t('modalDist')}</strong> {routedPartner.distanceKm} km {t('awaySuffix')} ({selectedDistrict})</div>
             </div>
 
             <div style={{ fontSize: '0.78rem', color: '#059669', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
               <CheckCircle2 size={16} />
-              <span>Dossier verified with 85% Bank Ready compliance score.</span>
+              <span>{t('modalDossierVerified')}</span>
             </div>
 
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
@@ -991,12 +1374,12 @@ export const ChannelPartnerRouter: React.FC = () => {
                   cursor: 'pointer'
                 }}
               >
-                Cancel
+                {t('modalCancel')}
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  alert(`✅ Application Dossier for ${profile.fullName} successfully transmitted to ${routedPartner.nodalOfficer} at ${routedPartner.name}. Reference ID: APP-SM-${Date.now().toString().slice(-6)}`);
+                  alert(`✅ ${t('modalAlertSuccess')} ${routedPartner.nodalOfficer} (${routedPartner.name}). Reference ID: APP-SM-${Date.now().toString().slice(-6)}`);
                   setShowRoutingModal(false);
                 }}
                 style={{
@@ -1010,7 +1393,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                   cursor: 'pointer'
                 }}
               >
-                Confirm & Dispatch
+                {t('modalConfirm')}
               </button>
             </div>
           </div>

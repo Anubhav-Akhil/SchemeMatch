@@ -345,7 +345,6 @@ export const SaathiAICopilot: React.FC = () => {
 
   const handleLanguageChange = (newLang: SupportedLanguage) => {
     setChatLang(newLang);
-    setLanguage(newLang);
     setIsLangMenuOpen(false);
   };
 
