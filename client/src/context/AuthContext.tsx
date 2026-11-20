@@ -34,6 +34,8 @@ interface AuthContextType {
   loginDemo: (name?: string, email?: string) => void;
   logout: () => Promise<void>;
   navigateToAuth: (mode?: 'login' | 'register') => void;
+  updateProfile: (data: { fullName?: string; avatarUrl?: string }) => Promise<void>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -217,6 +219,60 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const updateProfileHandler = async (data: { fullName?: string; avatarUrl?: string }) => {
+    if (!user) return;
+    const nextUser: AppUser = {
+      ...user,
+      fullName: data.fullName !== undefined ? data.fullName : user.fullName,
+      avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : user.avatarUrl
+    };
+    setUser(nextUser);
+
+    if (user.isDemo) {
+      localStorage.setItem(DEMO_USER_KEY, JSON.stringify(nextUser));
+    } else if (user.provider === 'google') {
+      localStorage.setItem(GOOGLE_USER_KEY, JSON.stringify(nextUser));
+    } else {
+      localStorage.setItem('schemematch_cached_user', JSON.stringify(nextUser));
+    }
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.auth.updateUser({
+          data: {
+            full_name: nextUser.fullName,
+            avatar_url: nextUser.avatarUrl
+          }
+        });
+      } catch (err) {
+        console.warn('Supabase updateUser metadata notice:', err);
+      }
+    }
+  };
+
+  const updatePasswordHandler = async (newPassword: string): Promise<{ success: boolean; error?: string }> => {
+    if (!user) {
+      return { success: false, error: 'User is not signed in.' };
+    }
+    if (user.provider === 'google') {
+      return { success: false, error: 'Password changes for Google sign-in are managed through your Google Account.' };
+    }
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase.auth.updateUser({ password: newPassword });
+        if (error) {
+          return { success: false, error: error.message };
+        }
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.message || 'Failed to update password' };
+      }
+    } else {
+      // Demo mode fallback
+      return { success: true };
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -233,7 +289,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loginWithGoogle: loginWithGoogleHandler,
         loginDemo,
         logout: logoutHandler,
-        navigateToAuth
+        navigateToAuth,
+        updateProfile: updateProfileHandler,
+        updatePassword: updatePasswordHandler
       }}
     >
       {children}

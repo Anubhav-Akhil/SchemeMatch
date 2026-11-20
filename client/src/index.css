@@ -11143,3 +11143,32 @@ body.lang-transition-active {
   border-color: #DC2626;
   transform: translateY(-1px);
 }
+
+/* ── Profile Dropdown Animations & Dark Theme ────────────────────────────── */
+@keyframes siDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.si-user-badge:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(255, 111, 0, 0.4);
+}
+
+[data-theme='dark'] .si-profile-dropdown-card {
+  background: rgba(15, 23, 42, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme='dark'] .si-user-badge:hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(255, 111, 0, 0.5);
+}
+

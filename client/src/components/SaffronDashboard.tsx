@@ -31,6 +31,7 @@ import { GapAnalyzer } from './GapAnalyzer';
 import { WhatIfSimulator } from './WhatIfSimulator';
 import { FinancialCalculator } from './FinancialCalculator';
 import { ChannelPartnerRouter } from './ChannelPartnerRouter';
+import { ProfileDropdown } from './ProfileDropdown';
 import {
   EmiCardView,
   DocumentChecklistCardView,
@@ -835,31 +836,8 @@ export const SaffronDashboard: React.FC = () => {
             <ArrowLeft size={15} />
           </button>
 
-          {/* User badge */}
-          <div className="si-user-badge">
-            <div className="si-user-avatar">
-              {user?.avatarUrl && !avatarError ? (
-                <img src={user.avatarUrl} alt="" referrerPolicy="no-referrer"
-                  crossOrigin="anonymous" onError={() => setAvatarError(true)} />
-              ) : (
-                <span>
-                  {user?.fullName
-                    ? user.fullName.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase()
-                    : 'U'}
-                </span>
-              )}
-            </div>
-            <div className="si-user-info">
-              <div className="si-user-name">{user?.fullName || 'Entrepreneur'}</div>
-              <div className="si-user-sub">{user?.email || ''}</div>
-            </div>
-          </div>
-
-          {/* Sign out */}
-          <button className="si-signout-btn" onClick={logout} title={nl.signOut}>
-            <LogOut size={15} />
-            <span className="ws-signout-label">{nl.signOut}</span>
-          </button>
+          {/* User Profile Dropdown with Inbuilt Avatars, Name & Password Management, & Sign Out */}
+          <ProfileDropdown />
         </div>
       </header>
 
