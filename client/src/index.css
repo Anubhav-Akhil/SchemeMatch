@@ -8631,7 +8631,7 @@ body.lang-transition-active {
 /* ── Expanded Saathi Slider Internal Controls ────────────────── */
 .si-saathi-panel .chatbot-figma-top-bar {
   padding: 14px 18px 12px 18px;
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.85);
@@ -8641,6 +8641,8 @@ body.lang-transition-active {
   align-items: center;
   flex-wrap: nowrap;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+  z-index: 100;
 }
 
 [data-theme='dark'] .si-saathi-panel .chatbot-figma-top-bar {
@@ -9098,6 +9100,7 @@ body.lang-transition-active {
   position: relative;
   display: inline-flex;
   align-items: center;
+  z-index: 120;
 }
 
 .saathi-lang-selector-trigger {
@@ -9145,13 +9148,13 @@ body.lang-transition-active {
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  min-width: 155px;
-  background: var(--bg-surface, #FFFFFF);
-  border: 1px solid var(--border-subtle, #E2E8F0);
-  border-radius: 10px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  padding: 4px;
-  z-index: 1000;
+  min-width: 160px;
+  background: #FFFFFF !important;
+  border: 1px solid var(--border-subtle, #CBD5E1);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.22), 0 6px 14px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  z-index: 99999 !important;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -9159,9 +9162,9 @@ body.lang-transition-active {
 }
 
 [data-theme='dark'] .saathi-lang-dropdown-menu {
-  background: #1E293B;
+  background: #0F172A !important;
   border-color: #334155;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.65), 0 6px 14px rgba(0, 0, 0, 0.4);
 }
 
 .saathi-lang-dropdown-item {
@@ -9836,6 +9839,8 @@ body.lang-transition-active {
   align-items: center;
   padding: 22px 32px 12px 32px;
   flex-shrink: 0;
+  position: relative;
+  z-index: 100;
 }
 
 .chatbot-figma-title {
@@ -9888,12 +9893,17 @@ body.lang-transition-active {
   text-align: center;
   padding: 30px 24px 20px 24px;
   margin: auto 0;
+  position: relative;
+  z-index: 1;
 }
 
 .chatbot-figma-star {
   color: #1E293B;
   margin-bottom: 16px;
   animation: starFloat 3s ease-in-out infinite alternate;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
 }
 
 [data-theme='dark'] .chatbot-figma-star {
