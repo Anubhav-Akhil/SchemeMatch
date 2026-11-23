@@ -257,7 +257,8 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
       if (res.ok) {
         const reply: ChatMessage = await res.json();
-        setMessages(prev => [...prev, reply]);
+        const localTimestamp = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        setMessages(prev => [...prev, { ...reply, timestamp: localTimestamp }]);
       } else {
         throw new Error(`Chat API responded with ${res.status}`);
       }

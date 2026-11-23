@@ -15,6 +15,7 @@ export interface AppUser {
   email: string;
   fullName: string;
   avatarUrl?: string;
+  googleAvatarUrl?: string;
   isDemo?: boolean;
   provider?: 'google' | 'email' | 'demo';
 }
@@ -124,12 +125,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                      sbUser.email?.split('@')[0] || 
                      'Entrepreneur';
     const avatarUrl = sbUser.user_metadata?.avatar_url || sbUser.user_metadata?.picture;
+    const rawGoogleAvatar = sbUser.identities?.find(i => i.provider === 'google')?.identity_data?.avatar_url ||
+                            sbUser.identities?.find(i => i.provider === 'google')?.identity_data?.picture ||
+                            sbUser.user_metadata?.picture ||
+                            (avatarUrl && avatarUrl.includes('googleusercontent.com') ? avatarUrl : undefined);
+
+    if (rawGoogleAvatar) {
+      try {
+        localStorage.setItem('schemematch_google_avatar', rawGoogleAvatar);
+      } catch (e) {}
+    }
+
+    const savedGoogleAvatar = rawGoogleAvatar || localStorage.getItem('schemematch_google_avatar') || undefined;
 
     setUser({
       id: sbUser.id,
       email: sbUser.email || '',
       fullName,
-      avatarUrl,
+      avatarUrl: avatarUrl || savedGoogleAvatar,
+      googleAvatarUrl: savedGoogleAvatar,
       isDemo: false,
       provider: sbUser.app_metadata?.provider === 'google' ? 'google' : 'email'
     });
@@ -224,7 +238,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const nextUser: AppUser = {
       ...user,
       fullName: data.fullName !== undefined ? data.fullName : user.fullName,
-      avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : user.avatarUrl
+      avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : user.avatarUrl,
+      googleAvatarUrl: user.googleAvatarUrl || localStorage.getItem('schemematch_google_avatar') || undefined
     };
     setUser(nextUser);
 
@@ -241,7 +256,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await supabase.auth.updateUser({
           data: {
             full_name: nextUser.fullName,
-            avatar_url: nextUser.avatarUrl
+            avatar_url: nextUser.avatarUrl || null
           }
         });
       } catch (err) {

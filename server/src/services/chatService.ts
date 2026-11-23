@@ -601,7 +601,7 @@ Here are your primary authorized application avenues ready to process your schem
       teluguText: responseTelugu,
       marathiText: responseMarathi,
       bengaliText: responseBengali,
-      timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+      timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' }),
       featureMode: detectedMode,
       matchedSchemes: matchedSchemes.length > 0 ? matchedSchemes : undefined,
       emiCard,

@@ -259,7 +259,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
         teluguText: deterministicReply.teluguText,
         marathiText: deterministicReply.marathiText,
         bengaliText: deterministicReply.bengaliText,
-        timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        timestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' }),
         featureMode: deterministicReply.featureMode,
         matchedSchemes: matchedSchemesToSend,
         emiCard: deterministicReply.emiCard,

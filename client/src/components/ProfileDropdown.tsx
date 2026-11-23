@@ -15,7 +15,7 @@ import {
   ShieldCheck,
   AlertCircle,
   ExternalLink,
-  Edit2
+  X
 } from 'lucide-react';
 
 interface ProfileDropdownProps {
@@ -31,11 +31,28 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
   const [activeTab, setActiveTab] = useState<'profile' | 'password'>('profile');
   const [avatarError, setAvatarError] = useState(false);
 
-  // Name changing fields (split full name into first and last name)
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [nameSaving, setNameSaving] = useState(false);
-  const [nameSuccess, setNameSuccess] = useState(false);
+  // Cached Google avatar URL (if signed in via Google or stored previously)
+  const googleAvatarUrl = 
+    user?.googleAvatarUrl || 
+    (typeof window !== 'undefined' ? localStorage.getItem('schemematch_google_avatar') : null) || 
+    (user?.avatarUrl && user.avatarUrl.includes('googleusercontent.com') ? user.avatarUrl : null);
+
+  // If user has a Google avatar, ensure it stays remembered in localStorage
+  useEffect(() => {
+    if (user?.avatarUrl && user.avatarUrl.includes('googleusercontent.com')) {
+      try {
+        localStorage.setItem('schemematch_google_avatar', user.avatarUrl);
+      } catch (e) {}
+    }
+  }, [user?.avatarUrl]);
+
+  // Draft editing states (for Full Name + Profile Avatar)
+  const [draftFirstName, setDraftFirstName] = useState('');
+  const [draftLastName, setDraftLastName] = useState('');
+  const [draftAvatarUrl, setDraftAvatarUrl] = useState<string | undefined>(undefined);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileSuccess, setProfileSuccess] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   // Password changing fields
   const [newPassword, setNewPassword] = useState('');
@@ -47,29 +64,39 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Sync first and last name when user changes or dropdown opens
-  useEffect(() => {
+  // Reset / roll back draft state to current saved user
+  const resetDraftToUser = () => {
     if (user?.fullName) {
       const parts = user.fullName.trim().split(/\s+/);
-      setFirstName(parts[0] || '');
-      setLastName(parts.slice(1).join(' ') || '');
+      setDraftFirstName(parts[0] || '');
+      setDraftLastName(parts.slice(1).join(' ') || '');
     } else {
-      setFirstName('Entrepreneur');
-      setLastName('');
+      setDraftFirstName('Entrepreneur');
+      setDraftLastName('');
     }
+    setDraftAvatarUrl(user?.avatarUrl || '');
     setAvatarError(false);
-  }, [user?.fullName, isOpen]);
+    setProfileSuccess(false);
+    setProfileError(null);
+  };
 
-  // Outside click and Escape key detection
+  // Sync draft states when user updates or dropdown opens
+  useEffect(() => {
+    resetDraftToUser();
+  }, [user?.fullName, user?.avatarUrl, isOpen]);
+
+  // Outside click and Escape key detection (roll back draft upon cancel/closing)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        resetDraftToUser();
         setIsOpen(false);
       }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        resetDraftToUser();
         setIsOpen(false);
       }
     };
@@ -82,50 +109,47 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, user?.fullName, user?.avatarUrl]);
 
-  // Handle saving name
-  const handleSaveName = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedFirst = firstName.trim();
-    const trimmedLast = lastName.trim();
-    if (!trimmedFirst) return;
+  // Cancel action: rolls back draft to previous values and closes dropdown
+  const handleCancel = () => {
+    resetDraftToUser();
+    setIsOpen(false);
+  };
+
+  // Save Profile action: applies name and avatar simultaneously
+  const handleSaveProfile = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const trimmedFirst = draftFirstName.trim();
+    const trimmedLast = draftLastName.trim();
+    if (!trimmedFirst) {
+      setProfileError('First name cannot be empty.');
+      return;
+    }
 
     const full = trimmedLast ? `${trimmedFirst} ${trimmedLast}` : trimmedFirst;
-    setNameSaving(true);
-    setNameSuccess(false);
+    setProfileSaving(true);
+    setProfileSuccess(false);
+    setProfileError(null);
 
     try {
-      await updateProfile({ fullName: full });
+      await updateProfile({
+        fullName: full,
+        avatarUrl: draftAvatarUrl ? draftAvatarUrl : ''
+      });
       // Keep profile context in sync
       setProfile({
         ...profile,
         fullName: full
       });
-      setNameSuccess(true);
-      setTimeout(() => setNameSuccess(false), 3000);
-    } catch (err) {
-      console.error('Failed to update name:', err);
+      setProfileSuccess(true);
+      setTimeout(() => setProfileSuccess(false), 3000);
+    } catch (err: any) {
+      console.error('Failed to update profile:', err);
+      setProfileError(err?.message || 'Failed to update profile.');
     } finally {
-      setNameSaving(false);
+      setProfileSaving(false);
     }
-  };
-
-  // Handle avatar selection
-  const handleSelectAvatar = async (avatar: InbuiltAvatar) => {
-    setAvatarError(false);
-    try {
-      await updateProfile({ avatarUrl: avatar.url });
-    } catch (err) {
-      console.error('Failed to update avatar:', err);
-    }
-  };
-
-  // Reset to Google / original photo
-  const handleResetToGoogle = async () => {
-    // If the original user session had a photo or clear avatar
-    setAvatarError(false);
-    await updateProfile({ avatarUrl: undefined });
   };
 
   // Handle password update
@@ -159,10 +183,25 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
     }
   };
 
-  // Current initials
+  // Saved initials for trigger button
   const initials = user?.fullName
     ? user.fullName.trim().split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase()
     : 'U';
+
+  // Preview initials for draft preview & initials avatar button
+  const previewInitials = (
+    (draftFirstName.trim()[0] || 'U') + (draftLastName.trim()[0] || '')
+  ).toUpperCase();
+
+  // Determine if draft has unsaved changes
+  const currentSavedFirst = user?.fullName ? user.fullName.trim().split(/\s+/)[0] || '' : 'Entrepreneur';
+  const currentSavedLast = user?.fullName ? user.fullName.trim().split(/\s+/).slice(1).join(' ') || '' : '';
+  const currentSavedAvatar = user?.avatarUrl || '';
+
+  const isDirty = 
+    draftFirstName.trim() !== currentSavedFirst ||
+    draftLastName.trim() !== currentSavedLast ||
+    (draftAvatarUrl || '') !== currentSavedAvatar;
 
   const isGoogleUser = user?.provider === 'google';
 
@@ -287,9 +326,9 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                 border: '2px solid rgba(255, 255, 255, 0.9)'
               }}
             >
-              {user?.avatarUrl && !avatarError ? (
+              {draftAvatarUrl && !avatarError ? (
                 <img
-                  src={user.avatarUrl}
+                  src={draftAvatarUrl}
                   alt=""
                   referrerPolicy="no-referrer"
                   crossOrigin="anonymous"
@@ -297,7 +336,7 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                   onError={() => setAvatarError(true)}
                 />
               ) : (
-                <span>{initials}</span>
+                <span>{previewInitials}</span>
               )}
             </div>
 
@@ -309,10 +348,41 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                   color: 'var(--text-primary)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
                 }}
               >
-                {user?.fullName || 'Entrepreneur'}
+                <span>{draftFirstName.trim() || 'Entrepreneur'} {draftLastName.trim()}</span>
+                {isDirty && (
+                  <span
+                    style={{
+                      fontSize: '0.62rem',
+                      padding: '1px 6px',
+                      borderRadius: '4px',
+                      background: 'rgba(255, 111, 0, 0.15)',
+                      color: '#FF6F00',
+                      fontWeight: 700
+                    }}
+                  >
+                    Draft
+                  </span>
+                )}
+                {profileSuccess && (
+                  <span
+                    style={{
+                      fontSize: '0.62rem',
+                      padding: '1px 6px',
+                      borderRadius: '4px',
+                      background: 'rgba(16, 185, 129, 0.15)',
+                      color: '#059669',
+                      fontWeight: 700
+                    }}
+                  >
+                    Saved ✓
+                  </span>
+                )}
               </div>
               <div
                 style={{
@@ -432,81 +502,96 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
 
           {/* Tab 1: My Profile (Avatar Selection + Full & Last Name) */}
           {activeTab === 'profile' && (
-            <div style={{ padding: '16px 20px', maxHeight: '380px', overflowY: 'auto' }}>
+            <div style={{ padding: '16px 20px', maxHeight: '420px', overflowY: 'auto' }}>
               
-              {/* Inbuilt Avatar Selection */}
-              <div style={{ marginBottom: '18px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <label style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
-                    Choose Inbuilt Avatar
-                  </label>
-                  {user?.avatarUrl && (
-                    <button
-                      type="button"
-                      onClick={handleResetToGoogle}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        fontSize: '0.68rem',
-                        color: 'var(--primary-saffron, #FF6F00)',
-                        cursor: 'pointer',
-                        padding: 0,
-                        fontWeight: 600
-                      }}
-                    >
-                      Default Initials
-                    </button>
-                  )}
-                </div>
+              <form onSubmit={handleSaveProfile}>
+                {/* Profile Picture / Avatar Options */}
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <label style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+                      Profile Photo / Avatar
+                    </label>
+                    <span style={{ fontSize: '0.68rem', color: isDirty ? 'var(--primary-saffron, #FF6F00)' : 'var(--text-muted)', fontWeight: isDirty ? 700 : 500 }}>
+                      {isDirty ? '● Unsaved changes' : 'Click Save to apply'}
+                    </span>
+                  </div>
 
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                    gap: '10px',
-                    padding: '8px',
-                    background: 'var(--bg-surface-subtle, rgba(0, 0, 0, 0.02))',
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-subtle, rgba(0, 0, 0, 0.06))'
-                  }}
-                >
-                  {INBUILT_AVATARS.map((avatar) => {
-                    const isSelected = user?.avatarUrl === avatar.url;
-                    return (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(5, 1fr)',
+                      gap: '8px',
+                      padding: '10px 8px',
+                      background: 'var(--bg-surface-subtle, rgba(0, 0, 0, 0.02))',
+                      borderRadius: '12px',
+                      border: '1px solid var(--border-subtle, rgba(0, 0, 0, 0.06))'
+                    }}
+                  >
+                    {/* Option 1: Google Profile Photo (if user has Google account / photo) */}
+                    {googleAvatarUrl && (
                       <button
-                        key={avatar.id}
                         type="button"
-                        onClick={() => handleSelectAvatar(avatar)}
-                        title={`${avatar.name} - ${avatar.role}`}
+                        onClick={() => {
+                          setAvatarError(false);
+                          setDraftAvatarUrl(googleAvatarUrl);
+                        }}
+                        title="Your Google / Gmail Profile Photo"
                         style={{
                           width: '100%',
                           aspectRatio: '1 / 1',
                           borderRadius: '50%',
-                          border: isSelected ? '2.5px solid var(--primary-saffron, #FF6F00)' : '2px solid transparent',
+                          border: draftAvatarUrl === googleAvatarUrl ? '2.5px solid var(--primary-saffron, #FF6F00)' : '2px solid transparent',
                           padding: '2px',
-                          background: isSelected ? 'rgba(255, 111, 0, 0.15)' : 'transparent',
+                          background: draftAvatarUrl === googleAvatarUrl ? 'rgba(255, 111, 0, 0.15)' : 'transparent',
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
                           position: 'relative',
                           transition: 'transform 0.15s, border-color 0.15s',
-                          transform: isSelected ? 'scale(1.08)' : 'scale(1)'
+                          transform: draftAvatarUrl === googleAvatarUrl ? 'scale(1.08)' : 'scale(1)'
                         }}
                       >
                         <img
-                          src={avatar.url}
-                          alt={avatar.name}
-                          style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+                          src={googleAvatarUrl}
+                          alt="Google Account"
+                          referrerPolicy="no-referrer"
+                          crossOrigin="anonymous"
+                          style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                         />
-                        {isSelected && (
+                        {/* Small Google 'G' icon badge on top right */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: -2,
+                            right: -2,
+                            width: 14,
+                            height: 14,
+                            borderRadius: '50%',
+                            background: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                            padding: 1
+                          }}
+                          title="Google Account Photo"
+                        >
+                          <svg viewBox="0 0 24 24" width="10" height="10">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                          </svg>
+                        </div>
+                        {draftAvatarUrl === googleAvatarUrl && (
                           <div
                             style={{
                               position: 'absolute',
                               bottom: -2,
                               right: -2,
-                              width: 16,
-                              height: 16,
+                              width: 15,
+                              height: 15,
                               borderRadius: '50%',
                               background: 'var(--primary-saffron, #FF6F00)',
                               color: '#fff',
@@ -516,19 +601,136 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                               boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                             }}
                           >
-                            <Check size={10} strokeWidth={3} />
+                            <Check size={9} strokeWidth={3} />
                           </div>
                         )}
                       </button>
-                    );
-                  })}
-                </div>
-              </div>
+                    )}
 
-              {/* Name Changing Option */}
-              <form onSubmit={handleSaveName}>
+                    {/* Option 2: Default Initials */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAvatarError(false);
+                        setDraftAvatarUrl('');
+                      }}
+                      title="Default Initials"
+                      style={{
+                        width: '100%',
+                        aspectRatio: '1 / 1',
+                        borderRadius: '50%',
+                        border: !draftAvatarUrl ? '2.5px solid var(--primary-saffron, #FF6F00)' : '2px solid transparent',
+                        padding: '2px',
+                        background: !draftAvatarUrl ? 'rgba(255, 111, 0, 0.15)' : 'transparent',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        transition: 'transform 0.15s, border-color 0.15s',
+                        transform: !draftAvatarUrl ? 'scale(1.08)' : 'scale(1)'
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          borderRadius: '50%',
+                          background: 'linear-gradient(135deg, #475569, #334155)',
+                          color: '#fff',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 800,
+                          fontSize: '0.75rem'
+                        }}
+                      >
+                        {previewInitials}
+                      </div>
+                      {!draftAvatarUrl && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: -2,
+                            right: -2,
+                            width: 15,
+                            height: 15,
+                            borderRadius: '50%',
+                            background: 'var(--primary-saffron, #FF6F00)',
+                            color: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                          }}
+                        >
+                          <Check size={9} strokeWidth={3} />
+                        </div>
+                      )}
+                    </button>
+
+                    {/* Option 3: Inbuilt Indian Entrepreneur Avatars */}
+                    {INBUILT_AVATARS.map((avatar) => {
+                      const isSelected = draftAvatarUrl === avatar.url;
+                      return (
+                        <button
+                          key={avatar.id}
+                          type="button"
+                          onClick={() => {
+                            setAvatarError(false);
+                            setDraftAvatarUrl(avatar.url);
+                          }}
+                          title={`${avatar.name} - ${avatar.role}`}
+                          style={{
+                            width: '100%',
+                            aspectRatio: '1 / 1',
+                            borderRadius: '50%',
+                            border: isSelected ? '2.5px solid var(--primary-saffron, #FF6F00)' : '2px solid transparent',
+                            padding: '2px',
+                            background: isSelected ? 'rgba(255, 111, 0, 0.15)' : 'transparent',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'relative',
+                            transition: 'transform 0.15s, border-color 0.15s',
+                            transform: isSelected ? 'scale(1.08)' : 'scale(1)'
+                          }}
+                        >
+                          <img
+                            src={avatar.url}
+                            alt={avatar.name}
+                            style={{ width: '100%', height: '100%', borderRadius: '50%' }}
+                          />
+                          {isSelected && (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                bottom: -2,
+                                right: -2,
+                                width: 15,
+                                height: 15,
+                                borderRadius: '50%',
+                                background: 'var(--primary-saffron, #FF6F00)',
+                                color: '#fff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                              }}
+                            >
+                              <Check size={9} strokeWidth={3} />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Name Changing Option */}
                 <div style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.04em', marginBottom: '8px' }}>
-                  Name Changing Option
+                  Name Information
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
@@ -538,8 +740,8 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                     </label>
                     <input
                       type="text"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
+                      value={draftFirstName}
+                      onChange={(e) => setDraftFirstName(e.target.value)}
                       placeholder="e.g. Ramesh"
                       required
                       style={{
@@ -562,8 +764,8 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                     </label>
                     <input
                       type="text"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      value={draftLastName}
+                      onChange={(e) => setDraftLastName(e.target.value)}
                       placeholder="e.g. Kumar"
                       style={{
                         width: '100%',
@@ -584,14 +786,34 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                 <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '12px' }}>
                   Full name preview:{' '}
                   <strong style={{ color: 'var(--text-primary)' }}>
-                    {firstName.trim()} {lastName.trim()}
+                    {draftFirstName.trim()} {draftLastName.trim()}
                   </strong>
                 </div>
 
-                {nameSuccess && (
+                {profileError && (
                   <div
                     style={{
-                      padding: '6px 10px',
+                      padding: '7px 10px',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      color: '#DC2626',
+                      fontSize: '0.75rem',
+                      borderRadius: '6px',
+                      marginBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <AlertCircle size={13} />
+                    <span>{profileError}</span>
+                  </div>
+                )}
+
+                {profileSuccess && (
+                  <div
+                    style={{
+                      padding: '7px 10px',
                       background: 'rgba(16, 185, 129, 0.1)',
                       border: '1px solid rgba(16, 185, 129, 0.3)',
                       color: '#059669',
@@ -604,33 +826,63 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className }) =
                     }}
                   >
                     <Check size={13} />
-                    <span>Profile name updated successfully!</span>
+                    <span>Profile and avatar saved successfully!</span>
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={nameSaving || !firstName.trim()}
-                  style={{
-                    width: '100%',
-                    padding: '8px 14px',
-                    borderRadius: '8px',
-                    background: 'linear-gradient(135deg, #FF6F00, #F59E0B)',
-                    color: '#fff',
-                    border: 'none',
-                    fontSize: '0.82rem',
-                    fontWeight: 700,
-                    cursor: nameSaving ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                    boxShadow: '0 2px 8px rgba(255, 111, 0, 0.25)'
-                  }}
-                >
-                  <Edit2 size={13} />
-                  <span>{nameSaving ? 'Saving...' : 'Save Name Changes'}</span>
-                </button>
+                {/* Unified Action Buttons: Cancel (Roll Back) + Save Changes */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px' }}>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    disabled={profileSaving}
+                    style={{
+                      flex: 1,
+                      padding: '8px 12px',
+                      borderRadius: '8px',
+                      background: 'var(--bg-surface-subtle, rgba(0, 0, 0, 0.04))',
+                      border: '1px solid var(--border-subtle, rgba(0, 0, 0, 0.15))',
+                      color: 'var(--text-secondary, #64748B)',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    <X size={14} />
+                    <span>Cancel</span>
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={profileSaving || !draftFirstName.trim()}
+                    style={{
+                      flex: 2,
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      background: 'linear-gradient(135deg, #FF6F00, #F59E0B)',
+                      color: '#fff',
+                      border: 'none',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      cursor: (profileSaving || !draftFirstName.trim()) ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
+                      boxShadow: '0 2px 8px rgba(255, 111, 0, 0.25)',
+                      opacity: (!draftFirstName.trim() || profileSaving) ? 0.7 : 1,
+                      transition: 'all 0.15s'
+                    }}
+                  >
+                    <Check size={14} />
+                    <span>{profileSaving ? 'Saving...' : 'Save Profile Changes'}</span>
+                  </button>
+                </div>
               </form>
             </div>
           )}
