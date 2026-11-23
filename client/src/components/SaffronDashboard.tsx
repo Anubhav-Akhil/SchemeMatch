@@ -657,9 +657,18 @@ export const SaffronDashboard: React.FC = () => {
   const { t, theme, toggleTheme, language, setLanguage } = useLanguage();
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [saathiCollapsed, setSaathiCollapsed] = useState(false);
   const [avatarError, setAvatarError] = useState(false);
   const [filterCategory, setFilterCategory] = useState('all');
+
+  const handleToggleSidebar = () => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 900) {
+      setMobileSidebarOpen(o => !o);
+    } else {
+      setSidebarCollapsed(c => !c);
+    }
+  };
 
   const firstNameGreeting = user?.fullName?.split(' ')[0] || 'Entrepreneur';
 
@@ -802,7 +811,12 @@ export const SaffronDashboard: React.FC = () => {
       <header className="si-top-bar">
         {/* Left: mobile menu + brand */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button className="si-mobile-menu-btn" onClick={() => setMobileSidebarOpen(o => !o)} aria-label="Menu">
+          <button 
+            className="si-mobile-menu-btn" 
+            onClick={handleToggleSidebar} 
+            aria-label={sidebarCollapsed ? "Show Side Panel" : "Hide Side Panel"}
+            title={sidebarCollapsed ? "Show Side Panel" : "Hide Side Panel"}
+          >
             {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <div className="si-brand-area" onClick={() => setCurrentView('landing')} title="Return to Landing">
@@ -844,8 +858,23 @@ export const SaffronDashboard: React.FC = () => {
       {/* ── MAIN FRAME: Sidebar + Content + Saathi ────────────── */}
       <div className="si-main-frame">
 
+        {/* Mobile Backdrop */}
+        {mobileSidebarOpen && (
+          <div 
+            className="si-sidebar-backdrop" 
+            onClick={() => setMobileSidebarOpen(false)} 
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(2px)',
+              zIndex: 290
+            }} 
+          />
+        )}
+
         {/* ── SIDEBAR ─────────────────────────────────────────── */}
-        <aside className={`si-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
+        <aside className={`si-sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
           <div className="si-sidebar-scrollable">
             {navGroups.map((group, gi) => (
               <div key={gi}>

@@ -5216,13 +5216,22 @@ input:focus, select:focus, textarea:focus {
 }
 
 .ws-mobile-menu-btn {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
   padding: 6px;
   color: var(--text-primary);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ws-mobile-menu-btn:hover {
+  background: var(--bg-surface-elevated, rgba(0, 0, 0, 0.05));
+  border-color: #4F46E5;
+  color: #4F46E5;
 }
 
 @media (max-width: 992px) {
@@ -5427,8 +5436,27 @@ input:focus, select:focus, textarea:focus {
   top: 64px;
   height: calc(100vh - 64px);
   flex-shrink: 0;
-  transition: transform 0.25s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s ease, opacity 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
   z-index: 90;
+}
+
+.ws-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  border-right-width: 0 !important;
+  border-right-color: transparent !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  overflow: hidden !important;
+}
+
+.ws-sidebar-scrollable,
+.ws-sidebar-footer {
+  min-width: 270px;
 }
 
 .ws-sidebar-scrollable {
@@ -5545,7 +5573,12 @@ input:focus, select:focus, textarea:focus {
   }
 
   .ws-sidebar.mobile-open {
-    transform: translateX(0);
+    width: 270px !important;
+    min-width: 270px !important;
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
   }
 }
 
@@ -7618,37 +7651,43 @@ body.lang-transition-active {
 }
 
 .si-mobile-menu-btn {
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: 9px;
   background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.85);
   color: var(--text-primary);
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   padding: 0;
+  flex-shrink: 0;
 }
 
 .si-mobile-menu-btn:hover {
   background: rgba(255, 255, 255, 0.95);
+  color: var(--primary-saffron, #FF6F00);
+  border-color: rgba(255, 111, 0, 0.35);
   transform: scale(1.05);
+  box-shadow: 0 4px 14px rgba(255, 111, 0, 0.15);
 }
 
 [data-theme='dark'] .si-mobile-menu-btn {
   background: rgba(30, 41, 59, 0.7);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.12);
   color: #F1F5F9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 [data-theme='dark'] .si-mobile-menu-btn:hover {
-  background: rgba(51, 65, 85, 0.8);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(51, 65, 85, 0.85);
+  border-color: rgba(255, 111, 0, 0.45);
+  color: #FF9E2C;
 }
 
 .si-brand-area {
@@ -7855,8 +7894,26 @@ body.lang-transition-active {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease, border-color 0.2s ease;
   z-index: 100;
+}
+
+.si-sidebar.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  border-right-width: 0 !important;
+  border-right-color: transparent !important;
+  box-shadow: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  overflow: hidden !important;
+}
+
+.si-sidebar-scrollable,
+.si-sidebar-footer {
+  min-width: 240px;
 }
 
 .si-sidebar-scrollable {
@@ -8905,7 +8962,14 @@ body.lang-transition-active {
     transform: translateX(-100%);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
   }
-  .si-sidebar.mobile-open { transform: translateX(0); }
+  .si-sidebar.mobile-open {
+    width: 240px !important;
+    min-width: 240px !important;
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+  }
   
   .si-saathi-panel {
     position: fixed !important;

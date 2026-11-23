@@ -69,8 +69,17 @@ export const MainAppDashboard: React.FC = () => {
   const { t, theme, toggleTheme, language, setLanguage } = useLanguage();
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [selectedFilterCategory, setSelectedFilterCategory] = useState<string>('all');
   const [avatarError, setAvatarError] = useState<boolean>(false);
+
+  const handleToggleSidebar = () => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 992) {
+      setMobileSidebarOpen(prev => !prev);
+    } else {
+      setSidebarCollapsed(prev => !prev);
+    }
+  };
 
   const filteredMatches = matchResults.filter((m) => {
     if (selectedFilterCategory !== 'all') {
@@ -120,8 +129,9 @@ export const MainAppDashboard: React.FC = () => {
         <div className="ws-top-left">
           <button 
             className="ws-mobile-menu-btn"
-            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            aria-label="Toggle Navigation Menu"
+            onClick={handleToggleSidebar}
+            aria-label={sidebarCollapsed ? "Show Side Panel" : "Hide Side Panel"}
+            title={sidebarCollapsed ? "Show Side Panel" : "Hide Side Panel"}
           >
             {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -197,8 +207,23 @@ export const MainAppDashboard: React.FC = () => {
 
       {/* Main Workspace Frame (Sidebar + Content Viewport) */}
       <div className="ws-main-frame">
+        {/* Mobile Backdrop */}
+        {mobileSidebarOpen && (
+          <div 
+            className="ws-sidebar-backdrop" 
+            onClick={() => setMobileSidebarOpen(false)} 
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(2px)',
+              zIndex: 89
+            }} 
+          />
+        )}
+
         {/* Left Sidebar Navigation */}
-        <aside className={`ws-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
+        <aside className={`ws-sidebar ${sidebarCollapsed ? 'collapsed' : ''} ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
           <div className="ws-sidebar-scrollable">
             {navItems.map((group, gIdx) => (
               <div key={gIdx} className="ws-nav-group">
