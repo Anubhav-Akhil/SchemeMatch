@@ -77,7 +77,7 @@ export const EMPTY_PROFILE: UserProfile = {
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { setCurrentView } = useAuth();
+  const { user, setCurrentView } = useAuth();
   const [profile, setProfile] = useState<UserProfile>(EMPTY_PROFILE);
   const [personas, setPersonas] = useState<PersonaProfile[]>(SAMPLE_PERSONAS);
   const [selectedPersonaId, setSelectedPersonaId] = useState<string>('');
@@ -93,6 +93,105 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [uploadedDocIds, setUploadedDocIds] = useState<string[]>(['aadhaar-card', 'caste-certificate', 'bank-statement']);
 
   const [allSchemes, setAllSchemes] = useState<Scheme[]>([]);
+
+  // Storage keys keyed by user to guarantee persistence across logins and sessions
+  const profileStorageKey = user?.email
+    ? `schemematch_business_profile_${user.email.toLowerCase()}`
+    : 'schemematch_business_profile_guest';
+
+  const matchesStorageKey = user?.email
+    ? `schemematch_matches_${user.email.toLowerCase()}`
+    : 'schemematch_matches_guest';
+
+  const docsStorageKey = user?.email
+    ? `schemematch_docs_${user.email.toLowerCase()}`
+    : 'schemematch_docs_guest';
+
+  // Restore saved business profile, matches, and uploaded docs when user logs in or on mount
+  useEffect(() => {
+    try {
+      const savedProfileStr = localStorage.getItem(profileStorageKey);
+      if (savedProfileStr) {
+        const parsed = JSON.parse(savedProfileStr);
+        if (parsed && typeof parsed === 'object') {
+          // If user has a name in auth context, ensure profile stays synced with it
+          if (user?.fullName && (!parsed.fullName || parsed.fullName === 'Entrepreneur')) {
+            parsed.fullName = user.fullName;
+          }
+          setProfile(parsed);
+
+          // Restore saved matches if available
+          const savedMatchesStr = localStorage.getItem(matchesStorageKey);
+          if (savedMatchesStr) {
+            try {
+              const parsedMatches = JSON.parse(savedMatchesStr);
+              if (parsedMatches && parsedMatches.matches && parsedMatches.matches.length > 0) {
+                setMatchResults(parsedMatches.matches);
+                setOtherSchemes(parsedMatches.otherSchemes || []);
+                setTotalPotentialSubsidy(parsedMatches.totalPotentialSubsidy || 0);
+                setHasCalculated(true);
+              }
+            } catch (e) {}
+          } else if (parsed.sector || parsed.requiredLoanAmount || parsed.category) {
+            runMatching(parsed);
+          }
+
+          // Restore saved documents if available
+          const savedDocsStr = localStorage.getItem(docsStorageKey);
+          if (savedDocsStr) {
+            try {
+              const parsedDocs = JSON.parse(savedDocsStr);
+              if (Array.isArray(parsedDocs)) {
+                setUploadedDocIds(parsedDocs);
+              }
+            } catch (e) {}
+          }
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to restore saved business profile:', e);
+    }
+
+    // Default: initialize profile name from user if available
+    if (user?.fullName) {
+      setProfile(prev => ({
+        ...prev,
+        fullName: prev.fullName || user.fullName
+      }));
+    }
+  }, [user?.email, user?.fullName, profileStorageKey]);
+
+  // Persist business profile whenever it updates
+  useEffect(() => {
+    if (profile && (profile.fullName || profile.category || profile.sector || profile.requiredLoanAmount)) {
+      try {
+        localStorage.setItem(profileStorageKey, JSON.stringify(profile));
+      } catch (e) {}
+    }
+  }, [profile, profileStorageKey]);
+
+  // Persist matches whenever calculated
+  useEffect(() => {
+    if (hasCalculated && matchResults.length > 0) {
+      try {
+        localStorage.setItem(matchesStorageKey, JSON.stringify({
+          matches: matchResults,
+          otherSchemes,
+          totalPotentialSubsidy
+        }));
+      } catch (e) {}
+    }
+  }, [hasCalculated, matchResults, otherSchemes, totalPotentialSubsidy, matchesStorageKey]);
+
+  // Persist uploaded documents
+  useEffect(() => {
+    if (uploadedDocIds.length > 0) {
+      try {
+        localStorage.setItem(docsStorageKey, JSON.stringify(uploadedDocIds));
+      } catch (e) {}
+    }
+  }, [uploadedDocIds, docsStorageKey]);
 
   // Method to fetch all government schemes from backend repository
   const fetchAllSchemes = async (): Promise<Scheme[]> => {

@@ -120,33 +120,81 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const mapSupabaseUser = (sbUser: User) => {
-    const fullName = sbUser.user_metadata?.full_name || 
-                     sbUser.user_metadata?.name || 
-                     sbUser.email?.split('@')[0] || 
-                     'Entrepreneur';
-    const avatarUrl = sbUser.user_metadata?.avatar_url || sbUser.user_metadata?.picture;
+    const email = sbUser.email || '';
+    const emailKey = email.toLowerCase();
+
+    // 1. Check local persistent profile cache for this specific user
+    let savedLocalProfile: { fullName?: string; avatarUrl?: string; googleAvatarUrl?: string } | null = null;
+    try {
+      const stored = localStorage.getItem(`schemematch_user_profile_${emailKey}`);
+      if (stored) {
+        savedLocalProfile = JSON.parse(stored);
+      }
+    } catch (e) {}
+
+    // 2. Check Supabase custom metadata (which Google OAuth sync never overwrites)
+    const customFullName = sbUser.user_metadata?.custom_full_name;
+    const customAvatarUrl = sbUser.user_metadata?.custom_avatar_url;
+
+    // 3. Raw Google avatar from identities or metadata
     const rawGoogleAvatar = sbUser.identities?.find(i => i.provider === 'google')?.identity_data?.avatar_url ||
                             sbUser.identities?.find(i => i.provider === 'google')?.identity_data?.picture ||
                             sbUser.user_metadata?.picture ||
-                            (avatarUrl && avatarUrl.includes('googleusercontent.com') ? avatarUrl : undefined);
+                            (sbUser.user_metadata?.avatar_url && sbUser.user_metadata.avatar_url.includes('googleusercontent.com') ? sbUser.user_metadata.avatar_url : undefined);
 
     if (rawGoogleAvatar) {
       try {
+        localStorage.setItem(`schemematch_google_avatar_${emailKey}`, rawGoogleAvatar);
         localStorage.setItem('schemematch_google_avatar', rawGoogleAvatar);
       } catch (e) {}
     }
 
-    const savedGoogleAvatar = rawGoogleAvatar || localStorage.getItem('schemematch_google_avatar') || undefined;
+    const savedGoogleAvatar = rawGoogleAvatar || 
+                              localStorage.getItem(`schemematch_google_avatar_${emailKey}`) ||
+                              localStorage.getItem('schemematch_google_avatar') || 
+                              undefined;
 
-    setUser({
+    // 4. Resolve fullName (Custom preference > Supabase raw claims > default)
+    const fullName = savedLocalProfile?.fullName ||
+                     customFullName ||
+                     sbUser.user_metadata?.full_name || 
+                     sbUser.user_metadata?.name || 
+                     sbUser.email?.split('@')[0] || 
+                     'Entrepreneur';
+
+    // 5. Resolve avatarUrl:
+    // If the user previously selected an avatar (inbuilt, initials '', or google), respect it!
+    let avatarUrl: string | undefined = undefined;
+    if (savedLocalProfile && savedLocalProfile.avatarUrl !== undefined) {
+      avatarUrl = savedLocalProfile.avatarUrl || undefined;
+    } else if (customAvatarUrl !== undefined) {
+      avatarUrl = customAvatarUrl || undefined;
+    } else if (sbUser.user_metadata?.avatar_url) {
+      avatarUrl = sbUser.user_metadata.avatar_url;
+    } else {
+      avatarUrl = savedGoogleAvatar;
+    }
+
+    const mappedUser: AppUser = {
       id: sbUser.id,
-      email: sbUser.email || '',
+      email,
       fullName,
-      avatarUrl: avatarUrl || savedGoogleAvatar,
+      avatarUrl,
       googleAvatarUrl: savedGoogleAvatar,
       isDemo: false,
       provider: sbUser.app_metadata?.provider === 'google' ? 'google' : 'email'
-    });
+    };
+
+    // Cache to ensure it survives signout/signin
+    try {
+      localStorage.setItem(`schemematch_user_profile_${emailKey}`, JSON.stringify({
+        fullName,
+        avatarUrl,
+        googleAvatarUrl: savedGoogleAvatar
+      }));
+    } catch (e) {}
+
+    setUser(mappedUser);
   };
 
   const loginWithEmailHandler = async (email: string, pass: string) => {
@@ -201,10 +249,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const loginDemo = (name: string = 'Entrepreneur', email: string = 'entrepreneur@schemematch.gov.in') => {
+    const emailKey = email.toLowerCase();
+    let savedDemoProfile: any = null;
+    try {
+      const stored = localStorage.getItem(`schemematch_user_profile_${emailKey}`) || localStorage.getItem(DEMO_USER_KEY);
+      if (stored) {
+        savedDemoProfile = JSON.parse(stored);
+      }
+    } catch (e) {}
+
     const demoUser: AppUser = {
-      id: 'demo-' + Date.now(),
+      id: savedDemoProfile?.id || ('demo-' + Date.now()),
       email,
-      fullName: name,
+      fullName: savedDemoProfile?.fullName || name,
+      avatarUrl: savedDemoProfile?.avatarUrl,
+      googleAvatarUrl: savedDemoProfile?.googleAvatarUrl || (typeof window !== 'undefined' ? localStorage.getItem('schemematch_google_avatar') : undefined) || undefined,
       isDemo: true,
       provider: 'demo'
     };
@@ -218,6 +277,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       localStorage.removeItem(DEMO_USER_KEY);
       localStorage.removeItem(GOOGLE_USER_KEY);
+      localStorage.removeItem('schemematch_cached_user');
+      // Preserving schemematch_user_profile_* and schemematch_business_profile_*
+      // so user's customized data persists on subsequent sign-ins!
       await signOutUser();
       setUser(null);
       setSession(null);
@@ -235,13 +297,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfileHandler = async (data: { fullName?: string; avatarUrl?: string }) => {
     if (!user) return;
+    const emailKey = user.email.toLowerCase();
     const nextUser: AppUser = {
       ...user,
       fullName: data.fullName !== undefined ? data.fullName : user.fullName,
       avatarUrl: data.avatarUrl !== undefined ? data.avatarUrl : user.avatarUrl,
-      googleAvatarUrl: user.googleAvatarUrl || localStorage.getItem('schemematch_google_avatar') || undefined
+      googleAvatarUrl: user.googleAvatarUrl || localStorage.getItem(`schemematch_google_avatar_${emailKey}`) || localStorage.getItem('schemematch_google_avatar') || undefined
     };
     setUser(nextUser);
+
+    // Save permanently keyed by user's email so it survives re-login
+    try {
+      localStorage.setItem(`schemematch_user_profile_${emailKey}`, JSON.stringify({
+        fullName: nextUser.fullName,
+        avatarUrl: nextUser.avatarUrl,
+        googleAvatarUrl: nextUser.googleAvatarUrl
+      }));
+    } catch (e) {}
 
     if (user.isDemo) {
       localStorage.setItem(DEMO_USER_KEY, JSON.stringify(nextUser));
@@ -256,7 +328,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         await supabase.auth.updateUser({
           data: {
             full_name: nextUser.fullName,
-            avatar_url: nextUser.avatarUrl || null
+            avatar_url: nextUser.avatarUrl || null,
+            custom_full_name: nextUser.fullName,
+            custom_avatar_url: nextUser.avatarUrl || '',
+            custom_profile_saved: true
           }
         });
       } catch (err) {
