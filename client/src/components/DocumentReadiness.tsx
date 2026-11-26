@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage, Language } from '../context/LanguageContext';
 import { DocumentReadinessReport, DocumentVerificationItem } from '../types';
-import { FileCheck2, Upload, AlertCircle, CheckCircle2, ExternalLink, RefreshCw, ShieldAlert, ArrowRight } from 'lucide-react';
+import { FileCheck2, Upload, AlertCircle, CheckCircle2, ExternalLink, RefreshCw, ShieldAlert, ArrowRight, ShieldCheck, Scan, Check } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 
 const DOC_LABELS: Record<Language, Record<string, string>> = {
@@ -220,34 +220,55 @@ export const DocumentReadiness: React.FC = () => {
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '28px', margin: '20px 0' }}>
+    <div className="tactile-card-3d" style={{ padding: '24px 28px', margin: '14px 0' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '6px' }}>
-            <span className="badge badge-emerald">{t('badgeAi')}</span>
-            <span className="badge badge-indigo">{t('badgePre')}</span>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '8px' }}>
+            <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+              <ShieldCheck size={12} />
+              <span>{t('badgeAi')}</span>
+            </span>
+            <span className="badge badge-indigo" style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+              {t('badgePre')}
+            </span>
           </div>
-          <h2 style={{ fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <FileCheck2 size={24} style={{ color: 'var(--primary-saffron)' }} />
+          <h2 style={{ fontSize: '1.65rem', fontWeight: 800, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '10px', margin: '0 0 6px 0', color: 'var(--text-primary)' }}>
+            <div style={{
+              width: 34,
+              height: 34,
+              borderRadius: '9px',
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              boxShadow: '0 3px 8px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
+            }}>
+              <FileCheck2 size={18} />
+            </div>
             <span>{t('title')}</span>
           </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, maxWidth: '640px', lineHeight: 1.5 }}>
             {t('subtitle')}
           </p>
         </div>
 
         {report && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'var(--bg-surface-subtle)', padding: '10px 18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+          <div className="tactile-stat-pod-3d" style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '12px 20px' }}>
             <div>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>{t('readinessScore')}</span>
-              <strong style={{ fontSize: '1.5rem', color: report.overallScore >= 75 ? 'var(--emerald-growth)' : 'var(--accent-amber)' }}>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700, display: 'block' }}>
+                {t('readinessScore')}
+              </span>
+              <strong style={{ fontSize: '1.6rem', color: report.overallScore >= 75 ? '#10B981' : '#F59E0B', fontFamily: 'var(--font-mono)' }}>
                 {report.overallScore}%
               </strong>
             </div>
-            <div style={{ borderLeft: '1px solid var(--border-subtle)', paddingLeft: '14px' }}>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>{t('status')}</span>
-              <span className={`badge ${report.overallScore >= 75 ? 'badge-emerald' : 'badge-saffron'}`}>
+            <div style={{ borderLeft: '1px solid var(--border-subtle)', paddingLeft: '16px' }}>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700, display: 'block' }}>
+                {t('status')}
+              </span>
+              <span className={`badge ${report.overallScore >= 75 ? 'badge-emerald' : 'badge-saffron'}`} style={{ fontSize: '0.74rem', letterSpacing: '0.04em' }}>
                 {report.readinessLevel}
               </span>
             </div>
@@ -257,42 +278,62 @@ export const DocumentReadiness: React.FC = () => {
 
       {/* OCR Simulation Alert */}
       {ocrStatus && (
-        <div style={{ padding: '12px 16px', background: 'var(--primary-saffron-glow)', border: '1px solid var(--primary-saffron)', borderRadius: 'var(--radius-sm)', marginBottom: '18px', display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem' }}>
-          <RefreshCw size={16} className="spin-animation" style={{ color: 'var(--primary-saffron)' }} />
+        <div style={{
+          padding: '12px 16px',
+          background: 'rgba(234, 88, 12, 0.08)',
+          border: '1.5px solid rgba(234, 88, 12, 0.35)',
+          borderRadius: '10px',
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          fontSize: '0.86rem',
+          color: 'var(--text-primary)'
+        }}>
+          <RefreshCw size={16} className="spin-animation" style={{ color: 'var(--primary-saffron)', flexShrink: 0 }} />
           <span>{ocrStatus}</span>
         </div>
       )}
 
       {/* Main Grid: Upload Dropzone & Document Checklist */}
       <div className="doc-scanner-grid">
-        {/* Left Column: Dropzone Simulator & Critical Gaps */}
+        {/* Left Column: 3D Scanner Deck & Critical Gaps */}
         <div>
           <div
-            className="upload-dropzone"
+            className="scanner-deck-3d"
             onClick={() => handleSimulatedDrop('udyam-registration', 'Udyam Registration')}
-            title="Click to simulate uploading a document"
+            title="Click to simulate live OCR document scanning"
+            style={{ cursor: 'pointer', textAlign: 'center', position: 'relative' }}
           >
-            <Upload size={36} style={{ color: 'var(--primary-saffron)', margin: '0 auto 12px auto' }} />
-            <h4 style={{ fontSize: '1.05rem', marginBottom: '6px' }}>{t('dropzoneTitle')}</h4>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', marginBottom: '14px' }}>
+            <div className="scanner-beam" />
+            <Scan size={38} style={{ color: 'var(--primary-saffron)', margin: '0 auto 12px auto' }} />
+            <h4 style={{ fontSize: '1.05rem', fontWeight: 800, marginBottom: '6px', color: 'var(--text-primary)' }}>
+              {t('dropzoneTitle')}
+            </h4>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: 1.45 }}>
               {t('dropzoneDesc')}
             </p>
-            <span className="btn-secondary" style={{ fontSize: '0.82rem', padding: '6px 14px' }}>
-              {t('dropzoneBtn')}
-            </span>
+            <button
+              type="button"
+              className="tactile-btn-primary-3d"
+              style={{ fontSize: '0.82rem', padding: '8px 16px' }}
+            >
+              <Upload size={14} />
+              <span>{t('dropzoneBtn')}</span>
+            </button>
           </div>
 
           {/* Critical Gaps Warning Box */}
           {report && report.criticalGaps.length > 0 && (
-            <div style={{ marginTop: '20px', padding: '16px', background: 'rgba(225, 29, 72, 0.08)', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(225, 29, 72, 0.3)' }}>
-              <h4 style={{ fontSize: '0.95rem', color: 'var(--accent-rose)', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+            <div className="tactile-card-3d" style={{ marginTop: '20px', padding: '16px 18px', borderLeft: '4px solid #DC2626' }}>
+              <h4 style={{ fontSize: '0.94rem', fontWeight: 800, color: '#DC2626', display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 10px 0' }}>
                 <ShieldAlert size={18} />
                 <span>{t('critTitle')} ({report.criticalGaps.length})</span>
               </h4>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {report.criticalGaps.map((gap, idx) => (
-                  <li key={idx} style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                    <span style={{ color: 'var(--accent-rose)', fontWeight: 700 }}>•</span>
+                  <li key={idx} style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'flex', alignItems: 'flex-start', gap: '8px', lineHeight: 1.4 }}>
+                    <span style={{ color: '#DC2626', fontWeight: 800 }}>•</span>
                     <span>{gap}</span>
                   </li>
                 ))}
@@ -301,13 +342,13 @@ export const DocumentReadiness: React.FC = () => {
           )}
 
           {/* 1-Click DPR Reminder */}
-          <div style={{ marginTop: '16px', padding: '14px', background: 'var(--bg-surface-subtle)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className="tactile-card-3d" style={{ marginTop: '16px', padding: '16px 18px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
               <div>
-                <strong style={{ fontSize: '0.88rem', display: 'block' }}>{t('dprQuestion')}</strong>
+                <strong style={{ fontSize: '0.9rem', fontWeight: 800, display: 'block', color: 'var(--text-primary)' }}>{t('dprQuestion')}</strong>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{t('dprSubtitle')}</span>
               </div>
-              <button className="btn-primary" onClick={() => setActiveTab('dpr')} style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
+              <button className="tactile-btn-primary-3d" onClick={() => setActiveTab('dpr')} style={{ fontSize: '0.8rem', padding: '7px 14px' }}>
                 <span>{t('dprBtn')}</span>
                 <ArrowRight size={14} />
               </button>
@@ -317,68 +358,70 @@ export const DocumentReadiness: React.FC = () => {
 
         {/* Right Column: Full Document Checklist with Status and Resolution Links */}
         <div>
-          <h3 style={{ fontSize: '1.15rem', marginBottom: '14px' }}>
+          <h3 style={{ fontSize: '1.12rem', fontWeight: 800, marginBottom: '14px', color: 'var(--text-primary)' }}>
             {t('checklistTitle')}
           </h3>
 
-          {report && report.documents.map((doc: DocumentVerificationItem) => {
-            const isVerified = doc.status === 'Verified' || doc.status === 'Uploaded';
-            return (
-              <div key={doc.id} className="doc-item-row">
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <strong style={{ fontSize: '0.92rem' }}>{doc.name}</strong>
-                    <span className={`badge ${doc.importance === 'Mandatory' ? 'badge-saffron' : 'badge-indigo'}`} style={{ fontSize: '0.65rem' }}>
-                      {doc.importance === 'Mandatory' ? t('badgeMandatory') : t('badgeRecommended')}
-                    </span>
-                    <span className={`badge ${isVerified ? 'badge-emerald' : 'badge-saffron'}`} style={{ fontSize: '0.68rem' }}>
-                      {isVerified ? t('badgeVerified') : t('badgeActionNeeded')}
-                    </span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {report && report.documents.map((doc: DocumentVerificationItem) => {
+              const isVerified = doc.status === 'Verified' || doc.status === 'Uploaded';
+              return (
+                <div key={doc.id} className="tactile-card-3d doc-item-row" style={{ padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px' }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                      <strong style={{ fontSize: '0.92rem', color: 'var(--text-primary)' }}>{doc.name}</strong>
+                      <span className={`badge ${doc.importance === 'Mandatory' ? 'badge-saffron' : 'badge-indigo'}`} style={{ fontSize: '0.66rem', letterSpacing: '0.04em' }}>
+                        {doc.importance === 'Mandatory' ? t('badgeMandatory') : t('badgeRecommended')}
+                      </span>
+                      <span className={`badge ${isVerified ? 'badge-emerald' : 'badge-saffron'}`} style={{ fontSize: '0.66rem', letterSpacing: '0.04em' }}>
+                        {isVerified ? t('badgeVerified') : t('badgeActionNeeded')}
+                      </span>
+                    </div>
+
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0 0 4px 0', lineHeight: 1.4 }}>
+                      {doc.description}
+                    </p>
+
+                    <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+                      <strong>{t('howToGet')}</strong> {doc.howToGet} ({doc.issuingAuthority})
+                    </div>
                   </div>
 
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '4px' }}>
-                    {doc.description}
-                  </p>
-
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    <strong>{t('howToGet')}</strong> {doc.howToGet} ({doc.issuingAuthority})
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'flex-end', flexShrink: 0 }}>
-                  <button
-                    className={isVerified ? 'btn-success' : 'btn-secondary'}
-                    onClick={() => toggleDocumentUpload(doc.id)}
-                    style={{ fontSize: '0.78rem', padding: '6px 12px' }}
-                  >
-                    {isVerified ? (
-                      <>
-                        <CheckCircle2 size={14} />
-                        <span>{t('btnUploaded')}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Upload size={14} />
-                        <span>{t('btnMarkUploaded')}</span>
-                      </>
-                    )}
-                  </button>
-
-                  {doc.onlinePortalUrl && (
-                    <a
-                      href={doc.onlinePortalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--primary-saffron)' }}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end', flexShrink: 0 }}>
+                    <button
+                      className={isVerified ? 'tactile-btn-primary-3d' : 'tactile-btn-secondary-3d'}
+                      onClick={() => toggleDocumentUpload(doc.id)}
+                      style={{ fontSize: '0.78rem', padding: '6px 14px' }}
                     >
-                      <span>{t('officialPortal')}</span>
-                      <ExternalLink size={12} />
-                    </a>
-                  )}
+                      {isVerified ? (
+                        <>
+                          <CheckCircle2 size={14} />
+                          <span>{t('btnUploaded')}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload size={14} />
+                          <span>{t('btnMarkUploaded')}</span>
+                        </>
+                      )}
+                    </button>
+
+                    {doc.onlinePortalUrl && (
+                      <a
+                        href={doc.onlinePortalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '0.74rem', display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--primary-saffron)', textDecoration: 'none', fontWeight: 600 }}
+                      >
+                        <span>{t('officialPortal')}</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

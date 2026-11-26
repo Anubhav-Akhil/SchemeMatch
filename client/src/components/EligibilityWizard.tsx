@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useProfile } from '../context/ProfileContext';
 import { useLanguage } from '../context/LanguageContext';
 import { UserProfile, SocialCategory, Gender, LocationType, SectorType, EducationLevel } from '../types';
-import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2, ArrowRight, IndianRupee, Award, AlertCircle, Loader2, ChevronRight, Briefcase, User } from 'lucide-react';
+import { UserCheck, Sliders, FileCheck, RefreshCw, CheckCircle2, Sparkles, Wand2, ArrowRight, IndianRupee, Award, AlertCircle, Loader2, ChevronRight, Briefcase, User, ShieldCheck, Terminal, Compass, Layers } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 
 interface MissingFieldItem {
@@ -122,61 +122,119 @@ export const EligibilityWizard: React.FC = () => {
   };
 
   return (
-    <div className="wizard-card glass-panel">
-      <div className="wizard-header">
-        <h3>
-          <Sliders size={20} style={{ color: 'var(--primary-saffron)' }} />
-          <span>{t.wizard.title}</span>
-        </h3>
-        <p>{t.wizard.subtitle}</p>
-      </div>
-
-      {/* AI Quick Profile Extraction Bar */}
-      <div className="wizard-ai-box" style={{
-        background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%)',
-        border: '1px solid rgba(99, 102, 241, 0.25)',
-        borderRadius: '12px',
-        padding: '12px 14px',
-        marginBottom: '16px'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Wand2 size={16} style={{ color: '#6366F1' }} />
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)' }}>
-              AI Natural-Language Profile Extractor
+    <div className="tactile-card-3d" style={{ padding: '24px 28px', margin: '12px 0 24px 0' }}>
+      {/* Institutional Terminal Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '22px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+              <ShieldCheck size={12} />
+              <span>OFFICIAL MSME & LENDING TAXONOMY</span>
             </span>
-            <span style={{ fontSize: '0.65rem', background: '#6366F1', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
-              AI ENGINE
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+              v2026.4
             </span>
           </div>
+          <h3 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '0 0 6px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              width: 34,
+              height: 34,
+              borderRadius: '9px',
+              background: 'linear-gradient(135deg, #EA580C 0%, #F59E0B 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFFFFF',
+              boxShadow: '0 3px 8px rgba(234, 88, 12, 0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
+            }}>
+              <Sliders size={18} />
+            </div>
+            <span>{t.wizard.title}</span>
+          </h3>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', margin: 0, maxWidth: '640px', lineHeight: 1.5 }}>
+            {t.wizard.subtitle}
+          </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <input
-            type="text"
-            placeholder="e.g. 30-yr man in rural UP doing tailoring business, needs 1.5L loan"
-            value={aiInputText}
-            onChange={(e) => setAiInputText(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAiExtraction(); } }}
-            style={{
-              flex: 1,
-              padding: '9px 12px',
-              fontSize: '0.84rem',
-              borderRadius: '8px',
-              border: '1px solid var(--border-subtle)',
-              background: 'var(--bg-surface)',
-              color: 'var(--text-primary)'
-            }}
-          />
+        {/* Holographic Verification Pod */}
+        <div className="hologram-seal-3d" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981' }} />
+          <div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--text-primary)' }}>
+              SIDBI / RBI COMPLIANT
+            </div>
+            <div style={{ fontSize: '0.66rem', color: 'var(--text-muted)' }}>
+              Pre-Appraisal Engine
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Institutional Natural-Language Profile Parser Deck */}
+      <div style={{
+        background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.03) 0%, rgba(15, 23, 42, 0.01) 100%)',
+        border: '1px solid var(--border-subtle)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.9)',
+        boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.02)',
+        borderRadius: '14px',
+        padding: '16px 18px',
+        marginBottom: '22px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Terminal size={15} style={{ color: 'var(--primary-saffron)' }} />
+            <span style={{ fontSize: '0.82rem', fontWeight: 800, letterSpacing: '0.02em', color: 'var(--text-primary)' }}>
+              Natural-Language Profile Extraction Console
+            </span>
+            <span style={{
+              fontSize: '0.62rem',
+              fontFamily: 'var(--font-mono)',
+              background: 'rgba(79, 70, 229, 0.1)',
+              color: '#4F46E5',
+              padding: '2px 8px',
+              borderRadius: '6px',
+              fontWeight: 700,
+              border: '1px solid rgba(79, 70, 229, 0.2)'
+            }}>
+              NLP PARSER
+            </span>
+          </div>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+            Instant auto-population
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="e.g. 30-yr man in rural UP doing tailoring enterprise, requires 1.5L bank credit"
+              value={aiInputText}
+              onChange={(e) => setAiInputText(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAiExtraction(); } }}
+              style={{
+                width: '100%',
+                padding: '11px 14px',
+                fontSize: '0.86rem',
+                borderRadius: '9px',
+                border: '1px solid var(--border-subtle)',
+                background: 'var(--bg-surface)',
+                color: 'var(--text-primary)',
+                boxShadow: 'inset 0 2px 3px rgba(0,0,0,0.04)',
+                fontFamily: 'inherit',
+                transition: 'border-color 0.2s, box-shadow 0.2s'
+              }}
+            />
+          </div>
           <button
             type="button"
-            className="btn-primary"
+            className="tactile-btn-primary-3d"
             disabled={isExtracting}
             onClick={() => handleAiExtraction()}
             style={{
-              padding: '8px 16px',
+              padding: '10px 18px',
               fontSize: '0.84rem',
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
               gap: '6px',
               whiteSpace: 'nowrap'
@@ -184,168 +242,131 @@ export const EligibilityWizard: React.FC = () => {
           >
             {isExtracting ? (
               <>
-                <Loader2 size={14} className="spin" />
-                <span>Extracting...</span>
+                <Loader2 size={15} className="spin" />
+                <span>Parsing...</span>
               </>
             ) : (
               <>
-                <Sparkles size={14} />
-                <span>Extract</span>
+                <Wand2 size={15} />
+                <span>Extract Profile</span>
               </>
             )}
           </button>
         </div>
 
-        {/* Quick Sample Chips */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
-          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', alignSelf: 'center' }}>Try:</span>
+        {/* Quick Sample Presets */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '12px', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Try Preset:</span>
           <button
             type="button"
+            className="tactile-btn-secondary-3d"
             onClick={() => handleAiExtraction('Sandeep Kumar, 30, man in rural UP doing tailoring business, needs 1.5L loan')}
-            style={{
-              fontSize: '0.68rem',
-              padding: '2px 8px',
-              borderRadius: '99px',
-              border: '1px dashed var(--border-subtle)',
-              background: 'var(--bg-surface-elevated)',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer'
-            }}
+            style={{ fontSize: '0.72rem', padding: '4px 10px', borderRadius: '7px' }}
           >
-            🧵 Tailoring Enterprise (1.5L)
+            🧵 Rural Tailoring (1.5L)
           </button>
           <button
             type="button"
+            className="tactile-btn-secondary-3d"
             onClick={() => handleAiExtraction('Ramesh, 28, OBC weaver in Varanasi, needs 10L loan for looms')}
-            style={{
-              fontSize: '0.68rem',
-              padding: '2px 8px',
-              borderRadius: '99px',
-              border: '1px dashed var(--border-subtle)',
-              background: 'var(--bg-surface-elevated)',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer'
-            }}
+            style={{ fontSize: '0.72rem', padding: '4px 10px', borderRadius: '7px' }}
           >
-            🧵 OBC Weaver (UP, 10L)
+            🧶 Varanasi Handloom (10L)
           </button>
           <button
             type="button"
+            className="tactile-btn-secondary-3d"
             onClick={() => handleAiExtraction('Deepak, 42, Safai Karamchari dependent, needs 3L for sanitation equipment')}
-            style={{
-              fontSize: '0.68rem',
-              padding: '2px 8px',
-              borderRadius: '99px',
-              border: '1px dashed var(--border-subtle)',
-              background: 'var(--bg-surface-elevated)',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer'
-            }}
+            style={{ fontSize: '0.72rem', padding: '4px 10px', borderRadius: '7px' }}
           >
-            🧹 Sanitation (3L)
+            🧹 Sanitation Logistics (3L)
           </button>
         </div>
 
         {extractionNotice && (
           <div style={{
-            marginTop: '8px',
-            fontSize: '0.74rem',
+            marginTop: '10px',
+            padding: '8px 12px',
+            borderRadius: '8px',
+            background: getMissingRequiredFields(profile).length > 0 ? 'rgba(245, 158, 11, 0.08)' : 'rgba(16, 185, 129, 0.08)',
+            border: getMissingRequiredFields(profile).length > 0 ? '1px solid rgba(245, 158, 11, 0.25)' : '1px solid rgba(16, 185, 129, 0.25)',
+            fontSize: '0.76rem',
             color: getMissingRequiredFields(profile).length > 0 ? '#D97706' : '#059669',
             fontWeight: 600,
             display: 'flex',
             alignItems: 'center',
-            gap: '4px'
+            gap: '6px'
           }}>
-            <CheckCircle2 size={13} />
+            <CheckCircle2 size={14} />
             <span>{extractionNotice}</span>
           </div>
         )}
-
       </div>
 
-      {/* Mini Stepper Tabs */}
-      <div style={{ display: 'flex', gap: '6px', marginBottom: '18px' }}>
+      {/* 3D Segmented Step Selector */}
+      <div className="tactile-segment-group" style={{ marginBottom: '22px' }}>
         <button
           type="button"
           onClick={() => setActiveStep('personal')}
-          style={{
-            flex: 1,
-            padding: '9px 8px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            borderRadius: 'var(--radius-sm)',
-            background: activeStep === 'personal' ? 'var(--primary-saffron)' : 'var(--bg-surface-subtle)',
-            color: activeStep === 'personal' ? '#FFFFFF' : 'var(--text-secondary)',
-            border: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px'
-          }}
+          className={`tactile-segment-btn ${activeStep === 'personal' ? 'active' : ''}`}
         >
-          <span>1. Identity</span>
+          <User size={14} />
+          <span>1. Identity & Domicile</span>
           {profile.category && profile.locationType ? (
-            <span style={{ fontSize: '0.62rem', background: '#10B981', color: '#fff', padding: '1px 5px', borderRadius: '4px' }}>✓</span>
+            <span style={{ fontSize: '0.62rem', background: '#10B981', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 800 }}>✓ Verified</span>
           ) : (
             <span style={{
               fontSize: '0.62rem',
-              background: activeStep === 'personal' ? 'rgba(255,255,255,0.25)' : 'rgba(234, 88, 12, 0.14)',
-              color: activeStep === 'personal' ? '#fff' : 'var(--primary-saffron, #EA580C)',
-              padding: '1px 5px',
-              borderRadius: '4px',
-              fontWeight: 700
-            }}>
-              Needs Info
-            </span>
-          )}
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveStep('business')}
-          style={{
-            flex: 1,
-            padding: '9px 8px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            borderRadius: 'var(--radius-sm)',
-            background: activeStep === 'business' ? 'var(--primary-saffron)' : 'var(--bg-surface-subtle)',
-            color: activeStep === 'business' ? '#FFFFFF' : 'var(--text-secondary)',
-            border: '1px solid var(--border-subtle)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px'
-          }}
-        >
-          <span>2. Business</span>
-          {profile.tradeType ? (
-            <span style={{
-              fontSize: '0.62rem',
-              background: activeStep === 'business' ? 'rgba(255,255,255,0.25)' : 'rgba(16, 185, 129, 0.15)',
-              color: activeStep === 'business' ? '#fff' : '#059669',
+              background: activeStep === 'personal' ? 'rgba(234, 88, 12, 0.15)' : 'rgba(0,0,0,0.06)',
+              color: activeStep === 'personal' ? 'var(--primary-saffron)' : 'var(--text-muted)',
               padding: '1px 6px',
               borderRadius: '4px',
               fontWeight: 700
             }}>
-              ✓ {profile.tradeType}
+              Required
             </span>
-          ) : null}
+          )}
         </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveStep('business')}
+          className={`tactile-segment-btn ${activeStep === 'business' ? 'active' : ''}`}
+        >
+          <Briefcase size={14} />
+          <span>2. Enterprise & Capital</span>
+          {profile.tradeType || profile.sector ? (
+            <span style={{
+              fontSize: '0.62rem',
+              background: '#10B981',
+              color: '#fff',
+              padding: '1px 6px',
+              borderRadius: '4px',
+              fontWeight: 800
+            }}>
+              ✓ Specified
+            </span>
+          ) : (
+            <span style={{
+              fontSize: '0.62rem',
+              background: 'rgba(0,0,0,0.06)',
+              color: 'var(--text-muted)',
+              padding: '1px 6px',
+              borderRadius: '4px',
+              fontWeight: 700
+            }}>
+              Required
+            </span>
+          )}
+        </button>
+
         <button
           type="button"
           onClick={() => setActiveStep('docs')}
-          style={{
-            flex: 1,
-            padding: '9px 8px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            borderRadius: 'var(--radius-sm)',
-            background: activeStep === 'docs' ? 'var(--primary-saffron)' : 'var(--bg-surface-subtle)',
-            color: activeStep === 'docs' ? '#FFFFFF' : 'var(--text-secondary)',
-            border: '1px solid var(--border-subtle)'
-          }}
+          className={`tactile-segment-btn ${activeStep === 'docs' ? 'active' : ''}`}
         >
-          3. Documents
+          <FileCheck size={14} />
+          <span>3. Dossier & Verification</span>
         </button>
       </div>
 
@@ -639,8 +660,8 @@ export const EligibilityWizard: React.FC = () => {
         {/* Submit Matching Button */}
         <button
           type="submit"
-          className="btn-primary"
-          style={{ width: '100%', marginTop: '12px' }}
+          className="tactile-btn-primary-3d"
+          style={{ width: '100%', marginTop: '16px', padding: '13px 20px', fontSize: '0.94rem', justifyContent: 'center' }}
           disabled={isLoadingMatches}
         >
           {isLoadingMatches ? (
@@ -659,10 +680,10 @@ export const EligibilityWizard: React.FC = () => {
         {/* Validation Warning when clicking without filling profile */}
         {validationError && (
           <div style={{
-            marginTop: '12px',
-            padding: '12px 14px',
+            marginTop: '14px',
+            padding: '12px 16px',
             background: 'rgba(239, 68, 68, 0.08)',
-            border: '1.5px solid rgba(239, 68, 68, 0.4)',
+            border: '1.5px solid rgba(239, 68, 68, 0.35)',
             borderRadius: '10px',
             display: 'flex',
             alignItems: 'flex-start',
@@ -673,7 +694,7 @@ export const EligibilityWizard: React.FC = () => {
           }}>
             <AlertCircle size={18} style={{ color: '#DC2626', flexShrink: 0, marginTop: '2px' }} />
             <div>
-              <strong style={{ display: 'block', marginBottom: '2px' }}>Profile Details Required</strong>
+              <strong style={{ display: 'block', marginBottom: '2px', fontWeight: 700 }}>Profile Details Required</strong>
               <span style={{ whiteSpace: 'pre-line' }}>{validationError}</span>
             </div>
           </div>
@@ -681,33 +702,31 @@ export const EligibilityWizard: React.FC = () => {
 
         {/* Instant Calculation Results & Subsidy Preview */}
         {hasCalculated && matchResults.length > 0 && getMissingRequiredFields(profile).length === 0 && (
-          <div style={{
-            marginTop: '16px',
-            padding: '14px 16px',
-            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%)',
-            border: '1.5px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '12px',
+          <div className="tactile-stat-pod-3d" style={{
+            marginTop: '18px',
+            padding: '16px 18px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '10px'
+            gap: '12px'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Award size={18} style={{ color: '#059669' }} />
-                <span style={{ fontWeight: 800, fontSize: '0.88rem', color: 'var(--text-primary)' }}>
-                  🎉 {matchResults.length} Eligible Schemes Calculated!
+                <span style={{ fontWeight: 800, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                  {matchResults.length} Eligible Scheme Recommendations Available
                 </span>
               </div>
               <div style={{
-                fontSize: '0.8rem',
+                fontSize: '0.82rem',
                 fontWeight: 800,
                 color: '#059669',
                 background: 'rgba(5, 150, 105, 0.12)',
-                padding: '3px 10px',
-                borderRadius: '99px',
+                padding: '4px 12px',
+                borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px'
+                gap: '4px',
+                fontFamily: 'var(--font-mono)'
               }}>
                 <IndianRupee size={13} />
                 <span>Up to ₹{(totalPotentialSubsidy / 100000).toFixed(2)}L Capital Subsidy Available</span>
@@ -715,7 +734,7 @@ export const EligibilityWizard: React.FC = () => {
             </div>
 
             {/* Top Recommended Preview Chips */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {matchResults.slice(0, 2).map((m) => (
                 <div
                   key={m.scheme.id}
@@ -723,28 +742,30 @@ export const EligibilityWizard: React.FC = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '8px 12px',
-                    borderRadius: '8px',
+                    padding: '10px 14px',
+                    borderRadius: '9px',
                     background: 'var(--bg-surface)',
-                    border: '1px solid var(--border-subtle)'
+                    border: '1px solid var(--border-subtle)',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
                   }}
                 >
-                  <div style={{ flex: 1, minWidth: 0, marginRight: '8px' }}>
-                    <div style={{ fontSize: '0.82rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ flex: 1, minWidth: 0, marginRight: '10px' }}>
+                    <div style={{ fontSize: '0.84rem', fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--text-primary)' }}>
                       {m.scheme.name}
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
                       {m.estimatedSubsidyAmount > 0
                         ? `₹${m.estimatedSubsidyAmount.toLocaleString('en-IN')} Grant / Subsidy`
-                        : 'Concessional Interest Credit'} · Match Score: <strong>{m.matchScore}%</strong>
+                        : 'Concessional Interest Credit'} · Match Score: <strong style={{ color: 'var(--text-primary)' }}>{m.matchScore}%</strong>
                     </div>
                   </div>
                   <span style={{
-                    fontSize: '0.68rem',
+                    fontSize: '0.66rem',
                     fontWeight: 800,
+                    letterSpacing: '0.04em',
                     background: '#10B981',
                     color: '#fff',
-                    padding: '2px 8px',
+                    padding: '3px 8px',
                     borderRadius: '6px',
                     whiteSpace: 'nowrap'
                   }}>
@@ -757,25 +778,17 @@ export const EligibilityWizard: React.FC = () => {
             {/* Direct Recommender Nav Button */}
             <button
               type="button"
+              className="tactile-btn-primary-3d"
               onClick={() => setActiveTab('matcher')}
               style={{
-                display: 'flex',
-                alignItems: 'center',
+                width: '100%',
                 justifyContent: 'center',
-                gap: '6px',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                background: 'linear-gradient(135deg, #10B981, #059669)',
-                color: '#fff',
-                border: 'none',
-                fontWeight: 700,
-                fontSize: '0.84rem',
-                cursor: 'pointer',
-                marginTop: '4px'
+                padding: '11px 16px',
+                fontSize: '0.86rem'
               }}
             >
               <span>View All {matchResults.length} Recommended Schemes & Subsidies</span>
-              <ArrowRight size={15} />
+              <ArrowRight size={16} />
             </button>
           </div>
         )}

@@ -569,68 +569,54 @@ export const ChannelPartnerRouter: React.FC = () => {
     <div className="partner-router-container" style={{ padding: '8px 0' }}>
       
       {/* ─── MODULE HEADER & BANNER ────────────────────────────────────────── */}
-      <div className="glass-panel" style={{
+      <div className="tactile-card-3d" style={{
         padding: '24px 28px',
-        marginBottom: '20px',
-        borderRadius: '16px',
-        position: 'relative',
-        overflow: 'hidden',
-        border: '1.5px solid var(--border-subtle)'
+        marginBottom: '22px'
       }}>
-        <div style={{
-          position: 'absolute',
-          top: -40,
-          right: -40,
-          width: 280,
-          height: 280,
-          background: 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(79, 70, 229, 0.05) 50%, transparent 70%)',
-          pointerEvents: 'none'
-        }} />
-
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span className="badge badge-emerald" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span className="badge badge-emerald" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', letterSpacing: '0.04em' }}>
                 <ShieldCheck size={13} />
                 {t('locatorBadge')}
               </span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                GIS ROUTER v2026
+              </span>
             </div>
-            <h1 style={{ fontSize: '1.8rem', fontWeight: 800, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               {t('title')}
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0, maxWidth: '780px', lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, maxWidth: '780px', lineHeight: 1.5 }}>
               {t('subtitle')}
             </p>
           </div>
 
           {/* Active Jurisdiction Capsule */}
-          <div style={{
+          <div className="tactile-stat-pod-3d" style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            background: 'var(--bg-surface-elevated)',
-            padding: '12px 18px',
-            borderRadius: '12px',
-            border: '1.5px solid var(--border-subtle)',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+            padding: '12px 18px'
           }}>
             <div style={{
               width: 36,
               height: 36,
-              borderRadius: '8px',
+              borderRadius: '9px',
               background: 'linear-gradient(135deg, #4F46E5, #6366F1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#fff'
+              color: '#fff',
+              boxShadow: '0 3px 8px rgba(79, 70, 229, 0.3)'
             }}>
               <MapPin size={20} />
             </div>
             <div>
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', fontWeight: 700 }}>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', fontWeight: 800 }}>
                 {isGpsActive ? t('liveGps') : t('districtCatchment')}
               </span>
-              <strong style={{ fontSize: '0.92rem', color: 'var(--text-primary)' }}>
+              <strong style={{ fontSize: '0.95rem', color: 'var(--text-primary)' }}>
                 {selectedDistrict}, {selectedState}
               </strong>
             </div>
@@ -639,14 +625,11 @@ export const ChannelPartnerRouter: React.FC = () => {
       </div>
 
       {/* ─── 7-STAGE DECISION PIPELINE VISUALIZER ───────────────────────────── */}
-      <div className="glass-panel" style={{
+      <div className="tactile-card-3d" style={{
         padding: '16px 20px',
-        borderRadius: '12px',
-        marginBottom: '22px',
-        background: 'var(--bg-surface-elevated)',
-        border: '1px solid var(--border-subtle)'
+        marginBottom: '22px'
       }}>
-        <div style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: '10px' }}>
+        <div style={{ fontSize: '0.74rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: '12px' }}>
           {t('pipelineHeader')}
         </div>
         <div style={{
@@ -675,13 +658,15 @@ export const ChannelPartnerRouter: React.FC = () => {
                 borderRadius: '8px',
                 background: idx === 6 ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-surface)',
                 border: idx === 6 ? '1.5px solid #10B981' : '1px solid var(--border-subtle)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
                 minWidth: '110px'
               }}>
                 <span style={{
                   fontSize: '0.66rem',
                   fontWeight: 800,
                   color: idx === 6 ? '#059669' : 'var(--primary-saffron)',
-                  marginBottom: '2px'
+                  marginBottom: '2px',
+                  fontFamily: 'var(--font-mono)'
                 }}>
                   {t('stepPrefix')} {node.step}
                 </span>
@@ -701,9 +686,8 @@ export const ChannelPartnerRouter: React.FC = () => {
       </div>
 
       {/* ─── INTERACTIVE CONTROLS ROW ─────────────────────────────────────── */}
-      <div className="glass-panel" style={{
+      <div className="tactile-card-3d" style={{
         padding: '16px 20px',
-        borderRadius: '12px',
         marginBottom: '22px',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -712,7 +696,7 @@ export const ChannelPartnerRouter: React.FC = () => {
       }}>
         {/* District Selector + GPS */}
         <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
             {t('locDistrict')}
           </label>
           <div style={{ display: 'flex', gap: '6px' }}>
@@ -721,9 +705,9 @@ export const ChannelPartnerRouter: React.FC = () => {
               onChange={(e) => handleDistrictChange(e.target.value)}
               style={{
                 flex: 1,
-                padding: '8px 10px',
+                padding: '9px 10px',
                 borderRadius: '8px',
-                fontSize: '0.82rem',
+                fontSize: '0.84rem',
                 border: '1px solid var(--border-subtle)',
                 background: 'var(--bg-surface)',
                 color: 'var(--text-primary)'
@@ -738,29 +722,21 @@ export const ChannelPartnerRouter: React.FC = () => {
               onClick={handleDetectGps}
               disabled={gpsLoading}
               title="Detect Live GPS Location"
+              className="tactile-btn-secondary-3d"
               style={{
                 padding: '8px 12px',
-                borderRadius: '8px',
-                background: isGpsActive ? '#10B981' : 'var(--bg-surface-elevated)',
-                color: isGpsActive ? '#fff' : 'var(--text-primary)',
-                border: '1px solid var(--border-subtle)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                fontSize: '0.78rem',
-                fontWeight: 600
+                fontSize: '0.78rem'
               }}
             >
               <Crosshair size={14} className={gpsLoading ? 'animate-spin' : ''} />
-              <span>{isGpsActive ? t('gpsBtn') : t('detectBtn')}</span>
+              <span>{isGpsActive ? 'Live' : t('detectBtn')}</span>
             </button>
           </div>
         </div>
 
         {/* Selected Scheme Selector */}
         <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
             {t('targetScheme')}
           </label>
           <select
@@ -768,9 +744,9 @@ export const ChannelPartnerRouter: React.FC = () => {
             onChange={(e) => setSelectedSchemeId(e.target.value)}
             style={{
               width: '100%',
-              padding: '8px 10px',
+              padding: '9px 10px',
               borderRadius: '8px',
-              fontSize: '0.82rem',
+              fontSize: '0.84rem',
               border: '1px solid var(--border-subtle)',
               background: 'var(--bg-surface)',
               color: 'var(--text-primary)'
@@ -784,7 +760,7 @@ export const ChannelPartnerRouter: React.FC = () => {
 
         {/* Loan Category */}
         <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
             {t('loanCategoryLabel')}
           </label>
           <select
@@ -792,9 +768,9 @@ export const ChannelPartnerRouter: React.FC = () => {
             onChange={(e) => setLoanCategory(e.target.value as any)}
             style={{
               width: '100%',
-              padding: '8px 10px',
+              padding: '9px 10px',
               borderRadius: '8px',
-              fontSize: '0.82rem',
+              fontSize: '0.84rem',
               border: '1px solid var(--border-subtle)',
               background: 'var(--bg-surface)',
               color: 'var(--text-primary)'
@@ -808,7 +784,7 @@ export const ChannelPartnerRouter: React.FC = () => {
 
         {/* Loan Amount */}
         <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
             {t('loanAmountLabel')}
           </label>
           <input
@@ -818,12 +794,13 @@ export const ChannelPartnerRouter: React.FC = () => {
             onChange={(e) => setLoanAmount(parseInt(e.target.value, 10) || 10000)}
             style={{
               width: '100%',
-              padding: '8px 10px',
+              padding: '9px 10px',
               borderRadius: '8px',
-              fontSize: '0.82rem',
+              fontSize: '0.84rem',
               border: '1px solid var(--border-subtle)',
               background: 'var(--bg-surface)',
-              color: 'var(--text-primary)'
+              color: 'var(--text-primary)',
+              fontFamily: 'var(--font-mono)'
             }}
           />
         </div>
@@ -831,20 +808,16 @@ export const ChannelPartnerRouter: React.FC = () => {
 
       {/* ─── RECOMMENDED CHANNEL PARTNER HERO SHOWCASE ───────────────────── */}
       {recommendedPartner && (
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.06) 100%)',
-          border: '2px solid #10B981',
-          borderRadius: '16px',
+        <div className="tactile-card-3d" style={{
+          border: '2px solid rgba(16, 185, 129, 0.4)',
           padding: '24px 28px',
-          marginBottom: '26px',
-          boxShadow: '0 8px 24px rgba(16, 185, 129, 0.1)',
-          position: 'relative'
+          marginBottom: '26px'
         }}>
           {/* Top Row: Location Header + Distance Pin */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px', marginBottom: '16px' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#10B981', color: '#fff', padding: '3px 10px', borderRadius: '99px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <span style={{ fontSize: '0.72rem', fontWeight: 800, background: '#10B981', color: '#fff', padding: '3px 10px', borderRadius: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   {t('recPartnerBadge')}
                 </span>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#059669', background: 'rgba(5, 150, 105, 0.12)', padding: '3px 8px', borderRadius: '6px' }}>
@@ -852,7 +825,7 @@ export const ChannelPartnerRouter: React.FC = () => {
                 </span>
               </div>
               
-              <h2 style={{ fontSize: '1.45rem', fontWeight: 800, margin: '4px 0', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: '4px 0', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span>🏦 {recommendedPartner.name}</span>
               </h2>
               
@@ -865,21 +838,17 @@ export const ChannelPartnerRouter: React.FC = () => {
             </div>
 
             {/* Distance Capsule */}
-            <div style={{
+            <div className="tactile-stat-pod-3d" style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-end',
-              background: 'var(--bg-surface)',
-              padding: '10px 18px',
-              borderRadius: '12px',
-              border: '1.5px solid rgba(16, 185, 129, 0.3)',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              padding: '10px 18px'
             }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#059669', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ fontSize: '1.45rem', fontWeight: 800, color: '#059669', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'var(--font-mono)' }}>
                 <MapPin size={20} />
                 <span>{recommendedPartner.distanceKm} {t('kmAway')}</span>
               </div>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+              <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700 }}>
                 {t('fromStatedLoc')} ({selectedDistrict})
               </span>
             </div>
@@ -888,7 +857,7 @@ export const ChannelPartnerRouter: React.FC = () => {
           {/* 4 EXACT CHECKMARK VALIDATION CRITERIA */}
           <div style={{
             background: 'var(--bg-surface)',
-            border: '1px solid rgba(16, 185, 129, 0.25)',
+            border: '1px solid var(--border-subtle)',
             borderRadius: '12px',
             padding: '16px 20px',
             marginBottom: '18px'
@@ -952,20 +921,14 @@ export const ChannelPartnerRouter: React.FC = () => {
                 href={recommendedPartner.directionsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                className="tactile-btn-secondary-3d"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '10px 18px',
-                  borderRadius: '10px',
-                  background: 'var(--bg-surface)',
-                  color: 'var(--text-primary)',
-                  border: '1.5px solid var(--border-subtle)',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
+                  padding: '9px 18px',
+                  fontSize: '0.84rem',
                   textDecoration: 'none',
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
                 }}
               >
                 <Navigation size={15} style={{ color: '#4F46E5' }} />
@@ -975,23 +938,17 @@ export const ChannelPartnerRouter: React.FC = () => {
 
               <button
                 type="button"
+                className="tactile-btn-primary-3d"
                 onClick={() => {
                   setRoutedPartner(recommendedPartner);
                   setShowRoutingModal(true);
                 }}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '10px 20px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #10B981, #059669)',
-                  color: '#fff',
-                  border: 'none',
-                  fontWeight: 800,
+                  padding: '9px 20px',
                   fontSize: '0.86rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px'
                 }}
               >
                 <Send size={15} />

@@ -13,7 +13,10 @@ import {
   Lightbulb, 
   HelpCircle,
   Clock,
-  Award
+  Award,
+  ShieldCheck,
+  Zap,
+  Target
 } from 'lucide-react';
 
 interface EligibilityGap {
@@ -440,37 +443,45 @@ export const GapAnalyzer: React.FC = () => {
 
   return (
     <div className="gap-analyzer-container" style={{ padding: '8px 0' }}>
-      {/* Header Banner */}
-      <div className="glass-panel" style={{ padding: '26px 30px', marginBottom: '24px', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -20, right: -20, width: 220, height: 220, background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        
+      {/* Institutional Diagnostic Header */}
+      <div className="tactile-card-3d" style={{ padding: '24px 28px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span className="badge badge-emerald">{l.badge}</span>
+              <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+                <ShieldCheck size={12} />
+                <span>{l.badge}</span>
+              </span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                AUDIT ENGINE
+              </span>
             </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               {l.title}
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
               {l.subtitle}
             </p>
           </div>
 
-          {/* Quick Metrics Badge */}
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', background: 'var(--bg-surface-elevated)', padding: '12px 20px', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
-            <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{l.currentScore}</span>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: currentMatchScore >= 75 ? '#10B981' : '#F59E0B' }}>
+          {/* 3D Dual-Dial Scorecard */}
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="tactile-stat-pod-3d" style={{ minWidth: '130px', textAlign: 'center', padding: '12px 18px' }}>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 700, display: 'block' }}>
+                {l.currentScore}
+              </span>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: currentMatchScore >= 75 ? '#10B981' : '#F59E0B', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
                 {currentMatchScore}%
               </div>
             </div>
-            <div style={{ width: '1px', height: '36px', background: 'var(--border-subtle)' }} />
-            <div style={{ textAlign: 'center' }}>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{l.potentialScore}</span>
-              <div style={{ fontSize: '1.4rem', fontWeight: 700, color: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+
+            <div className="tactile-stat-pod-3d" style={{ minWidth: '140px', textAlign: 'center', padding: '12px 18px', borderTop: '2px solid rgba(79, 70, 229, 0.4)' }}>
+              <span style={{ fontSize: '0.68rem', color: '#4F46E5', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 800, display: 'block' }}>
+                {l.potentialScore}
+              </span>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#4F46E5', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
                 {potentialScore}%
-                <TrendingUp size={16} />
+                <TrendingUp size={18} />
               </div>
             </div>
           </div>
@@ -478,42 +489,37 @@ export const GapAnalyzer: React.FC = () => {
       </div>
 
       {/* Scheme Selector Tabs */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '10px' }}>
+      <div style={{ marginBottom: '22px' }}>
+        <div style={{ fontSize: '0.76rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '10px' }}>
           {l.selectScheme}
         </div>
-        <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '6px' }}>
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
           {allSchemes.slice(0, 5).map((m) => {
             const isSelected = m.scheme.id === selectedSchemeId;
             return (
               <button
                 key={m.scheme.id}
                 onClick={() => setSelectedSchemeId(m.scheme.id)}
+                className={`tactile-segment-btn ${isSelected ? 'active' : ''}`}
                 style={{
+                  padding: '9px 16px',
+                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '10px 16px',
-                  borderRadius: '10px',
-                  border: isSelected ? '2px solid #4F46E5' : '1px solid var(--border-subtle)',
-                  background: isSelected ? 'rgba(79, 70, 229, 0.08)' : 'var(--bg-surface)',
-                  color: isSelected ? '#4F46E5' : 'var(--text-primary)',
-                  fontWeight: isSelected ? 600 : 500,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.15s ease'
+                  fontSize: '0.84rem'
                 }}
               >
                 <span>{m.scheme.name}</span>
                 <span 
                   style={{ 
-                    fontSize: '0.75rem', 
+                    fontSize: '0.72rem', 
                     padding: '2px 8px', 
-                    borderRadius: '20px', 
+                    borderRadius: '6px', 
                     background: m.matchScore >= 75 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
                     color: m.matchScore >= 75 ? '#059669' : '#D97706',
-                    fontWeight: 700
+                    fontWeight: 800,
+                    fontFamily: 'var(--font-mono)'
                   }}
                 >
                   {m.matchScore}%
@@ -529,11 +535,11 @@ export const GapAnalyzer: React.FC = () => {
         {/* Left Column: Actionable Gaps List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
               <AlertTriangle size={18} style={{ color: '#F59E0B' }} />
               <span>{l.identifiedGaps} {activeMatch?.scheme.name} ({gaps.filter(g => !g.isCompleted).length})</span>
             </h2>
-            <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
               {l.sortedBy}
             </span>
           </div>
@@ -541,14 +547,10 @@ export const GapAnalyzer: React.FC = () => {
           {gaps.map((gap) => (
             <div 
               key={gap.id}
-              className="glass-panel"
+              className="tactile-card-3d"
               style={{
-                padding: '20px',
-                borderRadius: '12px',
-                borderLeft: gap.isCompleted ? '4px solid #10B981' : '4px solid #F59E0B',
-                background: 'var(--bg-surface)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
+                padding: '20px 22px',
+                borderLeft: gap.isCompleted ? '4px solid #10B981' : '4px solid #F59E0B'
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '8px' }}>
@@ -558,19 +560,20 @@ export const GapAnalyzer: React.FC = () => {
                   ) : (
                     <ShieldAlert size={20} style={{ color: '#F59E0B', flexShrink: 0 }} />
                   )}
-                  <h3 style={{ fontSize: '1.02rem', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+                  <h3 style={{ fontSize: '1.02rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
                     {gap.title}
                   </h3>
                 </div>
 
                 <span 
                   style={{ 
-                    fontSize: '0.72rem', 
-                    fontWeight: 600, 
-                    padding: '3px 8px', 
-                    borderRadius: '4px',
+                    fontSize: '0.7rem', 
+                    fontWeight: 700, 
+                    padding: '3px 9px', 
+                    borderRadius: '6px',
                     background: gap.difficulty.includes('5') || gap.difficulty.includes('५') ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.1)',
-                    color: gap.difficulty.includes('5') || gap.difficulty.includes('५') ? '#059669' : '#DC2626'
+                    color: gap.difficulty.includes('5') || gap.difficulty.includes('५') ? '#059669' : '#DC2626',
+                    fontFamily: 'var(--font-mono)'
                   }}
                 >
                   {gap.difficulty}
@@ -584,12 +587,12 @@ export const GapAnalyzer: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
                   {gap.impactScore > 0 && (
-                    <span style={{ fontSize: '0.8rem', color: '#4F46E5', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.82rem', color: '#4F46E5', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
                       +{gap.impactScore}% {l.matchScoreSuffix}
                     </span>
                   )}
                   {gap.subsidyUnlock > 0 && (
-                    <span style={{ fontSize: '0.8rem', color: '#059669', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.82rem', color: '#059669', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>
                       {l.unlocks} ₹{(gap.subsidyUnlock / 1000).toFixed(0)}k {l.subsidy}
                     </span>
                   )}
@@ -598,13 +601,12 @@ export const GapAnalyzer: React.FC = () => {
                 {/* Remediation Button */}
                 {gap.actionTab ? (
                   <button
-                    className="btn-primary"
+                    className="tactile-btn-primary-3d"
                     onClick={() => setActiveTab(gap.actionTab!)}
                     style={{
-                      padding: '7px 14px',
+                      padding: '8px 16px',
                       fontSize: '0.82rem',
-                      borderRadius: '8px',
-                      display: 'flex',
+                      display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px'
                     }}
@@ -617,12 +619,11 @@ export const GapAnalyzer: React.FC = () => {
                     href={gap.externalUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-secondary"
+                    className="tactile-btn-secondary-3d"
                     style={{
-                      padding: '7px 14px',
+                      padding: '8px 16px',
                       fontSize: '0.82rem',
-                      borderRadius: '8px',
-                      display: 'flex',
+                      display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
                       textDecoration: 'none'
@@ -640,54 +641,54 @@ export const GapAnalyzer: React.FC = () => {
         {/* Right Column: Opportunity Summary & Remediation Roadmap */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           {/* Unlock Potential Card */}
-          <div 
-            className="glass-panel" 
-            style={{ 
-              padding: '24px', 
-              borderRadius: '14px',
-              background: 'linear-gradient(145deg, rgba(79, 70, 229, 0.06) 0%, rgba(16, 185, 129, 0.05) 100%)',
-              border: '1px solid rgba(79, 70, 229, 0.2)'
-            }}
-          >
+          <div className="tactile-card-3d" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <Award size={20} style={{ color: '#4F46E5' }} />
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+              <h3 style={{ fontSize: '1.08rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
                 {l.impactSummaryTitle}
               </h3>
             </div>
 
-            <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', margin: '0 0 18px 0', lineHeight: 1.45 }}>
+            <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', margin: '0 0 18px 0', lineHeight: 1.5 }}>
               {l.impactSummaryDescPre} <strong>{gaps.filter(g => !g.isCompleted).length}</strong> {l.impactSummaryDescPost}
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.86rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '18px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.86rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{l.additionalSubsidy}</span>
-                <strong style={{ color: '#059669', fontSize: '1.05rem' }}>+₹{totalLockedSubsidy.toLocaleString('en-IN')}</strong>
+                <strong style={{ color: '#059669', fontSize: '1.15rem', fontFamily: 'var(--font-mono)' }}>+₹{totalLockedSubsidy.toLocaleString('en-IN')}</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.86rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.86rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{l.targetFit}</span>
-                <strong style={{ color: '#4F46E5', fontSize: '1.05rem' }}>{potentialScore}% ({l.highFit})</strong>
+                <strong style={{ color: '#4F46E5', fontSize: '1.1rem', fontFamily: 'var(--font-mono)' }}>{potentialScore}% ({l.highFit})</strong>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.86rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.86rem' }}>
                 <span style={{ color: 'var(--text-muted)' }}>{l.estTime}</span>
                 <strong style={{ color: 'var(--text-primary)' }}>{l.estTimeVal}</strong>
               </div>
             </div>
 
-            {/* Visual Progress Bar */}
+            {/* Visual Progress Bar with 3D Specular Groove */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '6px' }}>
                 <span>{l.eligibilityProgress}</span>
-                <span>{currentMatchScore}% {l.of} 100%</span>
+                <span style={{ fontFamily: 'var(--font-mono)' }}>{currentMatchScore}% {l.of} 100%</span>
               </div>
-              <div style={{ width: '100%', height: '8px', background: 'var(--border-subtle)', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{
+                width: '100%',
+                height: '10px',
+                background: 'rgba(0,0,0,0.06)',
+                borderRadius: '99px',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.15)',
+                overflow: 'hidden'
+              }}>
                 <div 
                   style={{ 
                     width: `${currentMatchScore}%`, 
                     height: '100%', 
                     background: 'linear-gradient(90deg, #F59E0B 0%, #4F46E5 100%)',
-                    borderRadius: '4px'
+                    borderRadius: '99px',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
                   }} 
                 />
               </div>
@@ -697,29 +698,28 @@ export const GapAnalyzer: React.FC = () => {
               onClick={() => {
                 if (activeMatch) setSelectedSchemeModal(activeMatch);
               }}
-              className="btn-secondary"
+              className="tactile-btn-secondary-3d"
               style={{
                 width: '100%',
                 marginTop: '18px',
-                padding: '10px',
+                padding: '11px',
                 fontSize: '0.85rem',
-                justifyContent: 'center',
-                borderRadius: '8px'
+                justifyContent: 'center'
               }}
             >
               {l.inspectFull}
             </button>
           </div>
 
-          {/* Quick Tips Box */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: '12px' }}>
+          {/* Institutional Advisory Box */}
+          <div className="tactile-card-3d" style={{ padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
               <Lightbulb size={18} style={{ color: '#F59E0B' }} />
-              <h4 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: 'var(--text-primary)' }}>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
                 {l.advisoryTitle}
               </h4>
             </div>
-            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
               {l.advisoryDesc}
             </p>
           </div>

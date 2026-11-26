@@ -473,34 +473,36 @@ export const FinancialCalculator: React.FC = () => {
 
   return (
     <div className="financial-calculator-container" style={{ padding: '8px 0' }}>
-      {/* Header Banner */}
-      <div className="glass-panel" style={{ padding: '26px 30px', marginBottom: '24px', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -30, right: -30, width: 250, height: 250, background: 'radial-gradient(circle, rgba(79, 70, 229, 0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
+      {/* Institutional Financial Terminal Header */}
+      <div className="tactile-card-3d" style={{ padding: '24px 28px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span className="badge badge-emerald">{t('badge')}</span>
+              <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+                <ShieldCheck size={12} />
+                <span>{t('badge')}</span>
+              </span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                BANK APPRAISAL ENGINE
+              </span>
             </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               {t('title')}
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
               {t('subtitle')}
             </p>
           </div>
 
           <button
             onClick={() => setActiveTab('dpr')}
-            className="btn-primary"
+            className="tactile-btn-primary-3d"
             style={{
               padding: '10px 18px',
-              fontSize: '0.88rem',
-              borderRadius: '10px',
-              display: 'flex',
+              fontSize: '0.86rem',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.2)'
+              gap: '8px'
             }}
           >
             <FileText size={16} />
@@ -514,11 +516,11 @@ export const FinancialCalculator: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1.1fr)', gap: '24px' }}>
         
         {/* Left Column: Form & Sliders */}
-        <div className="glass-panel" style={{ padding: '24px', borderRadius: '14px' }}>
+        <div className="tactile-card-3d" style={{ padding: '24px' }}>
           
           {/* Preset Scheme Selector */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+          <div style={{ marginBottom: '22px' }}>
+            <label style={{ fontSize: '0.78rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'block', marginBottom: '8px' }}>
               {t('presetLabel')}
             </label>
             <select
@@ -527,10 +529,11 @@ export const FinancialCalculator: React.FC = () => {
               style={{
                 width: '100%',
                 padding: '10px 14px',
-                fontSize: '0.9rem',
-                borderRadius: '10px',
+                fontSize: '0.88rem',
+                borderRadius: '9px',
                 border: '1px solid var(--border-subtle)',
-                background: 'var(--bg-surface)'
+                background: 'var(--bg-surface)',
+                color: 'var(--text-primary)'
               }}
             >
               {SCHEME_PRESETS.map((p) => (
@@ -541,74 +544,77 @@ export const FinancialCalculator: React.FC = () => {
             </select>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             {/* Project Cost Input */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {t('totalProjectCost')}
                 </label>
-                <strong style={{ color: '#4F46E5', fontSize: '0.94rem' }}>
+                <strong style={{ color: '#4F46E5', fontSize: '1.05rem', fontFamily: 'var(--font-mono)' }}>
                   ₹{projectCost.toLocaleString('en-IN')}
                 </strong>
               </div>
               <input
                 type="range"
+                className="tactile-slider-3d"
                 min={50000}
                 max={5000000}
                 step={25000}
                 value={projectCost}
                 onChange={(e) => setProjectCost(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#4F46E5' }}
+                style={{ width: '100%', cursor: 'pointer' }}
               />
             </div>
 
             {/* Promoter Margin Money % */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {t('promoterContribution')}
                 </label>
-                <strong style={{ color: '#F59E0B', fontSize: '0.94rem' }}>
+                <strong style={{ color: '#F59E0B', fontSize: '1.05rem', fontFamily: 'var(--font-mono)' }}>
                   {promoterContributionPercent}% (₹{ownContributionAmount.toLocaleString('en-IN')})
                 </strong>
               </div>
               <input
                 type="range"
+                className="tactile-slider-3d"
                 min={5}
                 max={40}
                 step={1}
                 value={promoterContributionPercent}
                 onChange={(e) => setPromoterContributionPercent(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#F59E0B' }}
+                style={{ width: '100%', cursor: 'pointer' }}
               />
             </div>
 
             {/* Subsidy Rate % */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <label style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {t('govtSubsidyRate')}
                 </label>
-                <strong style={{ color: '#10B981', fontSize: '0.94rem' }}>
+                <strong style={{ color: '#10B981', fontSize: '1.05rem', fontFamily: 'var(--font-mono)' }}>
                   {subsidyRatePercent}% (₹{eligibleSubsidy.toLocaleString('en-IN')})
                 </strong>
               </div>
               <input
                 type="range"
+                className="tactile-slider-3d"
                 min={0}
                 max={35}
                 step={5}
                 value={subsidyRatePercent}
                 onChange={(e) => setSubsidyRatePercent(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#10B981' }}
+                style={{ width: '100%', cursor: 'pointer' }}
               />
             </div>
 
             {/* Grid of Interest Rate, Tenure, Moratorium */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   {t('bankInterestRate')}
                 </label>
                 <input
@@ -616,18 +622,18 @@ export const FinancialCalculator: React.FC = () => {
                   step="0.25"
                   value={interestRate}
                   onChange={(e) => setInterestRate(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px 10px', fontSize: '0.86rem', borderRadius: '8px' }}
+                  style={{ width: '100%', padding: '9px 10px', fontSize: '0.86rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)', fontFamily: 'var(--font-mono)' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   {t('tenureYears')}
                 </label>
                 <select
                   value={tenureYears}
                   onChange={(e) => setTenureYears(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px 10px', fontSize: '0.86rem', borderRadius: '8px' }}
+                  style={{ width: '100%', padding: '9px 10px', fontSize: '0.86rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}
                 >
                   <option value={1}>{t('tenure1Yr')}</option>
                   <option value={3}>{t('tenure3Yr')}</option>
@@ -637,13 +643,13 @@ export const FinancialCalculator: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   {t('moratoriumMonths')}
                 </label>
                 <select
                   value={moratoriumMonths}
                   onChange={(e) => setMoratoriumMonths(Number(e.target.value))}
-                  style={{ width: '100%', padding: '8px 10px', fontSize: '0.86rem', borderRadius: '8px' }}
+                  style={{ width: '100%', padding: '9px 10px', fontSize: '0.86rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}
                 >
                   <option value={0}>{t('moraNoGrace')}</option>
                   <option value={3}>{t('mora3Mo')}</option>
@@ -669,32 +675,31 @@ export const FinancialCalculator: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           
           {/* Main Key Metric Card */}
-          <div 
-            className="glass-panel" 
-            style={{ 
-              padding: '24px', 
-              borderRadius: '14px',
-              background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%)',
-              border: '1px solid rgba(79, 70, 229, 0.25)'
-            }}
-          >
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div className="tactile-card-3d" style={{ padding: '24px' }}>
+            <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 800 }}>
               {t('estMonthlyRepayment')}
             </span>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', margin: '6px 0 16px 0' }}>
-              <span style={{ fontSize: '2.2rem', fontWeight: 800, color: '#4F46E5', letterSpacing: '-0.02em' }}>
+              <span style={{ fontSize: '2.3rem', fontWeight: 800, color: '#4F46E5', letterSpacing: '-0.02em', fontFamily: 'var(--font-mono)' }}>
                 ₹{monthlyEmi.toLocaleString('en-IN')}
               </span>
               <span style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>{t('perMonth')}</span>
             </div>
 
             {/* Three-Tier Capital Breakdown Bar */}
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '6px', color: 'var(--text-muted)' }}>
+            <div style={{ marginBottom: '18px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '8px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                 <span>{t('capitalDist')}</span>
                 <span>₹{projectCost.toLocaleString('en-IN')} {t('totalCostText')}</span>
               </div>
-              <div style={{ width: '100%', height: '12px', borderRadius: '6px', display: 'flex', overflow: 'hidden' }}>
+              <div style={{
+                width: '100%',
+                height: '14px',
+                borderRadius: '8px',
+                display: 'flex',
+                overflow: 'hidden',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)'
+              }}>
                 <div 
                   title={`Own Margin: ₹${ownContributionAmount.toLocaleString('en-IN')}`} 
                   style={{ width: `${promoterContributionPercent}%`, background: '#F59E0B' }} 
@@ -708,63 +713,75 @@ export const FinancialCalculator: React.FC = () => {
                   style={{ width: `${100 - promoterContributionPercent - subsidyRatePercent}%`, background: '#4F46E5' }} 
                 />
               </div>
-              <div style={{ display: 'flex', gap: '14px', fontSize: '0.74rem', marginTop: '8px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '14px', fontSize: '0.74rem', marginTop: '10px', flexWrap: 'wrap', fontFamily: 'var(--font-mono)' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: '#F59E0B' }} />
+                  <span style={{ width: 9, height: 9, borderRadius: 2, background: '#F59E0B' }} />
                   {t('ownMargin')} ₹{ownContributionAmount.toLocaleString('en-IN')}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: '#10B981' }} />
+                  <span style={{ width: 9, height: 9, borderRadius: 2, background: '#10B981' }} />
                   {t('govtSubsidyLabel')} ₹{eligibleSubsidy.toLocaleString('en-IN')}
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 2, background: '#4F46E5' }} />
+                  <span style={{ width: 9, height: 9, borderRadius: 2, background: '#4F46E5' }} />
                   {t('bankLoanLabel')} ₹{netLoanLiability.toLocaleString('en-IN')}
                 </span>
               </div>
             </div>
 
             {/* Financial Summary Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', paddingTop: '14px', borderTop: '1px solid var(--border-subtle)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', paddingTop: '16px', borderTop: '1px solid var(--border-subtle)' }}>
               <div>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('totalInterestPayable')}</span>
-                <strong style={{ fontSize: '0.94rem', color: 'var(--text-primary)' }}>₹{totalInterestPayable.toLocaleString('en-IN')}</strong>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>
+                  {t('totalInterestPayable')}
+                </span>
+                <strong style={{ fontSize: '1.05rem', color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                  ₹{totalInterestPayable.toLocaleString('en-IN')}
+                </strong>
               </div>
               <div>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block' }}>{t('totalOutflow')}</span>
-                <strong style={{ fontSize: '0.94rem', color: 'var(--text-primary)' }}>₹{totalRepaymentAmount.toLocaleString('en-IN')}</strong>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>
+                  {t('totalOutflow')}
+                </span>
+                <strong style={{ fontSize: '1.05rem', color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}>
+                  ₹{totalRepaymentAmount.toLocaleString('en-IN')}
+                </strong>
               </div>
               {subventionSavings > 0 && (
                 <div style={{ gridColumn: 'span 2' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#059669', display: 'block' }}>{t('subventionSavings')}</span>
-                  <strong style={{ fontSize: '0.94rem', color: '#059669' }}>+₹{subventionSavings.toLocaleString('en-IN')} {t('interestSavedSuffix')}</strong>
+                  <span style={{ fontSize: '0.72rem', color: '#059669', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>
+                    {t('subventionSavings')}
+                  </span>
+                  <strong style={{ fontSize: '1.05rem', color: '#059669', fontFamily: 'var(--font-mono)' }}>
+                    +₹{subventionSavings.toLocaleString('en-IN')} {t('interestSavedSuffix')}
+                  </strong>
                 </div>
               )}
             </div>
           </div>
 
           {/* Repayment Schedule Mini Table */}
-          <div className="glass-panel" style={{ padding: '18px', borderRadius: '12px' }}>
-            <h4 style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 10px 0' }}>
+          <div className="tactile-card-3d" style={{ padding: '20px' }}>
+            <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)', margin: '0 0 12px 0' }}>
               {t('amortTitle')}
             </h4>
             <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', fontSize: '0.78rem', borderCollapse: 'collapse' }}>
+              <table style={{ width: '100%', fontSize: '0.8rem', borderCollapse: 'collapse', fontFamily: 'var(--font-mono)' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-subtle)', color: 'var(--text-muted)', textAlign: 'left' }}>
-                    <th style={{ padding: '4px 6px' }}>{t('thYear')}</th>
-                    <th style={{ padding: '4px 6px' }}>{t('thPrincipal')}</th>
-                    <th style={{ padding: '4px 6px' }}>{t('thInterest')}</th>
-                    <th style={{ padding: '4px 6px' }}>{t('thBalance')}</th>
+                  <tr style={{ borderBottom: '1.5px solid var(--border-subtle)', color: 'var(--text-muted)', textAlign: 'left' }}>
+                    <th style={{ padding: '6px 8px' }}>{t('thYear')}</th>
+                    <th style={{ padding: '6px 8px' }}>{t('thPrincipal')}</th>
+                    <th style={{ padding: '6px 8px' }}>{t('thInterest')}</th>
+                    <th style={{ padding: '6px 8px' }}>{t('thBalance')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {schedule.slice(0, 5).map((row) => (
-                    <tr key={row.year} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                      <td style={{ padding: '6px 6px', fontWeight: 600 }}>{t('yrPrefix')} {row.year}</td>
-                      <td style={{ padding: '6px 6px', color: '#4F46E5' }}>₹{row.principalPaid.toLocaleString('en-IN')}</td>
-                      <td style={{ padding: '6px 6px', color: 'var(--text-muted)' }}>₹{row.interestPaid.toLocaleString('en-IN')}</td>
-                      <td style={{ padding: '6px 6px', fontWeight: 600 }}>₹{row.closingBalance.toLocaleString('en-IN')}</td>
+                    <tr key={row.year} style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                      <td style={{ padding: '7px 8px', fontWeight: 700 }}>{t('yrPrefix')} {row.year}</td>
+                      <td style={{ padding: '7px 8px', color: '#4F46E5' }}>₹{row.principalPaid.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '7px 8px', color: 'var(--text-muted)' }}>₹{row.interestPaid.toLocaleString('en-IN')}</td>
+                      <td style={{ padding: '7px 8px', fontWeight: 700 }}>₹{row.closingBalance.toLocaleString('en-IN')}</td>
                     </tr>
                   ))}
                 </tbody>

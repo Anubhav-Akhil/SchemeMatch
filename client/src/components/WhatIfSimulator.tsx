@@ -539,19 +539,23 @@ export const WhatIfSimulator: React.FC = () => {
 
   return (
     <div className="whatif-simulator-container" style={{ padding: '8px 0' }}>
-      {/* Header Banner */}
-      <div className="glass-panel" style={{ padding: '26px 30px', marginBottom: '24px', borderRadius: '16px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: -30, right: -30, width: 250, height: 250, background: 'radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
+      {/* Institutional Parameter Sensitivity Header */}
+      <div className="tactile-card-3d" style={{ padding: '24px 28px', marginBottom: '24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <span className="badge badge-emerald">{t('badge')}</span>
+              <span className="badge badge-emerald" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+                <ShieldCheck size={12} />
+                <span>{t('badge')}</span>
+              </span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                SENSITIVITY ENGINE
+              </span>
             </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 700, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, margin: '0 0 8px 0', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
               {t('title')}
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', margin: 0, maxWidth: '680px', lineHeight: 1.5 }}>
               {t('subtitle')}
             </p>
           </div>
@@ -560,15 +564,13 @@ export const WhatIfSimulator: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <button
               onClick={applyToProfile}
-              className="btn-primary"
+              className="tactile-btn-primary-3d"
               style={{
                 padding: '10px 18px',
-                fontSize: '0.88rem',
-                borderRadius: '10px',
-                display: 'flex',
+                fontSize: '0.86rem',
+                display: 'inline-flex',
                 alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.25)'
+                gap: '8px'
               }}
             >
               {isAppliedNotice ? <Check size={16} /> : <Zap size={16} />}
@@ -577,36 +579,36 @@ export const WhatIfSimulator: React.FC = () => {
           </div>
         </div>
 
-        {/* Preset Scenarios Strip */}
-        <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+        {/* Preset Scenarios Strip with 3D Tactile Buttons */}
+        <div style={{ marginTop: '20px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', paddingTop: '16px', borderTop: '1px solid var(--border-subtle)' }}>
+          <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             {t('instantPresets')}
           </span>
           <button
             onClick={() => applyPreset('max_subsidy')}
-            className="btn-secondary"
-            style={{ fontSize: '0.78rem', padding: '5px 12px', borderRadius: '20px' }}
+            className="tactile-btn-secondary-3d"
+            style={{ fontSize: '0.76rem', padding: '5px 12px', borderRadius: '8px' }}
           >
             {t('presetMaxSubsidy')}
           </button>
           <button
             onClick={() => applyPreset('scale_mfg')}
-            className="btn-secondary"
-            style={{ fontSize: '0.78rem', padding: '5px 12px', borderRadius: '20px' }}
+            className="tactile-btn-secondary-3d"
+            style={{ fontSize: '0.76rem', padding: '5px 12px', borderRadius: '8px' }}
           >
             {t('presetScaleMfg')}
           </button>
           <button
             onClick={() => applyPreset('micro_credit')}
-            className="btn-secondary"
-            style={{ fontSize: '0.78rem', padding: '5px 12px', borderRadius: '20px' }}
+            className="tactile-btn-secondary-3d"
+            style={{ fontSize: '0.76rem', padding: '5px 12px', borderRadius: '8px' }}
           >
             {t('presetMicroCredit')}
           </button>
           <button
             onClick={() => applyPreset('reset')}
-            className="btn-secondary"
-            style={{ fontSize: '0.78rem', padding: '5px 12px', borderRadius: '20px', borderColor: 'var(--border-subtle)' }}
+            className="tactile-btn-secondary-3d"
+            style={{ fontSize: '0.76rem', padding: '5px 12px', borderRadius: '8px' }}
           >
             <RefreshCw size={12} style={{ marginRight: '4px' }} />
             {t('presetReset')}
@@ -618,8 +620,8 @@ export const WhatIfSimulator: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1.1fr)', gap: '24px' }}>
         
         {/* Left Column: Interactive Simulation Sliders & Switches */}
-        <div className="glass-panel" style={{ padding: '24px', borderRadius: '14px' }}>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 600, marginBottom: '20px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="tactile-card-3d" style={{ padding: '24px' }}>
+          <h2 style={{ fontSize: '1.12rem', fontWeight: 800, marginBottom: '20px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Sliders size={18} style={{ color: '#4F46E5' }} />
             <span>{t('simParams')}</span>
           </h2>
@@ -627,16 +629,17 @@ export const WhatIfSimulator: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
             {/* Slider 1: Total Project Cost */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <label style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {t('totalProjectCost')}
                 </label>
-                <span style={{ fontSize: '0.92rem', fontWeight: 700, color: '#4F46E5' }}>
+                <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#4F46E5', fontFamily: 'var(--font-mono)' }}>
                   ₹{simProjectCost.toLocaleString('en-IN')}
                 </span>
               </div>
               <input
                 type="range"
+                className="tactile-slider-3d"
                 min={50000}
                 max={5000000}
                 step={25000}
@@ -646,9 +649,9 @@ export const WhatIfSimulator: React.FC = () => {
                   setSimProjectCost(val);
                   if (simLoanAmount > val) setSimLoanAmount(Math.round(val * 0.9));
                 }}
-                style={{ width: '100%', accentColor: '#4F46E5', cursor: 'pointer' }}
+                style={{ width: '100%', cursor: 'pointer' }}
               />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px', fontFamily: 'var(--font-mono)' }}>
                 <span>{t('microHint')}</span>
                 <span>{t('msmeHint')}</span>
                 <span>{t('maxPmegpHint')}</span>
@@ -657,24 +660,25 @@ export const WhatIfSimulator: React.FC = () => {
 
             {/* Slider 2: Required Loan Amount */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <label style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {t('bankLoanRequested')}
                 </label>
-                <span style={{ fontSize: '0.92rem', fontWeight: 700, color: '#10B981' }}>
+                <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10B981', fontFamily: 'var(--font-mono)' }}>
                   ₹{simLoanAmount.toLocaleString('en-IN')}
                 </span>
               </div>
               <input
                 type="range"
+                className="tactile-slider-3d"
                 min={25000}
                 max={simProjectCost}
                 step={25000}
                 value={simLoanAmount}
                 onChange={(e) => setSimLoanAmount(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#10B981', cursor: 'pointer' }}
+                style={{ width: '100%', cursor: 'pointer' }}
               />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px', fontFamily: 'var(--font-mono)' }}>
                 <span>₹25,000</span>
                 <span>{t('loanPortion')} {Math.round((simLoanAmount / simProjectCost) * 100)}%</span>
                 <span>₹{simProjectCost.toLocaleString('en-IN')}</span>
@@ -683,24 +687,25 @@ export const WhatIfSimulator: React.FC = () => {
 
             {/* Slider 3: Promoter Contribution */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <label style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', alignItems: 'center' }}>
+                <label style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {t('promoterMargin')}
                 </label>
-                <span style={{ fontSize: '0.92rem', fontWeight: 700, color: '#F59E0B' }}>
+                <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#F59E0B', fontFamily: 'var(--font-mono)' }}>
                   ₹{simPromoterContribution.toLocaleString('en-IN')} ({marginPercent.toFixed(1)}%)
                 </span>
               </div>
               <input
                 type="range"
+                className="tactile-slider-3d"
                 min={5000}
                 max={Math.round(simProjectCost * 0.4)}
                 step={5000}
                 value={simPromoterContribution}
                 onChange={(e) => setSimPromoterContribution(Number(e.target.value))}
-                style={{ width: '100%', accentColor: '#F59E0B', cursor: 'pointer' }}
+                style={{ width: '100%', cursor: 'pointer' }}
               />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px', fontFamily: 'var(--font-mono)' }}>
                 <span>{t('marginScStHint')}</span>
                 <span>{t('marginGenHint')}</span>
                 <span>{t('marginMaxHint')}</span>
@@ -710,13 +715,13 @@ export const WhatIfSimulator: React.FC = () => {
             {/* Selectors Grid: Sector, Category, Location */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   {t('businessSector')}
                 </label>
                 <select
                   value={simSector}
                   onChange={(e) => setSimSector(e.target.value as SectorType)}
-                  style={{ width: '100%', padding: '8px 10px', fontSize: '0.82rem', borderRadius: '8px' }}
+                  style={{ width: '100%', padding: '9px 10px', fontSize: '0.82rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}
                 >
                   <option value="ArtisanHandicraft">{t('artisanCraft')}</option>
                   <option value="Manufacturing">{t('manufacturing')}</option>
@@ -728,13 +733,13 @@ export const WhatIfSimulator: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   {t('socialCategory')}
                 </label>
                 <select
                   value={simCategory}
                   onChange={(e) => setSimCategory(e.target.value as SocialCategory)}
-                  style={{ width: '100%', padding: '8px 10px', fontSize: '0.82rem', borderRadius: '8px' }}
+                  style={{ width: '100%', padding: '9px 10px', fontSize: '0.82rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}
                 >
                   <option value="SC">{t('catSC')}</option>
                   <option value="ST">{t('catST')}</option>
@@ -745,13 +750,13 @@ export const WhatIfSimulator: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>
                   {t('locationType')}
                 </label>
                 <select
                   value={simLocation}
                   onChange={(e) => setSimLocation(e.target.value as LocationType)}
-                  style={{ width: '100%', padding: '8px 10px', fontSize: '0.82rem', borderRadius: '8px' }}
+                  style={{ width: '100%', padding: '9px 10px', fontSize: '0.82rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}
                 >
                   <option value="Rural">{t('locRural')}</option>
                   <option value="Urban">{t('locUrban')}</option>
@@ -761,8 +766,8 @@ export const WhatIfSimulator: React.FC = () => {
             </div>
 
             {/* Verification Toggles */}
-            <div style={{ paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '10px' }}>
+            <div style={{ paddingTop: '14px', borderTop: '1px solid var(--border-subtle)' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', display: 'block', marginBottom: '10px' }}>
                 {t('simRegDocs')}
               </span>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
@@ -803,51 +808,53 @@ export const WhatIfSimulator: React.FC = () => {
         {/* Right Column: Dynamic Simulation Outcomes & Delta Card */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
           
-          {/* Key Outcome Highlights */}
-          <div 
-            className="glass-panel" 
-            style={{ 
-              padding: '24px', 
-              borderRadius: '14px',
-              background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%)',
-              border: '1px solid rgba(79, 70, 229, 0.25)'
-            }}
-          >
+          {/* Key Outcome Highlights Pod */}
+          <div className="tactile-card-3d" style={{ padding: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
                 {t('simOutcome')}
               </h3>
-              <span className="badge badge-emerald">{t('liveCalculated')}</span>
+              <span className="badge badge-emerald" style={{ fontSize: '0.72rem', letterSpacing: '0.04em' }}>
+                {t('liveCalculated')}
+              </span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px' }}>
-              <div style={{ background: 'var(--bg-surface)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>
+              <div className="tactile-stat-pod-3d" style={{ padding: '14px' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700, display: 'block' }}>
                   {t('govtSubsidy')}
                 </span>
-                <strong style={{ fontSize: '1.35rem', color: '#059669', display: 'block', margin: '4px 0' }}>
+                <strong style={{ fontSize: '1.4rem', color: '#059669', display: 'block', margin: '4px 0', fontFamily: 'var(--font-mono)' }}>
                   ₹{simSubsidyAmount.toLocaleString('en-IN')}
                 </strong>
-                <span style={{ fontSize: '0.74rem', color: '#059669', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.74rem', color: '#059669', fontWeight: 700 }}>
                   {simSubsidyRate}% {t('rateSuffix')} ({simLocation})
                 </span>
               </div>
 
-              <div style={{ background: 'var(--bg-surface)', padding: '14px', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>
+              <div className="tactile-stat-pod-3d" style={{ padding: '14px' }}>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700, display: 'block' }}>
                   {t('estMonthlyEmi')}
                 </span>
-                <strong style={{ fontSize: '1.35rem', color: '#4F46E5', display: 'block', margin: '4px 0' }}>
+                <strong style={{ fontSize: '1.4rem', color: '#4F46E5', display: 'block', margin: '4px 0', fontFamily: 'var(--font-mono)' }}>
                   ₹{simEmi.toLocaleString('en-IN')}
                 </strong>
-                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                   {(simAnnualRate * 100).toFixed(1)}% {t('tenureNote')}
                 </span>
               </div>
             </div>
 
             {/* Subsidy Delta Notice */}
-            <div style={{ padding: '12px 14px', background: subsidyDelta >= 0 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.1)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              padding: '12px 14px',
+              background: subsidyDelta >= 0 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.1)',
+              border: subsidyDelta >= 0 ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '9px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}>
               {subsidyDelta >= 0 ? (
                 <TrendingUp size={18} style={{ color: '#059669', flexShrink: 0 }} />
               ) : (
@@ -864,47 +871,47 @@ export const WhatIfSimulator: React.FC = () => {
           </div>
 
           {/* Scheme Feasibility Matrix */}
-          <div className="glass-panel" style={{ padding: '20px', borderRadius: '12px' }}>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '14px', color: 'var(--text-primary)' }}>
+          <div className="tactile-card-3d" style={{ padding: '20px' }}>
+            <h4 style={{ fontSize: '0.96rem', fontWeight: 800, marginBottom: '14px', color: 'var(--text-primary)' }}>
               {t('schemeFeasibility')}
             </h4>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {/* PMEGP */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-elevated)', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: '9px' }}>
                 <div>
-                  <strong style={{ fontSize: '0.86rem', display: 'block' }}>{t('pmegpTitle')}</strong>
+                  <strong style={{ fontSize: '0.88rem', display: 'block', color: 'var(--text-primary)' }}>{t('pmegpTitle')}</strong>
                   <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
                     {simProjectCost <= 5000000 ? t('pmegpCostOk') : t('pmegpCostExceed')}
                   </span>
                 </div>
-                <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
+                <span className="badge badge-emerald" style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
                   {simHasUdyam && simHasDpr ? t('fitScoreHigh') : t('fitScoreMed')}
                 </span>
               </div>
 
               {/* Stand-Up India */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-elevated)', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: '9px' }}>
                 <div>
-                  <strong style={{ fontSize: '0.86rem', display: 'block' }}>{t('standupTitle')}</strong>
+                  <strong style={{ fontSize: '0.88rem', display: 'block', color: 'var(--text-primary)' }}>{t('standupTitle')}</strong>
                   <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
                     {simLoanAmount >= 1000000 && isSpecialCategory ? t('standupEligible') : t('standupReq')}
                   </span>
                 </div>
-                <span className={`badge ${simLoanAmount >= 1000000 && isSpecialCategory ? 'badge-emerald' : 'badge-saffron'}`} style={{ fontSize: '0.75rem' }}>
+                <span className={`badge ${simLoanAmount >= 1000000 && isSpecialCategory ? 'badge-emerald' : 'badge-saffron'}`} style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
                   {simLoanAmount >= 1000000 && isSpecialCategory ? t('badgeEligible') : t('badgeConditional')}
                 </span>
               </div>
 
               {/* Mudra / NSFDC */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', background: 'var(--bg-surface-elevated)', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', background: 'var(--bg-surface)', border: '1px solid var(--border-subtle)', borderRadius: '9px' }}>
                 <div>
-                  <strong style={{ fontSize: '0.86rem', display: 'block' }}>{t('mudraTitle')}</strong>
+                  <strong style={{ fontSize: '0.88rem', display: 'block', color: 'var(--text-primary)' }}>{t('mudraTitle')}</strong>
                   <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
                     {t('mudraDesc')}
                   </span>
                 </div>
-                <span className="badge badge-indigo" style={{ fontSize: '0.75rem' }}>
+                <span className="badge badge-indigo" style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
                   {simLoanAmount <= 1000000 ? t('badgeHighPriority') : t('badgeBridgeOption')}
                 </span>
               </div>
