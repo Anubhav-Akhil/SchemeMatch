@@ -637,7 +637,7 @@ export const ChannelPartnerRouter: React.FC = () => {
           alignItems: 'center',
           gap: '8px',
           overflowX: 'auto',
-          paddingBottom: '4px'
+          paddingBottom: '8px'
         }}>
           {[
             { step: '1', title: t('step1'), desc: `${selectedDistrict}` },
@@ -653,32 +653,52 @@ export const ChannelPartnerRouter: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                justifyContent: 'center',
                 textAlign: 'center',
-                padding: '8px 12px',
-                borderRadius: '8px',
+                padding: '10px 14px',
+                borderRadius: '10px',
                 background: idx === 6 ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-surface)',
                 border: idx === 6 ? '1.5px solid #10B981' : '1px solid var(--border-subtle)',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
-                minWidth: '110px'
+                minWidth: '135px',
+                maxWidth: '165px',
+                flexShrink: 0,
+                boxSizing: 'border-box'
               }}>
                 <span style={{
                   fontSize: '0.66rem',
                   fontWeight: 800,
                   color: idx === 6 ? '#059669' : 'var(--primary-saffron)',
-                  marginBottom: '2px',
+                  marginBottom: '3px',
                   fontFamily: 'var(--font-mono)'
                 }}>
                   {t('stepPrefix')} {node.step}
                 </span>
-                <span style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap' }}>
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  lineHeight: 1.25,
+                  marginBottom: '3px',
+                  textAlign: 'center',
+                  wordBreak: 'break-word'
+                }}>
                   {node.title}
                 </span>
-                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', maxWidth: '100px' }}>
+                <span style={{
+                  fontSize: '0.68rem',
+                  color: 'var(--text-muted)',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  maxWidth: '100%',
+                  marginTop: 'auto'
+                }}>
                   {node.desc}
                 </span>
               </div>
               {idx < arr.length - 1 && (
-                <ChevronRight size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                <ChevronRight size={14} style={{ color: 'var(--text-muted)', flexShrink: 0, margin: '0 2px' }} />
               )}
             </React.Fragment>
           ))}
