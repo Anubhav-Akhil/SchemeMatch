@@ -126,10 +126,17 @@ export const ChatHistoryDrawer: React.FC<ChatHistoryDrawerProps> = ({
   const [sessions, setSessions] = useState<SavedChatSession[]>([]);
 
   useEffect(() => {
-    if (isOpen) {
-      setSessions(loadStoredChatSessions());
-    }
-  }, [isOpen]);
+    if (!isOpen) return;
+    setSessions(loadStoredChatSessions());
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

@@ -448,14 +448,17 @@ export const SaathiAICopilot: React.FC = () => {
                   <RefreshCw size={14} />
                 </button>
 
-                <button
-                  type="button"
-                  className="chatbot-figma-close-btn"
-                  onClick={() => setIsOpen(false)}
-                  aria-label="Close"
-                >
-                  <X size={18} />
-                </button>
+                {/* Close Button - hidden when history drawer is open to prevent duplicate close buttons */}
+                {!isHistoryOpen && (
+                  <button
+                    type="button"
+                    className="chatbot-figma-close-btn"
+                    onClick={() => setIsOpen(false)}
+                    aria-label="Close"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
               </div>
             </div>
 

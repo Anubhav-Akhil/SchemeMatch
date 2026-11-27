@@ -429,15 +429,17 @@ const SaathiPanel: React.FC<{ collapsed: boolean; onToggle: () => void }> = ({
 
           )}
 
-          <button
-            type="button"
-            className="chatbot-figma-close-btn"
-            onClick={onToggle}
-            title="Collapse Slider"
-            aria-label="Collapse"
-          >
-            <ChevronRight size={18} />
-          </button>
+          {!isHistoryOpen && (
+            <button
+              type="button"
+              className="chatbot-figma-close-btn"
+              onClick={onToggle}
+              title="Collapse Slider"
+              aria-label="Collapse"
+            >
+              <ChevronRight size={18} />
+            </button>
+          )}
         </div>
       </div>
 

@@ -10753,10 +10753,10 @@ body.lang-transition-active {
 .saathi-history-drawer-overlay {
   position: absolute;
   inset: 0;
-  z-index: 60;
-  background: rgba(15, 23, 42, 0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  z-index: 150;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   flex-direction: column;
   animation: saathiFigmaFadeIn 0.22s ease-out;
