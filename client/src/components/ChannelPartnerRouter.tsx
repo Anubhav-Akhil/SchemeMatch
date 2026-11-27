@@ -687,30 +687,36 @@ export const ChannelPartnerRouter: React.FC = () => {
 
       {/* ─── INTERACTIVE CONTROLS ROW ─────────────────────────────────────── */}
       <div className="tactile-card-3d" style={{
-        padding: '16px 20px',
+        padding: '18px 20px',
         marginBottom: '22px',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-        gap: '14px',
-        alignItems: 'center'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        gap: '16px',
+        alignItems: 'end'
       }}>
         {/* District Selector + GPS */}
-        <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+        <div style={{ minWidth: 0, width: '100%' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
             {t('locDistrict')}
           </label>
-          <div style={{ display: 'flex', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', minWidth: 0, width: '100%' }}>
             <select
               value={selectedDistrict}
               onChange={(e) => handleDistrictChange(e.target.value)}
               style={{
-                flex: 1,
+                flex: '1 1 0',
+                minWidth: 0,
+                width: '100%',
                 padding: '9px 10px',
                 borderRadius: '8px',
                 fontSize: '0.84rem',
                 border: '1px solid var(--border-subtle)',
                 background: 'var(--bg-surface)',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                boxSizing: 'border-box'
               }}
             >
               {POPULAR_DISTRICTS.map(d => (
@@ -724,8 +730,13 @@ export const ChannelPartnerRouter: React.FC = () => {
               title="Detect Live GPS Location"
               className="tactile-btn-secondary-3d"
               style={{
+                flexShrink: 0,
                 padding: '8px 12px',
-                fontSize: '0.78rem'
+                fontSize: '0.78rem',
+                whiteSpace: 'nowrap',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px'
               }}
             >
               <Crosshair size={14} className={gpsLoading ? 'animate-spin' : ''} />
@@ -735,8 +746,8 @@ export const ChannelPartnerRouter: React.FC = () => {
         </div>
 
         {/* Selected Scheme Selector */}
-        <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+        <div style={{ minWidth: 0, width: '100%' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
             {t('targetScheme')}
           </label>
           <select
@@ -744,12 +755,17 @@ export const ChannelPartnerRouter: React.FC = () => {
             onChange={(e) => setSelectedSchemeId(e.target.value)}
             style={{
               width: '100%',
+              minWidth: 0,
               padding: '9px 10px',
               borderRadius: '8px',
               fontSize: '0.84rem',
               border: '1px solid var(--border-subtle)',
               background: 'var(--bg-surface)',
-              color: 'var(--text-primary)'
+              color: 'var(--text-primary)',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              boxSizing: 'border-box'
             }}
           >
             {SCHEME_OPTIONS.map(s => (
@@ -759,8 +775,8 @@ export const ChannelPartnerRouter: React.FC = () => {
         </div>
 
         {/* Loan Category */}
-        <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+        <div style={{ minWidth: 0, width: '100%' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
             {t('loanCategoryLabel')}
           </label>
           <select
@@ -768,12 +784,17 @@ export const ChannelPartnerRouter: React.FC = () => {
             onChange={(e) => setLoanCategory(e.target.value as any)}
             style={{
               width: '100%',
+              minWidth: 0,
               padding: '9px 10px',
               borderRadius: '8px',
               fontSize: '0.84rem',
               border: '1px solid var(--border-subtle)',
               background: 'var(--bg-surface)',
-              color: 'var(--text-primary)'
+              color: 'var(--text-primary)',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              boxSizing: 'border-box'
             }}
           >
             {LOAN_CATEGORIES.map(c => (
@@ -783,8 +804,8 @@ export const ChannelPartnerRouter: React.FC = () => {
         </div>
 
         {/* Loan Amount */}
-        <div>
-          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '5px' }}>
+        <div style={{ minWidth: 0, width: '100%' }}>
+          <label style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
             {t('loanAmountLabel')}
           </label>
           <input
@@ -794,13 +815,15 @@ export const ChannelPartnerRouter: React.FC = () => {
             onChange={(e) => setLoanAmount(parseInt(e.target.value, 10) || 10000)}
             style={{
               width: '100%',
+              minWidth: 0,
               padding: '9px 10px',
               borderRadius: '8px',
               fontSize: '0.84rem',
               border: '1px solid var(--border-subtle)',
               background: 'var(--bg-surface)',
               color: 'var(--text-primary)',
-              fontFamily: 'var(--font-mono)'
+              fontFamily: 'var(--font-mono)',
+              boxSizing: 'border-box'
             }}
           />
         </div>
